@@ -4,12 +4,33 @@ Models work order queues across Stations A, B, C, AMR fleet dispatch, and batter
 Assigned to: Jordan Gonzalez (RL Lead)
 """
 
-import gymnasium as gym
-from gymnasium import spaces
+try:
+    import gymnasium as gym
+    from gymnasium import spaces
+    GYM_AVAILABLE = True
+    EnvBase = gym.Env
+except ImportError:
+    try:
+        import gym
+        from gym import spaces
+        GYM_AVAILABLE = True
+        EnvBase = gym.Env
+    except ImportError:
+        GYM_AVAILABLE = False
+        class EnvBase:
+            pass
+        class MockSpaces:
+            class Box:
+                def __init__(self, low, high, dtype): self.low, self.high, self.dtype = low, high, dtype
+            class Discrete:
+                def __init__(self, n): self.n = n
+                def sample(self): return int(np.random.randint(0, self.n))
+        spaces = MockSpaces()
+
 import numpy as np
 
 
-class MDCRoboticsLabEnv(gym.Env):
+class MDCRoboticsLabEnv(EnvBase):
     """
     Simulation Environment for MDC Robotics Lab Task Allocation & Battery Scheduling.
 
@@ -57,7 +78,10 @@ class MDCRoboticsLabEnv(gym.Env):
         self.demand_phase = 1.0
 
     def reset(self, seed=None, options=None):
-        super().reset(seed=seed)
+        if GYM_AVAILABLE and hasattr(super(), 'reset'):
+            super().reset(seed=seed)
+        else:
+            self.np_random = np.random.default_rng(seed)
         self.current_step = 0
 
         # Initial conditions: small starting queues, fully charged batteries
