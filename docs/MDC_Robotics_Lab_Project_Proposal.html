@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MDC AI & Robotics Lab Digital Twin - Project Proposal & Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#e0f2fe',
+      primaryTextColor: '#0369a1',
+      primaryBorderColor: '#38bdf8',
+      lineColor: '#0284c7',
+      secondaryColor: '#f0fdf4',
+      tertiaryColor: '#fef3c7'
+    }
+  });
+</script>
+<style>
+  @page {
+    size: letter;
+    margin: 18mm 16mm 18mm 16mm;
+    @bottom-center {
+      content: "MDC AI & Robotics Lab Digital Twin • Page " counter(page) " of " counter(pages);
+      font-family: 'Inter', sans-serif;
+      font-size: 8pt;
+      color: #64748b;
+    }
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #1e293b;
+    background-color: #ffffff;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  header {
+    border-bottom: 2px solid #0284c7;
+    padding-bottom: 20px;
+    margin-bottom: 32px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    background: #e0f2fe;
+    color: #0369a1;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.25;
+    margin: 0 0 12px 0;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    color: #475569;
+    margin: 0 0 16px 0;
+  }
+
+  .meta-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+  }
+
+  .meta-item strong {
+    display: block;
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .meta-item span {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  h2 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #0369a1;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 8px;
+    margin-top: 36px;
+    margin-bottom: 16px;
+    break-after: avoid;
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin-top: 24px;
+    margin-bottom: 10px;
+    break-after: avoid;
+  }
+
+  p {
+    margin: 0 0 14px 0;
+    color: #334155;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px 0;
+    font-size: 0.9rem;
+    break-inside: avoid;
+  }
+
+  th {
+    background: #f1f5f9;
+    color: #0f172a;
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+  }
+
+  td {
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    vertical-align: top;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f8fafc;
+  }
+
+  .diagram-container {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+    break-inside: avoid;
+  }
+
+  .diagram-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 12px;
+    letter-spacing: 0.05em;
+  }
+
+  .callout {
+    border-left: 4px solid #0284c7;
+    background: #f0f9ff;
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    margin: 18px 0;
+    font-size: 0.95rem;
+    break-inside: avoid;
+  }
+
+  .callout-warning {
+    border-left-color: #f59e0b;
+    background: #fffbeb;
+  }
+
+  .checklist {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .checklist li {
+    padding: 6px 0 6px 28px;
+    position: relative;
+    font-size: 0.92rem;
+  }
+
+  .checklist li::before {
+    content: "☐";
+    position: absolute;
+    left: 4px;
+    top: 5px;
+    font-size: 1.1rem;
+    color: #0284c7;
+  }
+
+  code {
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 0.85em;
+    background: #f1f5f9;
+    color: #0369a1;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .member-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin: 20px 0;
+  }
+
+  .member-card {
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 16px;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    break-inside: avoid;
+  }
+
+  .member-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+  }
+
+  .member-role {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #0284c7;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+
+  .member-duties {
+    font-size: 0.85rem;
+    color: #475569;
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  .member-duties li {
+    margin-bottom: 4px;
+  }
+
+  @media print {
+    body {
+      padding: 0;
+      max-width: 100%;
+    }
+    .member-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="badge">Academic Simulation Project Proposal</span>
+  <h1>Miami Dade College AI & Robotics Lab Digital Twin</h1>
+  <p class="subtitle">Multi-Method Simulation (DES + ABM) with Reinforcement Learning (Q-Learning vs. PPO) & Interactive 3D Visualization</p>
+  
+  <div class="meta-box">
+    <div class="meta-item">
+      <strong>Institution</strong>
+      <span>Miami Dade College</span>
+    </div>
+    <div class="meta-item">
+      <strong>Course</strong>
+      <span>Simulation for Applied AI</span>
+    </div>
+    <div class="meta-item">
+      <strong>Team Members</strong>
+      <span>Jorge, Jordan, Illia, Ricardo</span>
+    </div>
+    <div class="meta-item">
+      <strong>Status</strong>
+      <span>Ready for Group Review</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <h2>1. Executive Summary & Problem Context</h2>
+  <div class="callout">
+    <strong>Real-World Problem Setting:</strong> Miami Dade College AI & Robotics Lab
+  </div>
+  <p>
+    In the Miami Dade College AI & Robotics Lab, physical equipment, shared component bins (Station A), soldering/prototyping workbenches (Station B), and specialized testing benches (Station C) experience acute bottlenecks during class labs and peak project hours. Autonomous Mobile Robots (AMRs) tasked with delivering parts, clearing workstations, and assisting students encounter conflicting priorities, queue congestion, and battery depletion.
+  </p>
+  <p>
+    <strong>Core Objectives:</strong>
+  </p>
+  <ul>
+    <li><strong>Minimize Student Wait Times:</strong> Cut transit and queue delays for requested lab components and bench testing slots.</li>
+    <li><strong>Optimize AMR Fleet Productivity:</strong> Maintain high throughput while guaranteeing robots recharge (Station D) before critical battery failure.</li>
+    <li><strong>Benchmark AI Policies:</strong> Compare heuristic baselines (FIFO / threshold) against <strong>Q-Learning</strong> and <strong>Proximal Policy Optimization (PPO)</strong>.</li>
+    <li><strong>Interactive Stakeholder Decision Support:</strong> Deliver insights via an interactive <strong>Streamlit Dashboard</strong> and an <strong>AnyLogic <code>.alp</code></strong> model featuring full 3D animation.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>2. Team Roles & Work Breakdown Structure (WBS)</h2>
+  <p>To ensure balanced accountability and fulfill all professor peer-evaluation requirements, tasks are divided among the 4 team members:</p>
+
+  <div class="member-grid">
+    <div class="member-card">
+      <div class="member-name">Jorge A Mendoza</div>
+      <div class="member-role">Project Manager & AnyLogic Model Architect</div>
+      <ul class="member-duties">
+        <li>Build the AnyLogic <code>.alp</code> simulation model</li>
+        <li>Implement DES process flow for student work orders</li>
+        <li>Define ABM statecharts for AMRs and lab stations</li>
+        <li>Configure the AnyLogic native 3D animation canvas</li>
+      </ul>
+    </div>
+
+    <div class="member-card">
+      <div class="member-name">Jordan Gonzalez</div>
+      <div class="member-role">Reinforcement Learning Engineer</div>
+      <ul class="member-duties">
+        <li>Build Python Gymnasium lab queue environment</li>
+        <li>Implement and train <strong>Q-Learning</strong> policy</li>
+        <li>Implement and train <strong>PPO</strong> policy (Stable-Baselines3/PyTorch)</li>
+        <li>Export policy models, convergence metrics, and loss logs</li>
+      </ul>
+    </div>
+
+    <div class="member-card">
+      <div class="member-name">Illia Shybanov</div>
+      <div class="member-role">Dashboard & Integration Specialist</div>
+      <ul class="member-duties">
+        <li>Develop multi-tab <strong>Streamlit Dashboard</strong> (<code>app.py</code>)</li>
+        <li>Implement interactive sliders and user parameter controls</li>
+        <li>Visualize KPI charts (Q-Learning vs. PPO vs. Baseline)</li>
+        <li>Embed 3D Digital Twin visual preview and live telemetry</li>
+      </ul>
+    </div>
+
+    <div class="member-card">
+      <div class="member-name">Ricardo Molina Gonzalez</div>
+      <div class="member-role">Experiments & Reporting Lead</div>
+      <ul class="member-duties">
+        <li>Execute 5 AnyLogic experiments (Optimization, Monte Carlo, etc.)</li>
+        <li>Draft 2–3 page technical summary paper with recommendations</li>
+        <li>Assemble 10–12 minute presentation slide deck</li>
+        <li>Package final unified single <code>.zip</code> submission package</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout callout-warning">
+    <strong>Mandatory Individual Deliverable (10% of Grade):</strong> Each member (Jorge, Jordan, Illia, Ricardo) must also independently complete and zip <strong>Module 4: Lesson 1</strong> (Stages 1–3) to include in the final team archive.
+  </div>
+</section>
+
+<section>
+  <h2>3. Conceptual Model Diagrams</h2>
+
+  <h3>A. Causal-Loop Diagram (CLD)</h3>
+  <p>Models the macro system feedback loops governing student requests, queue backlogs, fleet utilization, and battery depletion:</p>
+  <div class="diagram-container">
+    <div class="diagram-title">System Dynamics Causal Feedback Loops</div>
+    <div class="mermaid">
+flowchart TD
+    SR["Student Request Arrival Rate (+)"]
+    QL["Workstation Queue Length (+)"]
+    WT["Student Wait Time (+)"]
+    FD["Fleet Dispatch Pressure (+)"]
+    RU["Active AMR Fleet Utilization (+)"]
+    BD["Battery Discharge Rate (+)"]
+    BL["Average Battery Level (-)"]
+    CR["Required Charging Queue at Dock (+)"]
+    AR["Available Active AMRs (-)"]
+    TP["Lab Work Order Throughput (+)"]
+
+    SR --> QL
+    QL --> WT
+    QL --> FD
+    FD --> RU
+    RU --> TP
+    TP -->|"Balancing Loop B1: Backlog Reduction"| QL
+    
+    RU --> BD
+    BD --> BL
+    BL -->|"Low Battery Trigger"| CR
+    CR --> AR
+    AR -->|"Balancing Loop B2: Resource Constraint"| RU
+    AR -->|"Reinforcing Delay R1"| WT
+    </div>
+  </div>
+
+  <h3>B. Discrete-Event Simulation (DES) Process Flow</h3>
+  <p>AnyLogic queuing architecture modeling component requests, inventory retrieval, and workstation testing:</p>
+  <div class="diagram-container">
+    <div class="diagram-title">DES Queuing & Service Pipeline</div>
+    <div class="mermaid">
+flowchart LR
+    Source["Source: Student Request<br>(MDC Lab Schedule)"]
+    Queue["Queue: Work Order Backlog<br>(FIFO / Priority Buffer)"]
+    Seize["Seize: Assign AMR & Station<br>(RL Policy Action)"]
+    Transit1["Delay: AMR Transit to Shelf<br>(Station A Component Pickup)"]
+    Service1["Delay: Component Dispense<br>(Inventory Retrieval)"]
+    Transit2["Delay: AMR Transit to Bench<br>(Station B/C Delivery)"]
+    Service2["Delay: Student Work Task<br>(Assembly / Testing Duration)"]
+    Release["Release: Free AMR & Bench"]
+    Sink["Sink: Completed Work Order<br>(Record Wait Time & Throughput)"]
+
+    Source --> Queue
+    Queue --> Seize
+    Seize --> Transit1
+    Transit1 --> Service1
+    Service1 --> Transit2
+    Transit2 --> Service2
+    Service2 --> Release
+    Release --> Sink
+    </div>
+  </div>
+
+  <h3>C. Agent-Based Modeling (ABM) AMR Statechart</h3>
+  <p>Individual robot state machine showing task execution, navigation, and automated battery management:</p>
+  <div class="diagram-container">
+    <div class="diagram-title">AMR Autonomous State Machine</div>
+    <div class="mermaid">
+stateDiagram-v2
+    [*] --> Idle
+
+    state Idle {
+        [*] --> WaitingForOrder
+        WaitingForOrder --> CheckBattery: Periodic Check
+    }
+
+    state Active_Service {
+        NavigatingToStation: Moving to Target Station
+        LoadingParts: Loading Parts at Station A
+        DeliveringToBench: Moving to Station B or C
+        UnloadingAndTesting: Assisting at Workstation
+
+        NavigatingToStation --> LoadingParts: Reached Station
+        LoadingParts --> DeliveringToBench: Transfer Complete
+        DeliveringToBench --> UnloadingAndTesting: Reached Bench
+    }
+
+    state Charging_Routine {
+        NavigatingToDock: Moving to Station D (Charger)
+        Charging: Inductive Magnetic Fast Charge
+        
+        NavigatingToDock --> Charging: Docked on Pad
+    }
+
+    Idle --> Active_Service: RL Action: Dispatch to Order
+    Active_Service --> Idle: Task Completed (Battery > Threshold)
+    
+    Active_Service --> Charging_Routine: Battery <= Critical (20%)
+    Idle --> Charging_Routine: RL Action: Preemptive Docking
+    Charging_Routine --> Idle: Battery Reached 95%
+    </div>
+  </div>
+
+  <h3>D. Reinforcement Learning (RL) Decision Framework</h3>
+  <p>Markov Decision Process (MDP) comparing <strong>Q-Learning</strong> against <strong>PPO</strong>:</p>
+  <div class="diagram-container">
+    <div class="diagram-title">RL Supervisory Control Architecture</div>
+    <div class="mermaid">
+flowchart TD
+    subgraph Environment["MDC Robotics Lab Environment (AnyLogic / Gymnasium)"]
+        State["State Vector St:<br>• Queue Lengths (Station A, B, C)<br>• AMR Battery Levels (AMR-01, 02, 03)<br>• Robot States (Idle, Busy, Charging)<br>• Active Class Session Phase"]
+        Physics["Simulation Step & Transitions"]
+        State --> Physics
+    end
+
+    subgraph Agent["AI Policy (Q-Learning vs. PPO)"]
+        PolicyQ["Tabular / Deep Q-Network<br>(Action-Value Estimation)"]
+        PolicyPPO["PPO Actor-Critic<br>(Clipped Surrogate Objective)"]
+    end
+
+    Physics -->|"Reward Rt & Next State St+1"| Agent
+    Agent -->|"Action At:<br>• Assign AMR(i) -> Station(j)<br>• Dock AMR(i) -> Station D<br>• Standby AMR(i)"| Physics
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>4. Required AnyLogic Simulation Experiments</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Experiment</th>
+        <th>Purpose & Methodology</th>
+        <th>Target Output</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Optimization</strong></td>
+        <td>Find optimal fleet size (2 vs 3 vs 5 AMRs) and charging pads under lab budget constraints.</td>
+        <td>Pareto frontier of min wait time vs. capital cost.</td>
+      </tr>
+      <tr>
+        <td><strong>Compare Runs</strong></td>
+        <td>Direct head-to-head comparison between FIFO baseline, Q-Learning, and PPO policies.</td>
+        <td>Comparative throughput and wait-time bar charts.</td>
+      </tr>
+      <tr>
+        <td><strong>Monte Carlo</strong></td>
+        <td>100+ replications with stochastic student arrival intervals and task durations.</td>
+        <td>95% confidence interval distributions of student wait times.</td>
+      </tr>
+      <tr>
+        <td><strong>Sensitivity Analysis</strong></td>
+        <td>Vary battery drain rate (aging batteries) and student influx (&plusmn;30%).</td>
+        <td>Spider charts identifying tipping points for lab gridlock.</td>
+      </tr>
+      <tr>
+        <td><strong>Calibration</strong></td>
+        <td>Tune simulated robot velocities and service times against physical MDC lab stopwatch data.</td>
+        <td>Pre- vs. Post-calibration curve alignment.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>5. Streamlit Dashboard Architecture (5 Tabs)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Tab</th>
+        <th>Name</th>
+        <th>Features & Controls</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Tab 1</strong></td>
+        <td>Control Center & Inputs</td>
+        <td>Interactive sliders: Student arrival frequency, AMR count, transit speed, policy selector.</td>
+      </tr>
+      <tr>
+        <td><strong>Tab 2</strong></td>
+        <td>Operational KPIs</td>
+        <td>Real-time metrics: Average wait time, throughput/hr, station utilization heatmaps.</td>
+      </tr>
+      <tr>
+        <td><strong>Tab 3</strong></td>
+        <td>RL Benchmark (Q-Learning vs. PPO)</td>
+        <td>Episode reward curves, loss progression, policy execution efficiency tables.</td>
+      </tr>
+      <tr>
+        <td><strong>Tab 4</strong></td>
+        <td>Simulation Experiments</td>
+        <td>Visualizers for Monte Carlo density, sensitivity spider plots, and optimization results.</td>
+      </tr>
+      <tr>
+        <td><strong>Tab 5</strong></td>
+        <td>Executive Report</td>
+        <td>Non-obvious findings, policy recommendations, and actionable operational strategies for MDC.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>6. Final Submission Checklist</h2>
+  <ul class="checklist">
+    <li>AnyLogic simulation model file (<code>.alp</code>) containing DES + ABM + 3D animation</li>
+    <li>Python RL model training files and Streamlit Dashboard source code</li>
+    <li>Short written summary report (2–3 pages)</li>
+    <li>Professional presentation slide deck (10–12 minutes)</li>
+    <li>Module 4 Lesson 1 zip archives for Jorge A Mendoza</li>
+    <li>Module 4 Lesson 1 zip archives for Jordan Gonzalez</li>
+    <li>Module 4 Lesson 1 zip archives for Illia Shybanov</li>
+    <li>Module 4 Lesson 1 zip archives for Ricardo Molina Gonzalez</li>
+    <li>Group Peer Evaluation grading rubrics completed and signed</li>
+    <li>Single unified zip file assembled for final submission</li>
+  </ul>
+</section>
+
+</body>
+</html>
