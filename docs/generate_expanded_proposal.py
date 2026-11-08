@@ -1,0 +1,503 @@
+"""Generate the Expanded Group Project Proposal PDF and HTML addressing the Professor's questions.
+Deeply details interconnected operational processes, true agent-based behaviors, multi-objective RL,
+and causal-loop diagrams for Option 1 and Option 2 (Professor's favorite).
+"""
+import subprocess
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+
+HTML_CONTENT = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comprehensive Project Proposal Expansion - Miami Dade College</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#e0f2fe',
+      primaryTextColor: '#0369a1',
+      primaryBorderColor: '#38bdf8',
+      lineColor: '#0284c7',
+      secondaryColor: '#f0fdf4',
+      tertiaryColor: '#fef3c7'
+    }
+  });
+</script>
+<style>
+  @page {
+    size: letter;
+    margin: 16mm 14mm 16mm 14mm;
+    @bottom-center {
+      content: "MDC • Simulation for Applied AI • Expanded Proposal • Page " counter(page) " of " counter(pages);
+      font-family: 'Inter', sans-serif;
+      font-size: 8pt;
+      color: #64748b;
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.55;
+    color: #1e293b;
+    background-color: #ffffff;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 20px;
+  }
+
+  header {
+    border-bottom: 2px solid #0284c7;
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border-radius: 9999px;
+    background: #e0f2fe;
+    color: #0369a1;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  h1 { font-size: 1.85rem; font-weight: 800; color: #0f172a; margin: 0 0 8px 0; }
+  .subtitle { font-size: 1.0rem; color: #475569; margin: 0 0 14px 0; }
+
+  .meta-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .meta-item strong { display: block; font-size: 0.7rem; color: #64748b; text-transform: uppercase; }
+  .meta-item span { font-size: 0.88rem; font-weight: 600; color: #0f172a; }
+
+  h2 {
+    font-size: 1.35rem; font-weight: 700; color: #0369a1;
+    border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;
+    margin-top: 28px; margin-bottom: 12px; break-after: avoid;
+  }
+  h3 { font-size: 1.1rem; font-weight: 600; color: #0f172a; margin-top: 18px; margin-bottom: 8px; break-after: avoid; }
+  p { margin: 0 0 10px 0; color: #334155; font-size: 0.92rem; }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 18px 0; font-size: 0.85rem; break-inside: avoid; }
+  th { background: #f1f5f9; color: #0f172a; font-weight: 600; text-align: left; padding: 7px 9px; border: 1px solid #cbd5e1; }
+  td { padding: 7px 9px; border: 1px solid #e2e8f0; vertical-align: top; }
+  tr:nth-child(even) { background-color: #f8fafc; }
+
+  .diagram-container {
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+    padding: 14px; margin: 14px 0; text-align: center; break-inside: avoid;
+  }
+  .diagram-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 8px; }
+
+  .callout {
+    border-left: 4px solid #0284c7; background: #f0f9ff;
+    padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 12px 0; font-size: 0.9rem; break-inside: avoid;
+  }
+  .callout-highlight { border-left-color: #10b981; background: #ecfdf5; }
+
+  code { font-family: 'JetBrains Mono', Consolas, monospace; font-size: 0.85em; background: #f1f5f9; color: #0369a1; padding: 2px 5px; border-radius: 3px; }
+  pre {
+    background: #0f172a; color: #f8fafc; padding: 12px; border-radius: 6px;
+    font-family: 'JetBrains Mono', Consolas, monospace; font-size: 0.82rem; overflow-x: auto; margin: 12px 0;
+  }
+  ul, ol { margin: 0 0 12px 0; padding-left: 20px; font-size: 0.92rem; }
+  li { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="badge">Comprehensive Expansion Report</span>
+  <h1>Technical Architecture & Operational Rigor Document</h1>
+  <p class="subtitle">Addressing Professor Inquiries: Multi-Process Workflows, Agent-Based Interactions, Sequential Multi-Objective RL, and Causal Feedback Dynamics</p>
+  
+  <div class="meta-box">
+    <div class="meta-item"><strong>Course</strong><span>Simulation for Applied AI</span></div>
+    <div class="meta-item"><strong>Institution</strong><span>Miami Dade College</span></div>
+    <div class="meta-item"><strong>Team Members</strong><span>Jorge Mendoza, Jordan Gonzalez, Illia Shybanov, Ricardo Molina</span></div>
+    <div class="meta-item"><strong>Primary Focus</strong><span>Option 2 (Campus Rover Logistics) & Option 1</span></div>
+  </div>
+</header>
+
+<section>
+  <h2>Executive Summary & Response to Faculty Guidance</h2>
+  <p>
+    We sincerely appreciate the professor's encouraging and insightful feedback on our preliminary submission. In particular, we welcome your strong recommendation regarding <strong>Option 2: Smart Campus Autonomous Courier Rover Logistics for Miami Dade College Facilities</strong>. 
+  </p>
+  <p>
+    Below, our team provides the rigorous operational processes, agent definitions, reinforcement learning formulation, and causal feedback loops requested. Both options are expanded, with profound emphasis on Option 2 to confirm that our 4-student team has distinct, substantial technical responsibilities spanning Discrete-Event Modeling, Agent-Based interactions, Reinforcement Learning, and interactive dashboard analytics.
+  </p>
+</section>
+
+<!-- ==================== OPTION 2: PROFESSOR'S FAVORITE ==================== -->
+<section>
+  <h2>SECTION 1: OPTION 2 (RECOMMENDED) — MDC CAMPUS AUTONOMOUS ROVER LOGISTICS</h2>
+  <div class="callout callout-highlight">
+    <strong>Faculty Endorsement:</strong> "I particularly really, really like option 2 because it offers opportunities to investigate operational efficiency, resource allocation, autonomous decision-making, and cost optimization within a realistic campus environment."
+  </div>
+
+  <h3>1.1 Interconnected Operational Processes (Lifecycle from Request to Delivery)</h3>
+  <p>
+    Rather than a simplistic single queue-and-service model, Option 2 models <strong>seven interconnected operational subsystems</strong> that interact stochastically:
+  </p>
+
+  <div class="diagram-container">
+    <div class="diagram-title">Interconnected DES Campus Logistics Process Flowchart</div>
+    <div class="mermaid">
+flowchart LR
+    R1["1. Request Gen<br>(Mail, Lab Samples, Hardware)"] --> R2["2. SLA Sorting &<br>Priority Categorization"]
+    R2 --> R3["3. Dynamic Batching<br>(Multi-Compartment Locker)"]
+    R3 --> R4["4. Dispatch Decision<br>(RL Policy vs FIFO)"]
+    R4 --> R5["5. Pickup at Building Hub<br>(Loading Delay)"]
+    R5 --> R6["6. Transit on Walkways<br>(Pedestrian Density Drag)"]
+    R6 --> R7{"7. Delivery Attempt"}
+    R7 -->|"Recipient Present"| R8["Completed Delivery<br>(SLA Recorded)"]
+    R7 -->|"Recipient Absent<br>(Timeout)"| R9["Fallback to Smart Locker<br>or Reroute to Depot"]
+    R8 --> R10{"Battery State?"}
+    R9 --> R10
+    R10 -->|"SOC < Threshold"| R11["Autonomous Docking at Station D"]
+    R10 -->|"SOC Safe & Demand High"| R3
+    </div>
+  </div>
+
+  <ol>
+    <li>
+      <strong>Request Generation Subsystem:</strong> Dynamic arrival rates driven by campus schedule phases (morning administrative mail bursts, midday student lab sample transfers, afternoon urgent department dispatches). Models Poisson arrivals with time-dependent arrival rates $\lambda(t)$.
+    </li>
+    <li>
+      <strong>Priority & Service Level Agreement (SLA) Stratification:</strong> Requests are segregated into three tiers:
+      <ul>
+        <li><strong>Urgent (Tier 1):</strong> Biohazard/chemistry lab specimens and emergency administrative docs (Strict 15-minute SLA limit).</li>
+        <li><strong>Standard (Tier 2):</strong> Inter-departmental packages and student equipment transfers (45-minute SLA).</li>
+        <li><strong>Bulk (Tier 3):</strong> Routine campus mail and recycled consumables (2-hour SLA window).</li>
+      </ul>
+    </li>
+    <li>
+      <strong>Multi-Compartment Dynamic Batching:</strong> Each rover is equipped with 3 lockable modular cargo bins. The system must decide whether to dispatch a rover immediately with a single urgent item or hold for 3–5 minutes to batch co-located packages heading to adjacent campus buildings (e.g., Building 1 $\rightarrow$ Science Building 2 $\rightarrow$ Student Center).
+    </li>
+    <li>
+      <strong>Dispatching & Resource Contention:</strong> Allocates ready rovers from the active fleet. If all rovers are in transit or recharging, requests accumulate in building holding queues, triggering SLA violation penalties.
+    </li>
+    <li>
+      <strong>Pedestrian-Interactive Transit & Bottlenecks:</strong> Rovers navigate outdoors between campus buildings. Walkway transit times are <em>not static delays</em>; they fluctuate dynamically based on the 10-minute passing periods between classes, where pedestrian density surges by up to 500%, forcing rovers to decelerate, detour, or halt.
+    </li>
+    <li>
+      <strong>Delivery Handshake & Unsuccessful Delivery Subsystem:</strong> Upon arriving at a destination hub, the recipient is alerted. If the recipient does not claim the package within a 3-minute window:
+      <ul>
+        <li><em>Primary Fallback:</em> Deposit package into a secure automated campus parcel locker (if slots are available).</li>
+        <li><em>Secondary Fallback:</em> Abort delivery, flag as "Delivery Exception", retain package in rover cargo bin, and schedule a return trip to Central Receiving, consuming cargo capacity.</li>
+      </ul>
+    </li>
+    <li>
+      <strong>Energy Replenishment & Depot Management:</strong> Rovers monitor State-of-Charge (SOC). When entering charging depot (Station D), rovers contend for limited inductive charging slots (e.g., 2 pads for 5 rovers). The system must balance fast-charging downtime against peak dispatch availability.
+    </li>
+  </ol>
+
+  <h3>1.2 Agent-Based Modeling (ABM): Agent Types, Attributes, States & Behaviors</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Agent Type</th>
+        <th>Internal Attributes</th>
+        <th>Statechart & Operational States</th>
+        <th>Interactive Behaviors</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Autonomous Courier Rover</strong> (Active Agent)</td>
+        <td>
+          • ID, $(X, Y)$ position, velocity<br>
+          • Battery State of Charge (0–100%)<br>
+          • 3-Slot Modular Cargo Inventory<br>
+          • Cumulative mileage & degradation rate
+        </td>
+        <td>
+          • <code>IDLE_DEPOT</code><br>
+          • <code>LOADING_BATCH</code><br>
+          • <code>IN_TRANSIT</code><br>
+          • <code>DELIVERY_HANDSHAKE</code><br>
+          • <code>NAVIGATING_TO_CHARGER</code><br>
+          • <code>FAST_CHARGING</code>
+        </td>
+        <td>
+          • Dynamic speed throttled by local pedestrian density.<br>
+          • Senses charging dock occupancy.<br>
+          • Communicates status to Central Dispatch Coordinator.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Pedestrian Student Crowds</strong> (Environmental Agent)</td>
+        <td>
+          • Origin & destination building<br>
+          • Walking speed (1.0–1.4 m/s)<br>
+          • Class schedule timestamp
+        </td>
+        <td>
+          • <code>IN_CLASS</code> (Off-path)<br>
+          • <code>CLASS_PASSING_PERIOD</code> (On walkway)<br>
+          • <code>LOITERING</code> (Courtyard/plaza)
+        </td>
+        <td>
+          • Crosses pedestrian pathways in stochastic swarms during 10-minute class breaks.<br>
+          • Acts as dynamic obstacle fields that slow rover navigation.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Campus Building Hubs</strong> (Fixed Agent)</td>
+        <td>
+          • Building name, Coordinates<br>
+          • Outbound parcel queue<br>
+          • Smart Locker Capacity (Occupied / Free)
+        </td>
+        <td>
+          • <code>NORMAL_LOAD</code><br>
+          • <code>QUEUE_CONGESTED</code><br>
+          • <code>LOCKER_FULL</code>
+        </td>
+        <td>
+          • Generates parcel orders.<br>
+          • Receives delivered packages.<br>
+          • Holds failed deliveries in automated lockers.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Central Charging Depot</strong> (Resource Agent)</td>
+        <td>
+          • Number of Inductive Charge Pads (2)<br>
+          • Queue buffer capacity<br>
+          • Charge rate (0.8% SOC / min)
+        </td>
+        <td>
+          • <code>PADS_AVAILABLE</code><br>
+          • <code>ALL_PADS_OCCUPIED</code><br>
+          • <code>DEPOT_CONGESTED</code>
+        </td>
+        <td>
+          • Charges docked rovers.<br>
+          • Queues rovers with low battery.<br>
+          • Releases rovers upon reaching 90% SOC.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>1.3 Causal-Loop Feedback Dynamics</h3>
+  <div class="diagram-container">
+    <div class="diagram-title">System Dynamics Causal-Loop Diagram (Option 2 Campus Fleet)</div>
+    <div class="mermaid">
+flowchart TD
+    DG["Parcel Dispatch Generation (+)"] --> PQ["Pending Package Queue (+)"]
+    PQ --> ST["Average Delivery Time (+)"]
+    PQ --> PR["Fleet Dispatch Pressure (+)"]
+    PR --> RU["Rover Utilization Rate (+)"]
+    RU --> DR["Battery Discharge Rate (+)"]
+    DR --> BL["Average Fleet Battery Level (-)"]
+    BL -->|"Low SOC Trigger"| CQ["Charging Depot Queue (+)"]
+    CQ --> AR["Available Active Rovers (-)"]
+    AR -->|"Resource Constraint B1"| RU
+    AR -->|"Delay Escalation R1"| ST
+    
+    RU --> TC["Walkway Traffic Congestion (+)"]
+    TC -->|"Deceleration Penalty B2"| ST
+    ST --> SL["SLA Violation Penalties (+)"]
+    </div>
+  </div>
+  <p>
+    <strong>Key Loops:</strong>
+    <em>Balancing Loop B1</em> limits fleet utilization as rovers exhaust battery reserves and queue at Station D. 
+    <em>Reinforcing Loop R1</em> inflates delivery delays: when multiple rovers dock at once, remaining rovers face higher workload, depleting faster and escalating delivery times.
+    <em>Balancing Loop B2</em> captures pedestrian walkway crowding: higher rover deployments create walkway interference, triggering speed throttling.
+  </p>
+
+  <h3>1.4 Reinforcement Learning: Sequential Multi-Objective Decision Making</h3>
+  <p>
+    The RL supervisory agent does not merely find the shortest path; it solves a complex, sequential <strong>Multi-Objective Markov Decision Process (MOMDP)</strong> coordinating batching, assignment, and preemptive energy management:
+  </p>
+
+  <div class="callout">
+    <strong>State Space Vector $S_t \in \mathbb{R}^{10}$ (Observed Every Decision Step):</strong>
+    <ol>
+      <li><code>[Q_HubA, Q_HubB, Q_HubC]</code>: Queue depths at Central Mail, Science Lab, and Admin Hub.</li>
+      <li><code>[U_HubA, U_HubB, U_HubC]</code>: Number of urgent (Tier 1) parcels awaiting immediate pickup.</li>
+      <li><code>[SOC_R1, SOC_R2, SOC_R3]</code>: Battery percentage (0.0–1.0) of each rover in the fleet.</li>
+      <li><code>Ped_Density</code>: Real-time pedestrian walkway congestion index (0.2 calm to 1.0 passing rush).</li>
+      <li><code>Docks_Free</code>: Number of available charging pads at Station D (0, 1, or 2).</li>
+    </ol>
+  </div>
+
+  <div class="callout">
+    <strong>Action Space $A_t$ (Discrete Combinatorial Decisions):</strong>
+    <ul>
+      <li><code>Action 0..2</code>: <strong>Immediate Dispatch:</strong> Assign available rover to Hub $A, B$, or $C$ for single urgent express delivery.</li>
+      <li><code>Action 3..5</code>: <strong>Batch & Route:</strong> Instruct rover to load 2–3 co-located parcels across adjacent buildings before departure.</li>
+      <li><code>Action 6</code>: <strong>Opportunistic Recharging:</strong> Pull a moderately charged rover (e.g. 55% SOC) into Station D for a brief top-off before the upcoming class rush hour.</li>
+      <li><code>Action 7</code>: <strong>Congestion-Bypass Route:</strong> Route rover via secondary perimeter pathway to avoid high-density pedestrian courtyards.</li>
+      <li><code>Action 8</code>: <strong>Standby:</strong> Hold rover at strategic central node to conserve battery.</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <strong>Multi-Objective Reward Function ($R_t$):</strong>
+    $$R_t = + w_1 \cdot N_{\text{delivered}} - w_2 \sum \text{WaitTimes} - w_3 \sum \text{SLA\_Violations} - w_4 \cdot \text{EnergyConsumed} - w_5 \cdot \mathbb{I}(\text{Rover Stranded})$$
+    <em>Weights: $w_1 = +15, w_2 = 0.5, w_3 = 25, w_4 = 0.8, w_5 = 100$.</em>
+  </div>
+
+  <p>
+    <strong>Comparing Q-Learning vs. PPO:</strong>
+    Tabular/DQN Q-learning handles discrete assignment states well in low-traffic conditions, but <strong>PPO (Proximal Policy Optimization)</strong> excels at continuous policy smoothing—anticipating pedestrian crowd surges and scheduling opportunistic top-off charging <em>prior</em> to class breaks, preventing deadlocks and SLA violations.
+  </p>
+</section>
+
+<!-- ==================== OPTION 1: ROBOTICS LAB ==================== -->
+<section>
+  <h2>SECTION 2: OPTION 1 — MDC AI & ROBOTICS LAB LOGISTICS & TESTING OPTIMIZATION</h2>
+  <p>
+    For complete rigor, we also expand Option 1 as requested, detailing its multi-process scope within the MDC AI & Robotics facility:
+  </p>
+  <ul>
+    <li>
+      <strong>Operational Processes:</strong> Student bill-of-materials request $\rightarrow$ inventory shelf part retrieval (Station A) $\rightarrow$ soldering bench transport (Station B) $\rightarrow$ QA sensor calibration delay (Station C) $\rightarrow$ tool return $\rightarrow$ charging cycle (Station D). Bottlenecks occur when multiple capstone teams request testing bench access simultaneously while AMRs deplete batteries.
+    </li>
+    <li>
+      <strong>Agent Types:</strong> 3 Differential AMRs (Inspector Alpha, Logistics Beta, Courier Gamma), Unitree G1 Humanoid (safety inspector), Student workbenches (A–C), Inductive charge pads (Station D).
+    </li>
+    <li>
+      <strong>Sequential RL Problem:</strong> Balancing high student lab request throughput against battery lifetime and workbench tool contention using Q-Learning vs. PPO.
+    </li>
+  </ul>
+</section>
+
+<!-- ==================== WBS & TEAMWORK ==================== -->
+<section>
+  <h2>SECTION 3: 4-STUDENT TECHNICAL RESPONSIBILITIES & 4-WEEK ROADMAP</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Team Member</th>
+        <th>Dedicated Technical Domain</th>
+        <th>Substantial Course Deliverables</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Jorge A Mendoza</strong></td>
+        <td><strong>AnyLogic Lead Architect</strong></td>
+        <td>
+          • Builds multi-method AnyLogic <code>.alp</code> model.<br>
+          • Connects DES process pipelines (parcel generation, SLA queues, locker fallback).<br>
+          • Configures ABM rover statecharts, campus pedestrian paths, and 3D spatial animation canvas.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Jordan Gonzalez</strong></td>
+        <td><strong>Reinforcement Learning Engineer</strong></td>
+        <td>
+          • Implements Python Gymnasium environment with multi-objective reward formulation.<br>
+          • Trains and tunes <strong>Q-Learning</strong> policy.<br>
+          • Trains and evaluates <strong>PPO</strong> policy (Stable-Baselines3/PyTorch).<br>
+          • Exports policy weights, convergence curves, and comparative metrics.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Illia Shybanov</strong></td>
+        <td><strong>Streamlit Dashboard & UI Specialist</strong></td>
+        <td>
+          • Builds full 5-tab interactive Streamlit web application (<code>app.py</code>).<br>
+          • Integrates real-time parameter sliders (arrival rates, rover fleet count, charging pads).<br>
+          • Plots interactive Plotly KPI visuals (SLA compliance, throughput, energy burn).<br>
+          • Connects 3D twin telemetry preview and policy comparison graphs.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Ricardo Molina Gonzalez</strong></td>
+        <td><strong>Experiments & Technical Reporting Lead</strong></td>
+        <td>
+          • Executes the 5 required AnyLogic experiments: Optimization, Compare Runs, Monte Carlo (100 runs), Sensitivity Analysis, and Calibration.<br>
+          • Writes the 2–3 page academic report detailing non-obvious findings and recommendations.<br>
+          • Builds the 10–12 minute presentation slide deck.<br>
+          • Manages final package assembly (including individual Module 4 zips).
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>Conclusion & Requested Approval</h2>
+  <p>
+    Based on the professor's strong preference, <strong>our team enthusiastically selects Option 2 (MDC Smart Campus Autonomous Courier Rover Logistics)</strong> as our primary group project. The mathematical foundations, simulation architecture, code scaffolds, and team work breakdown are fully prepared for immediate execution.
+  </p>
+</section>
+
+</body>
+</html>
+"""
+
+def main():
+    course_docs = Path(r"d:\Miami Dade College\Simulation For AI\mdc_robotics_simulation_twin\docs")
+    twin_docs = Path(r"d:\Miami Dade College\AI-3D-Robotics-Lab\Docs")
+
+    course_html = course_docs / "Expanded_Group_Project_Proposal_MDC.html"
+    course_pdf = course_docs / "Expanded_Group_Project_Proposal_MDC.pdf"
+
+    twin_html = twin_docs / "Expanded_Group_Project_Proposal_MDC.html"
+    twin_pdf = twin_docs / "Expanded_Group_Project_Proposal_MDC.pdf"
+
+    print("Writing HTML documentation...")
+    course_html.write_text(HTML_CONTENT, encoding="utf-8")
+    twin_html.write_text(HTML_CONTENT, encoding="utf-8")
+
+    print("Rendering PDF with Microsoft Edge headless...")
+    with tempfile.TemporaryDirectory() as tmp:
+        profile_dir = Path(tmp) / "profile"
+        subprocess.run([
+            EDGE,
+            "--headless=new",
+            "--disable-gpu",
+            "--no-pdf-header-footer",
+            "--run-all-compositor-stages-before-draw",
+            "--virtual-time-budget=9000",
+            f"--user-data-dir={profile_dir}",
+            f"--print-to-pdf={course_pdf}",
+            course_html.as_uri()
+        ], check=True)
+
+        last = -1
+        for _ in range(60):
+            size = course_pdf.stat().st_size if course_pdf.exists() else -1
+            if size > 0 and size == last:
+                break
+            last = size
+            time.sleep(0.5)
+
+    import shutil
+    shutil.copy2(course_pdf, twin_pdf)
+
+    print("Successfully generated:")
+    print(f"Course Docs PDF: {course_pdf} ({course_pdf.stat().st_size} bytes)")
+    print(f"Twin Docs PDF:   {twin_pdf} ({twin_pdf.stat().st_size} bytes)")
+
+if __name__ == "__main__":
+    main()
