@@ -1,6 +1,9 @@
-"""Generate the Expanded Group Project Proposal PDF and HTML addressing the Professor's questions.
-Deeply details interconnected operational processes, true agent-based behaviors, multi-objective RL,
-and causal-loop diagrams for Option 1 and Option 2 (Professor's favorite).
+"""Generate the polished, immaculate Expanded Group Project Proposal PDF.
+Fixes:
+1. Replaces raw LaTeX with clean, universal Unicode arrows and math (→, λ(t), St ∈ ℝ¹⁰).
+2. Fixes awkward page break on Section 3 heading (page-break-before: always).
+3. Eliminates trailing blank page 9 (tightens margins and layout to a clean 7-page document).
+4. Sharpens diagram rendering and contrast.
 """
 import subprocess
 import sys
@@ -15,7 +18,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comprehensive Project Proposal Expansion - Miami Dade College</title>
+<title>Technical Architecture & Operational Rigor Document - Miami Dade College</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -37,9 +40,9 @@ HTML_CONTENT = """<!DOCTYPE html>
 <style>
   @page {
     size: letter;
-    margin: 16mm 14mm 16mm 14mm;
+    margin: 14mm 14mm 14mm 14mm;
     @bottom-center {
-      content: "MDC • Simulation for Applied AI • Expanded Proposal • Page " counter(page) " of " counter(pages);
+      content: "MDC • Simulation for Applied AI • Technical Expansion Report • Page " counter(page) " of " counter(pages);
       font-family: 'Inter', sans-serif;
       font-size: 8pt;
       color: #64748b;
@@ -49,80 +52,84 @@ HTML_CONTENT = """<!DOCTYPE html>
   *, *::before, *::after { box-sizing: border-box; }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    line-height: 1.55;
+    line-height: 1.5;
     color: #1e293b;
     background-color: #ffffff;
     max-width: 900px;
     margin: 0 auto;
-    padding: 24px 20px;
+    padding: 16px 14px;
   }
 
   header {
     border-bottom: 2px solid #0284c7;
-    padding-bottom: 16px;
-    margin-bottom: 24px;
+    padding-bottom: 14px;
+    margin-bottom: 20px;
   }
 
   .badge {
     display: inline-block;
-    padding: 4px 12px;
-    font-size: 0.78rem;
+    padding: 3px 10px;
+    font-size: 0.75rem;
     font-weight: 700;
     border-radius: 9999px;
     background: #e0f2fe;
     color: #0369a1;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
-  h1 { font-size: 1.85rem; font-weight: 800; color: #0f172a; margin: 0 0 8px 0; }
-  .subtitle { font-size: 1.0rem; color: #475569; margin: 0 0 14px 0; }
+  h1 { font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0 0 6px 0; }
+  .subtitle { font-size: 0.95rem; color: #475569; margin: 0 0 12px 0; }
 
   .meta-box {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 10px;
+    gap: 8px;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 12px 14px;
+    border-radius: 6px;
+    padding: 10px 14px;
   }
-  .meta-item strong { display: block; font-size: 0.7rem; color: #64748b; text-transform: uppercase; }
-  .meta-item span { font-size: 0.88rem; font-weight: 600; color: #0f172a; }
+  .meta-item strong { display: block; font-size: 0.68rem; color: #64748b; text-transform: uppercase; }
+  .meta-item span { font-size: 0.85rem; font-weight: 600; color: #0f172a; }
 
   h2 {
-    font-size: 1.35rem; font-weight: 700; color: #0369a1;
-    border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;
-    margin-top: 28px; margin-bottom: 12px; break-after: avoid;
+    font-size: 1.25rem; font-weight: 700; color: #0369a1;
+    border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;
+    margin-top: 24px; margin-bottom: 10px; break-after: avoid;
   }
-  h3 { font-size: 1.1rem; font-weight: 600; color: #0f172a; margin-top: 18px; margin-bottom: 8px; break-after: avoid; }
-  p { margin: 0 0 10px 0; color: #334155; font-size: 0.92rem; }
+  h3 { font-size: 1.05rem; font-weight: 600; color: #0f172a; margin-top: 16px; margin-bottom: 6px; break-after: avoid; }
+  p { margin: 0 0 8px 0; color: #334155; font-size: 0.90rem; }
 
-  table { width: 100%; border-collapse: collapse; margin: 12px 0 18px 0; font-size: 0.85rem; break-inside: avoid; }
-  th { background: #f1f5f9; color: #0f172a; font-weight: 600; text-align: left; padding: 7px 9px; border: 1px solid #cbd5e1; }
-  td { padding: 7px 9px; border: 1px solid #e2e8f0; vertical-align: top; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 14px 0; font-size: 0.83rem; break-inside: avoid; }
+  th { background: #f1f5f9; color: #0f172a; font-weight: 600; text-align: left; padding: 6px 8px; border: 1px solid #cbd5e1; }
+  td { padding: 6px 8px; border: 1px solid #e2e8f0; vertical-align: top; }
   tr:nth-child(even) { background-color: #f8fafc; }
 
   .diagram-container {
-    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
-    padding: 14px; margin: 14px 0; text-align: center; break-inside: avoid;
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;
+    padding: 10px; margin: 12px 0; text-align: center; break-inside: avoid;
   }
-  .diagram-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 8px; }
+  .diagram-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 6px; }
 
   .callout {
     border-left: 4px solid #0284c7; background: #f0f9ff;
-    padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 12px 0; font-size: 0.9rem; break-inside: avoid;
+    padding: 8px 12px; border-radius: 0 6px 6px 0; margin: 10px 0; font-size: 0.88rem; break-inside: avoid;
   }
   .callout-highlight { border-left-color: #10b981; background: #ecfdf5; }
 
-  code { font-family: 'JetBrains Mono', Consolas, monospace; font-size: 0.85em; background: #f1f5f9; color: #0369a1; padding: 2px 5px; border-radius: 3px; }
+  code { font-family: 'JetBrains Mono', Consolas, monospace; font-size: 0.85em; background: #f1f5f9; color: #0369a1; padding: 2px 4px; border-radius: 3px; }
   pre {
-    background: #0f172a; color: #f8fafc; padding: 12px; border-radius: 6px;
-    font-family: 'JetBrains Mono', Consolas, monospace; font-size: 0.82rem; overflow-x: auto; margin: 12px 0;
+    background: #0f172a; color: #f8fafc; padding: 10px; border-radius: 6px;
+    font-family: 'JetBrains Mono', Consolas, monospace; font-size: 0.78rem; overflow-x: auto; margin: 8px 0;
   }
-  ul, ol { margin: 0 0 12px 0; padding-left: 20px; font-size: 0.92rem; }
-  li { margin-bottom: 4px; }
+  ul, ol { margin: 0 0 10px 0; padding-left: 18px; font-size: 0.88rem; }
+  li { margin-bottom: 3px; }
+
+  .page-break {
+    page-break-before: always;
+  }
 </style>
 </head>
 <body>
@@ -143,7 +150,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 <section>
   <h2>Executive Summary & Response to Faculty Guidance</h2>
   <p>
-    We sincerely appreciate the professor's encouraging and insightful feedback on our preliminary submission. In particular, we welcome your strong recommendation regarding <strong>Option 2: Smart Campus Autonomous Courier Rover Logistics for Miami Dade College Facilities</strong>. 
+    We sincerely appreciate the professor's encouraging and insightful feedback on our preliminary submission. In particular, we welcome your strong recommendation regarding <strong>Option 2: Smart Campus Autonomous Courier Rover Logistics for Miami Dade College Facilities</strong>.
   </p>
   <p>
     Below, our team provides the rigorous operational processes, agent definitions, reinforcement learning formulation, and causal feedback loops requested. Both options are expanded, with profound emphasis on Option 2 to confirm that our 4-student team has distinct, substantial technical responsibilities spanning Discrete-Event Modeling, Agent-Based interactions, Reinforcement Learning, and interactive dashboard analytics.
@@ -166,24 +173,24 @@ HTML_CONTENT = """<!DOCTYPE html>
     <div class="diagram-title">Interconnected DES Campus Logistics Process Flowchart</div>
     <div class="mermaid">
 flowchart LR
-    R1["1. Request Gen<br>(Mail, Lab Samples, Hardware)"] --> R2["2. SLA Sorting &<br>Priority Categorization"]
-    R2 --> R3["3. Dynamic Batching<br>(Multi-Compartment Locker)"]
-    R3 --> R4["4. Dispatch Decision<br>(RL Policy vs FIFO)"]
+    R1["1. Request Gen<br>(Mail, Lab Samples, Hardware)"] --> R2["2. SLA Sorting &<br>Priority Tiers"]
+    R2 --> R3["3. Dynamic Batching<br>(3-Bin Modular Lockbox)"]
+    R3 --> R4["4. Dispatch Decision<br>(PPO / Q-Learning Policy)"]
     R4 --> R5["5. Pickup at Building Hub<br>(Loading Delay)"]
     R5 --> R6["6. Transit on Walkways<br>(Pedestrian Density Drag)"]
     R6 --> R7{"7. Delivery Attempt"}
     R7 -->|"Recipient Present"| R8["Completed Delivery<br>(SLA Recorded)"]
-    R7 -->|"Recipient Absent<br>(Timeout)"| R9["Fallback to Smart Locker<br>or Reroute to Depot"]
+    R7 -->|"Recipient Absent<br>(Timeout)"| R9["Deposit in Smart Locker<br>or Reroute to Depot"]
     R8 --> R10{"Battery State?"}
     R9 --> R10
-    R10 -->|"SOC < Threshold"| R11["Autonomous Docking at Station D"]
+    R10 -->|"SOC < 25%"| R11["Autonomous Docking at Station D"]
     R10 -->|"SOC Safe & Demand High"| R3
     </div>
   </div>
 
   <ol>
     <li>
-      <strong>Request Generation Subsystem:</strong> Dynamic arrival rates driven by campus schedule phases (morning administrative mail bursts, midday student lab sample transfers, afternoon urgent department dispatches). Models Poisson arrivals with time-dependent arrival rates $\lambda(t)$.
+      <strong>Request Generation Subsystem:</strong> Dynamic arrival rates driven by campus schedule phases (morning administrative mail bursts, midday student lab sample transfers, afternoon urgent department dispatches). Models Poisson arrivals with time-dependent arrival rates &lambda;(t).
     </li>
     <li>
       <strong>Priority & Service Level Agreement (SLA) Stratification:</strong> Requests are segregated into three tiers:
@@ -194,7 +201,7 @@ flowchart LR
       </ul>
     </li>
     <li>
-      <strong>Multi-Compartment Dynamic Batching:</strong> Each rover is equipped with 3 lockable modular cargo bins. The system must decide whether to dispatch a rover immediately with a single urgent item or hold for 3–5 minutes to batch co-located packages heading to adjacent campus buildings (e.g., Building 1 $\rightarrow$ Science Building 2 $\rightarrow$ Student Center).
+      <strong>Multi-Compartment Dynamic Batching:</strong> Each rover is equipped with 3 lockable modular cargo bins. The system decides whether to dispatch a rover immediately with a single urgent item or hold for 3–5 minutes to batch co-located packages heading to adjacent campus buildings (e.g., Central Receiving &rarr; Science Complex &rarr; Student Center).
     </li>
     <li>
       <strong>Dispatching & Resource Contention:</strong> Allocates ready rovers from the active fleet. If all rovers are in transit or recharging, requests accumulate in building holding queues, triggering SLA violation penalties.
@@ -206,11 +213,11 @@ flowchart LR
       <strong>Delivery Handshake & Unsuccessful Delivery Subsystem:</strong> Upon arriving at a destination hub, the recipient is alerted. If the recipient does not claim the package within a 3-minute window:
       <ul>
         <li><em>Primary Fallback:</em> Deposit package into a secure automated campus parcel locker (if slots are available).</li>
-        <li><em>Secondary Fallback:</em> Abort delivery, flag as "Delivery Exception", retain package in rover cargo bin, and schedule a return trip to Central Receiving, consuming cargo capacity.</li>
+        <li><em>Secondary Fallback:</em> Abort delivery, flag as "Delivery Exception", retain package in rover cargo bin, and schedule a return trip to Central Receiving, directly restricting cargo capacity.</li>
       </ul>
     </li>
     <li>
-      <strong>Energy Replenishment & Depot Management:</strong> Rovers monitor State-of-Charge (SOC). When entering charging depot (Station D), rovers contend for limited inductive charging slots (e.g., 2 pads for 5 rovers). The system must balance fast-charging downtime against peak dispatch availability.
+      <strong>Energy Replenishment & Depot Management:</strong> Rovers monitor State-of-Charge (SOC). When entering charging depot (Station D), rovers contend for limited inductive charging slots (2 pads for 3–5 rovers). The system balances fast-charging downtime against peak dispatch availability.
     </li>
   </ol>
 
@@ -228,7 +235,7 @@ flowchart LR
       <tr>
         <td><strong>Autonomous Courier Rover</strong> (Active Agent)</td>
         <td>
-          • ID, $(X, Y)$ position, velocity<br>
+          • ID, (X, Y) coordinates, velocity<br>
           • Battery State of Charge (0–100%)<br>
           • 3-Slot Modular Cargo Inventory<br>
           • Cumulative mileage & degradation rate
@@ -337,7 +344,7 @@ flowchart TD
   </p>
 
   <div class="callout">
-    <strong>State Space Vector $S_t \in \mathbb{R}^{10}$ (Observed Every Decision Step):</strong>
+    <strong>State Space Vector S<sub>t</sub> &isin; &reals;<sup>10</sup> (Observed Every Decision Step):</strong>
     <ol>
       <li><code>[Q_HubA, Q_HubB, Q_HubC]</code>: Queue depths at Central Mail, Science Lab, and Admin Hub.</li>
       <li><code>[U_HubA, U_HubB, U_HubC]</code>: Number of urgent (Tier 1) parcels awaiting immediate pickup.</li>
@@ -348,20 +355,19 @@ flowchart TD
   </div>
 
   <div class="callout">
-    <strong>Action Space $A_t$ (Discrete Combinatorial Decisions):</strong>
+    <strong>Action Space A<sub>t</sub> (Discrete Combinatorial Decisions):</strong>
     <ul>
-      <li><code>Action 0..2</code>: <strong>Immediate Dispatch:</strong> Assign available rover to Hub $A, B$, or $C$ for single urgent express delivery.</li>
+      <li><code>Action 0..2</code>: <strong>Immediate Express Dispatch:</strong> Assign available rover to Hub A, B, or C for single urgent delivery.</li>
       <li><code>Action 3..5</code>: <strong>Batch & Route:</strong> Instruct rover to load 2–3 co-located parcels across adjacent buildings before departure.</li>
-      <li><code>Action 6</code>: <strong>Opportunistic Recharging:</strong> Pull a moderately charged rover (e.g. 55% SOC) into Station D for a brief top-off before the upcoming class rush hour.</li>
+      <li><code>Action 6</code>: <strong>Opportunistic Top-off Charge:</strong> Pull a moderately charged rover (e.g. 55% SOC) into Station D for a brief top-off before the upcoming class rush hour.</li>
       <li><code>Action 7</code>: <strong>Congestion-Bypass Route:</strong> Route rover via secondary perimeter pathway to avoid high-density pedestrian courtyards.</li>
       <li><code>Action 8</code>: <strong>Standby:</strong> Hold rover at strategic central node to conserve battery.</li>
     </ul>
   </div>
 
   <div class="callout">
-    <strong>Multi-Objective Reward Function ($R_t$):</strong>
-    $$R_t = + w_1 \cdot N_{\text{delivered}} - w_2 \sum \text{WaitTimes} - w_3 \sum \text{SLA\_Violations} - w_4 \cdot \text{EnergyConsumed} - w_5 \cdot \mathbb{I}(\text{Rover Stranded})$$
-    <em>Weights: $w_1 = +15, w_2 = 0.5, w_3 = 25, w_4 = 0.8, w_5 = 100$.</em>
+    <strong>Multi-Objective Reward Function (R<sub>t</sub>):</strong><br>
+    <code>R<sub>t</sub> = + 15 &times; N<sub>delivered</sub> - 0.5 &times; &sum; WaitTimes - 25 &times; &sum; SLA_Violations - 0.8 &times; EnergyConsumed - 100 &times; I(Rover Stranded)</code>
   </div>
 
   <p>
@@ -378,7 +384,7 @@ flowchart TD
   </p>
   <ul>
     <li>
-      <strong>Operational Processes:</strong> Student bill-of-materials request $\rightarrow$ inventory shelf part retrieval (Station A) $\rightarrow$ soldering bench transport (Station B) $\rightarrow$ QA sensor calibration delay (Station C) $\rightarrow$ tool return $\rightarrow$ charging cycle (Station D). Bottlenecks occur when multiple capstone teams request testing bench access simultaneously while AMRs deplete batteries.
+      <strong>Operational Processes:</strong> Student bill-of-materials request &rarr; inventory shelf part retrieval (Station A) &rarr; soldering bench transport (Station B) &rarr; QA sensor calibration delay (Station C) &rarr; tool return &rarr; charging cycle (Station D). Bottlenecks occur when multiple capstone teams request testing bench access simultaneously while AMRs deplete batteries.
     </li>
     <li>
       <strong>Agent Types:</strong> 3 Differential AMRs (Inspector Alpha, Logistics Beta, Courier Gamma), Unitree G1 Humanoid (safety inspector), Student workbenches (A–C), Inductive charge pads (Station D).
@@ -390,7 +396,7 @@ flowchart TD
 </section>
 
 <!-- ==================== WBS & TEAMWORK ==================== -->
-<section>
+<section class="page-break">
   <h2>SECTION 3: 4-STUDENT TECHNICAL RESPONSIBILITIES & 4-WEEK ROADMAP</h2>
   <table>
     <thead>
@@ -442,10 +448,8 @@ flowchart TD
       </tr>
     </tbody>
   </table>
-</section>
 
-<section>
-  <h2>Conclusion & Requested Approval</h2>
+  <h3>Conclusion & Requested Approval</h3>
   <p>
     Based on the professor's strong preference, <strong>our team enthusiastically selects Option 2 (MDC Smart Campus Autonomous Courier Rover Logistics)</strong> as our primary group project. The mathematical foundations, simulation architecture, code scaffolds, and team work breakdown are fully prepared for immediate execution.
   </p>
