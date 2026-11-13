@@ -68,7 +68,17 @@ selected_policy = st.sidebar.selectbox(
 )
 
 st.sidebar.divider()
-st.sidebar.info("Developed by: Jorge A Mendoza, Jordan Gonzalez, Illia Shybanov, Ricardo Molina Gonzalez")
+st.sidebar.markdown("""
+### 👥 Project Team & Roles
+* **Jorge A Mendoza** — *Project Manager & AnyLogic Model Architect*
+* **Jordan Gonzalez** — *Reinforcement Learning Engineer*
+* **Illia Shybanov** — *Dashboard & Integration Specialist*
+* **Ricardo Molina Gonzalez** — *Simulation Experiments & Documentation Lead*
+
+---
+**Course:** Simulation for Applied AI  
+**Institution:** Miami Dade College
+""")
 
 # ----------------- Header -----------------
 st.title("🤖 MDC AI & Robotics Lab: Multi-Method Digital Twin")
