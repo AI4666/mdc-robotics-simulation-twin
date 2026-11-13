@@ -1,6 +1,10 @@
 # 🏗️ AnyLogic Multi-Method Simulation Model (`.alp`)
-**Lead Architect:** Jorge A Mendoza  
-**Assisting / Experiments:** Ricardo Molina Gonzalez  
+**Course:** Simulation for Applied AI — Miami Dade College  
+**Project Team:**
+* **Jorge A Mendoza** — Project Manager & AnyLogic Model Architect
+* **Jordan Gonzalez** — Reinforcement Learning Engineer
+* **Illia Shybanov** — Dashboard & Integration Specialist
+* **Ricardo Molina Gonzalez** — Simulation Experiments & Documentation Lead
 
 ---
 
@@ -8,7 +12,8 @@
 This directory holds the primary **AnyLogic 8 simulation project file (`.alp`)** and associated 2D/3D assets.
 
 ### File Structure:
-* `MDC_Robotics_Lab_Simulation.alp` *(To be created / saved here from AnyLogic)*
+* `MDC_Robotics_Lab_Simulation.alp` *(Ready to open & run in AnyLogic 8)*
+* `generate_alp.py` *(Python generator script for model recreation & validation)*
 * `assets/robotics_lab_floorplan.png` *(High-resolution scale floorplan of the Miami Dade College lab room)*
 
 ---

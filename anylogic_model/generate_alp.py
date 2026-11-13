@@ -1,0 +1,1094 @@
+#!/usr/bin/env python3
+"""
+AnyLogic Model Generator for MDC Robotics Lab Simulation
+Generates: anylogic_model/MDC_Robotics_Lab_Simulation.alp
+Course: Simulation for Applied AI - Miami Dade College
+Team Members:
+  - Jorge A Mendoza (Project Manager & AnyLogic Model Architect)
+  - Jordan Gonzalez (Reinforcement Learning Engineer)
+  - Illia Shybanov (Dashboard & Integration Specialist)
+  - Ricardo Molina Gonzalez (Simulation Experiments & Documentation Lead)
+"""
+
+import sys
+from pathlib import Path
+
+ALP_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
+<!--
+*************************************************
+	         AnyLogic Project File
+  Miami Dade College - Simulation for Applied AI
+  Project: MDC AI & Robotics Lab Digital Twin
+  Team Members:
+    - Jorge A Mendoza (Project Manager & AnyLogic Model Architect)
+    - Jordan Gonzalez (Reinforcement Learning Engineer)
+    - Illia Shybanov (Dashboard & Integration Specialist)
+    - Ricardo Molina Gonzalez (Simulation Experiments & Documentation Lead)
+*************************************************
+-->
+<AnyLogicWorkspace WorkspaceVersion="1.9" AnyLogicVersion="8.9.10.202609231424" AlpVersion="8.9.10">
+<Model>
+	<Id>1794500000001</Id>
+	<Name><![CDATA[MDC_Robotics_Lab_Simulation]]></Name>
+	<EngineVersion>6</EngineVersion>
+	<JavaPackageName><![CDATA[mdc_robotics_lab_simulation]]></JavaPackageName>
+	<ModelTimeUnit><![CDATA[Minute]]></ModelTimeUnit>
+	<Folders>
+	</Folders>
+	<ActiveObjectClasses>
+		<!--   =========   Active Object Class: Main   ========  -->
+		<ActiveObjectClass>
+			<Id>1794500000010</Id>
+			<Name><![CDATA[Main]]></Name>
+			<Generic>false</Generic>
+			<GenericParameter>
+				<Id>1794500000011</Id>
+				<Name><![CDATA[1794500000011]]></Name>
+				<GenericParameterValue Class="CodeValue">
+					<Code><![CDATA[T extends Agent]]></Code>
+				</GenericParameterValue>
+				<GenericParameterLabel><![CDATA[Generic parameter:]]></GenericParameterLabel>
+			</GenericParameter>
+			<FlowChartsUsage>ENTITY</FlowChartsUsage>
+			<SamplesToKeep>100</SamplesToKeep>
+			<LimitNumberOfArrayElements>false</LimitNumberOfArrayElements>
+			<ElementsLimitValue>100</ElementsLimitValue>
+			<MakeDefaultViewArea>true</MakeDefaultViewArea>
+			<SceneGridColor/>
+			<SceneBackgroundColor>-13421773</SceneBackgroundColor>
+			<AgentProperties>
+				<EnvironmentDefinesInitialLocation>true</EnvironmentDefinesInitialLocation>
+				<RotateAnimationTowardsMovement>true</RotateAnimationTowardsMovement>
+				<RotateAnimationVertically>false</RotateAnimationVertically>
+				<VelocityCode Class="CodeUnitValue">
+					<Code><![CDATA[1.2]]></Code>
+					<Unit Class="SpeedUnits"><![CDATA[MPS]]></Unit>
+				</VelocityCode>
+				<MessageType><![CDATA[Object]]></MessageType>
+			</AgentProperties>
+			<EnvironmentProperties>
+				<EnableSteps>false</EnableSteps>
+				<StepDurationCode Class="CodeUnitValue">
+					<Code><![CDATA[1.0]]></Code>
+					<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+				</StepDurationCode>
+				<SpaceType>CONTINUOUS</SpaceType>
+				<WidthCode><![CDATA[1000]]></WidthCode>
+				<HeightCode><![CDATA[700]]></HeightCode>
+				<ZHeightCode><![CDATA[0]]></ZHeightCode>
+				<ColumnsCountCode><![CDATA[100]]></ColumnsCountCode>
+				<RowsCountCode><![CDATA[100]]></RowsCountCode>
+				<NeigborhoodType>MOORE</NeigborhoodType>
+				<LayoutType>USER_DEF</LayoutType>
+				<NetworkType>USER_DEF</NetworkType>
+				<ConnectionsPerAgentCode><![CDATA[2]]></ConnectionsPerAgentCode>
+				<ConnectionsRangeCode><![CDATA[50]]></ConnectionsRangeCode>
+				<NeighborLinkFractionCode><![CDATA[0.95]]></NeighborLinkFractionCode>
+				<MCode><![CDATA[10]]></MCode>
+			</EnvironmentProperties>
+
+			<Parameters>
+				<Parameter>
+					<Id>1794500000020</Id>
+					<Name><![CDATA[numberOfAMRs]]></Name>
+					<Type><![CDATA[int]]></Type>
+					<DefaultValue Class="CodeValue">
+						<Code><![CDATA[3]]></Code>
+					</DefaultValue>
+					<ParameterEditor>
+						<Id>1794500000021</Id>
+						<Label><![CDATA[Active AMRs in Fleet]]></Label>
+						<EditorContolType>TEXT_BOX</EditorContolType>
+					</ParameterEditor>
+				</Parameter>
+				<Parameter>
+					<Id>1794500000022</Id>
+					<Name><![CDATA[numberOfDocks]]></Name>
+					<Type><![CDATA[int]]></Type>
+					<DefaultValue Class="CodeValue">
+						<Code><![CDATA[2]]></Code>
+					</DefaultValue>
+					<ParameterEditor>
+						<Id>1794500000023</Id>
+						<Label><![CDATA[Charging Docks Capacity]]></Label>
+						<EditorContolType>TEXT_BOX</EditorContolType>
+					</ParameterEditor>
+				</Parameter>
+				<Parameter>
+					<Id>1794500000024</Id>
+					<Name><![CDATA[studentArrivalRate]]></Name>
+					<Type><![CDATA[double]]></Type>
+					<DefaultValue Class="CodeValue">
+						<Code><![CDATA[18.0]]></Code>
+					</DefaultValue>
+					<ParameterEditor>
+						<Id>1794500000025</Id>
+						<Label><![CDATA[Student Order Influx (req/hr)]]></Label>
+						<EditorContolType>TEXT_BOX</EditorContolType>
+					</ParameterEditor>
+				</Parameter>
+				<Parameter>
+					<Id>1794500000026</Id>
+					<Name><![CDATA[dispatchPolicy]]></Name>
+					<Type><![CDATA[int]]></Type>
+					<DefaultValue Class="CodeValue">
+						<Code><![CDATA[0]]></Code>
+					</DefaultValue>
+					<ParameterEditor>
+						<Id>1794500000027</Id>
+						<Label><![CDATA[Dispatch Policy (0=FIFO, 1=Q-Learning, 2=PPO)]]></Label>
+						<EditorContolType>TEXT_BOX</EditorContolType>
+					</ParameterEditor>
+				</Parameter>
+				<Parameter>
+					<Id>1794500000028</Id>
+					<Name><![CDATA[chargingThreshold]]></Name>
+					<Type><![CDATA[double]]></Type>
+					<DefaultValue Class="CodeValue">
+						<Code><![CDATA[0.20]]></Code>
+					</DefaultValue>
+					<ParameterEditor>
+						<Id>1794500000029</Id>
+						<Label><![CDATA[Battery Low Charging Threshold (20%)]]></Label>
+						<EditorContolType>TEXT_BOX</EditorContolType>
+					</ParameterEditor>
+				</Parameter>
+				<Parameter>
+					<Id>1794500000030</Id>
+					<Name><![CDATA[batteryDischargeRate]]></Name>
+					<Type><![CDATA[double]]></Type>
+					<DefaultValue Class="CodeValue">
+						<Code><![CDATA[0.02]]></Code>
+					</DefaultValue>
+					<ParameterEditor>
+						<Id>1794500000031</Id>
+						<Label><![CDATA[Battery Discharge Rate (% per min)]]></Label>
+						<EditorContolType>TEXT_BOX</EditorContolType>
+					</ParameterEditor>
+				</Parameter>
+			</Parameters>
+
+			<PlainVariables>
+				<PlainVariable Visibility="PUBLIC">
+					<Id>1794500000040</Id>
+					<Name><![CDATA[averageStudentWaitTime]]></Name>
+					<Type><![CDATA[double]]></Type>
+					<InitialValue Class="CodeValue">
+						<Code><![CDATA[0.0]]></Code>
+					</InitialValue>
+				</PlainVariable>
+				<PlainVariable Visibility="PUBLIC">
+					<Id>1794500000041</Id>
+					<Name><![CDATA[completedOrdersPerHour]]></Name>
+					<Type><![CDATA[double]]></Type>
+					<InitialValue Class="CodeValue">
+						<Code><![CDATA[0.0]]></Code>
+					</InitialValue>
+				</PlainVariable>
+				<PlainVariable Visibility="PUBLIC">
+					<Id>1794500000042</Id>
+					<Name><![CDATA[totalDeliveredCount]]></Name>
+					<Type><![CDATA[int]]></Type>
+					<InitialValue Class="CodeValue">
+						<Code><![CDATA[0]]></Code>
+					</InitialValue>
+				</PlainVariable>
+				<PlainVariable Visibility="PUBLIC">
+					<Id>1794500000043</Id>
+					<Name><![CDATA[fleetUtilization]]></Name>
+					<Type><![CDATA[double]]></Type>
+					<InitialValue Class="CodeValue">
+						<Code><![CDATA[0.0]]></Code>
+					</InitialValue>
+				</PlainVariable>
+			</PlainVariables>
+
+			<Connectors>
+				<Connector>
+					<Id>1794500000101</Id>
+					<Name><![CDATA[c1]]></Name>
+					<X>140</X><Y>220</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<SourceEmbeddedObjectReference>
+						<PackageName><![CDATA[mdc_robotics_lab_simulation]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+						<ItemName><![CDATA[orderSource]]></ItemName>
+					</SourceEmbeddedObjectReference>
+					<SourceConnectableItemReference>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Source]]></ClassName>
+						<ItemName><![CDATA[out]]></ItemName>
+					</SourceConnectableItemReference>
+					<TargetEmbeddedObjectReference>
+						<PackageName><![CDATA[mdc_robotics_lab_simulation]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+						<ItemName><![CDATA[orderQueue]]></ItemName>
+					</TargetEmbeddedObjectReference>
+					<TargetConnectableItemReference>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Queue]]></ClassName>
+						<ItemName><![CDATA[in]]></ItemName>
+					</TargetConnectableItemReference>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>80</X><Y>0</Y></Point>
+					</Points>
+				</Connector>
+				<Connector>
+					<Id>1794500000102</Id>
+					<Name><![CDATA[c2]]></Name>
+					<X>260</X><Y>220</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<SourceEmbeddedObjectReference>
+						<PackageName><![CDATA[mdc_robotics_lab_simulation]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+						<ItemName><![CDATA[orderQueue]]></ItemName>
+					</SourceEmbeddedObjectReference>
+					<SourceConnectableItemReference>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Queue]]></ClassName>
+						<ItemName><![CDATA[out]]></ItemName>
+					</SourceConnectableItemReference>
+					<TargetEmbeddedObjectReference>
+						<PackageName><![CDATA[mdc_robotics_lab_simulation]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+						<ItemName><![CDATA[seizeAMR]]></ItemName>
+					</TargetEmbeddedObjectReference>
+					<TargetConnectableItemReference>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Seize]]></ClassName>
+						<ItemName><![CDATA[in]]></ItemName>
+					</TargetConnectableItemReference>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>80</X><Y>0</Y></Point>
+					</Points>
+				</Connector>
+				<Connector>
+					<Id>1794500000103</Id>
+					<Name><![CDATA[c3]]></Name>
+					<X>380</X><Y>220</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<SourceEmbeddedObjectReference>
+						<PackageName><![CDATA[mdc_robotics_lab_simulation]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+						<ItemName><![CDATA[seizeAMR]]></ItemName>
+					</SourceEmbeddedObjectReference>
+					<SourceConnectableItemReference>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Seize]]></ClassName>
+						<ItemName><![CDATA[out]]></ItemName>
+					</SourceConnectableItemReference>
+					<TargetEmbeddedObjectReference>
+						<PackageName><![CDATA[mdc_robotics_lab_simulation]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+						<ItemName><![CDATA[pickupDelay]]></ItemName>
+					</TargetEmbeddedObjectReference>
+					<TargetConnectableItemReference>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Delay]]></ClassName>
+						<ItemName><![CDATA[in]]></ItemName>
+					</TargetConnectableItemReference>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>80</X><Y>0</Y></Point>
+					</Points>
+				</Connector>
+				<Connector>
+					<Id>1794500000104</Id>
+					<Name><![CDATA[c4]]></Name>
+					<X>500</X><Y>220</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<SourceEmbeddedObjectReference>
+						<PackageName><![CDATA[mdc_robotics_lab_simulation]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+						<ItemName><![CDATA[pickupDelay]]></ItemName>
+					</SourceEmbeddedObjectReference>
+					<SourceConnectableItemReference>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Delay]]></ClassName>
+						<ItemName><![CDATA[out]]></ItemName>
+					</SourceConnectableItemReference>
+					<TargetEmbeddedObjectReference>
+						<PackageName><![CDATA[mdc_robotics_lab_simulation]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+						<ItemName><![CDATA[transitDelay]]></ItemName>
+					</TargetEmbeddedObjectReference>
+					<TargetConnectableItemReference>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Delay]]></ClassName>
+						<ItemName><![CDATA[in]]></ItemName>
+					</TargetConnectableItemReference>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>80</X><Y>0</Y></Point>
+					</Points>
+				</Connector>
+				<Connector>
+					<Id>1794500000105</Id>
+					<Name><![CDATA[c5]]></Name>
+					<X>620</X><Y>220</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<SourceEmbeddedObjectReference>
+						<PackageName><![CDATA[mdc_robotics_lab_simulation]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+						<ItemName><![CDATA[transitDelay]]></ItemName>
+					</SourceEmbeddedObjectReference>
+					<SourceConnectableItemReference>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Delay]]></ClassName>
+						<ItemName><![CDATA[out]]></ItemName>
+					</SourceConnectableItemReference>
+					<TargetEmbeddedObjectReference>
+						<PackageName><![CDATA[mdc_robotics_lab_simulation]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+						<ItemName><![CDATA[releaseAMR]]></ItemName>
+					</TargetEmbeddedObjectReference>
+					<TargetConnectableItemReference>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Release]]></ClassName>
+						<ItemName><![CDATA[in]]></ItemName>
+					</TargetConnectableItemReference>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>80</X><Y>0</Y></Point>
+					</Points>
+				</Connector>
+				<Connector>
+					<Id>1794500000106</Id>
+					<Name><![CDATA[c6]]></Name>
+					<X>740</X><Y>220</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<SourceEmbeddedObjectReference>
+						<PackageName><![CDATA[mdc_robotics_lab_simulation]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+						<ItemName><![CDATA[releaseAMR]]></ItemName>
+					</SourceEmbeddedObjectReference>
+					<SourceConnectableItemReference>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Release]]></ClassName>
+						<ItemName><![CDATA[out]]></ItemName>
+					</SourceConnectableItemReference>
+					<TargetEmbeddedObjectReference>
+						<PackageName><![CDATA[mdc_robotics_lab_simulation]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+						<ItemName><![CDATA[deliveredSink]]></ItemName>
+					</TargetEmbeddedObjectReference>
+					<TargetConnectableItemReference>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Sink]]></ClassName>
+						<ItemName><![CDATA[in]]></ItemName>
+					</TargetConnectableItemReference>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>80</X><Y>0</Y></Point>
+					</Points>
+				</Connector>
+			</Connectors>
+
+			<EmbeddedObjects>
+				<!-- 1. Source Block: Poisson Student Order Arrivals -->
+				<EmbeddedObject>
+					<Id>1794500000201</Id>
+					<Name><![CDATA[orderSource]]></Name>
+					<X>100</X><Y>200</Y>
+					<Label><X>-15</X><Y>-25</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<ActiveObjectClass>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Source]]></ClassName>
+					</ActiveObjectClass>
+					<GenericParameterSubstitute>
+						<GenericParameterSubstituteReference>
+							<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+							<ClassName><![CDATA[Source]]></ClassName>
+							<ItemName><![CDATA[1412336242928]]></ItemName>
+						</GenericParameterSubstituteReference>
+					</GenericParameterSubstitute>
+					<Parameters>
+						<Parameter>
+							<Name><![CDATA[arrivalType]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[self.INTERARRIVAL_TIME]]></Code>
+							</Value>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[interarrivalTime]]></Name>
+							<Value Class="CodeUnitValue">
+								<Code><![CDATA[exponential(60.0 / studentArrivalRate)]]></Code>
+								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+							</Value>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[newEntity]]></Name>
+							<Value Class="EntityCodeValue">
+								<EntityEmbeddedObject>
+									<ActiveObjectClass>
+										<PackageName><![CDATA[mdc_robotics_lab_simulation]]></PackageName>
+										<ClassName><![CDATA[StudentOrder]]></ClassName>
+									</ActiveObjectClass>
+									<GenericParameterSubstitute>
+										<GenericParameterSubstituteReference>
+											<PackageName><![CDATA[mdc_robotics_lab_simulation]]></PackageName>
+											<ClassName><![CDATA[StudentOrder]]></ClassName>
+											<ItemName><![CDATA[1794500000501]]></ItemName>
+										</GenericParameterSubstituteReference>
+									</GenericParameterSubstitute>
+									<Parameters>
+									</Parameters>
+								</EntityEmbeddedObject>
+							</Value>
+						</Parameter>
+					</Parameters>
+				</EmbeddedObject>
+
+				<!-- 2. Queue Block: Prioritized Buffer for Student Work Orders -->
+				<EmbeddedObject>
+					<Id>1794500000202</Id>
+					<Name><![CDATA[orderQueue]]></Name>
+					<X>220</X><Y>200</Y>
+					<Label><X>-15</X><Y>-25</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<ActiveObjectClass>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Queue]]></ClassName>
+					</ActiveObjectClass>
+					<GenericParameterSubstitute>
+						<GenericParameterSubstituteReference>
+							<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+							<ClassName><![CDATA[Queue]]></ClassName>
+							<ItemName><![CDATA[1412336242932]]></ItemName>
+						</GenericParameterSubstituteReference>
+					</GenericParameterSubstitute>
+					<Parameters>
+						<Parameter>
+							<Name><![CDATA[capacity]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[100]]></Code>
+							</Value>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[queuing]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[dispatchPolicy == 0 ? self.QUEUING_FIFO : self.QUEUING_PRIORITY]]></Code>
+							</Value>
+						</Parameter>
+					</Parameters>
+				</EmbeddedObject>
+
+				<!-- 3. Seize Block: Assign AMR from Fleet Pool -->
+				<EmbeddedObject>
+					<Id>1794500000203</Id>
+					<Name><![CDATA[seizeAMR]]></Name>
+					<X>340</X><Y>200</Y>
+					<Label><X>-15</X><Y>-25</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<ActiveObjectClass>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Seize]]></ClassName>
+					</ActiveObjectClass>
+					<GenericParameterSubstitute>
+						<GenericParameterSubstituteReference>
+							<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+							<ClassName><![CDATA[Seize]]></ClassName>
+							<ItemName><![CDATA[1412336243147]]></ItemName>
+						</GenericParameterSubstituteReference>
+					</GenericParameterSubstitute>
+					<Parameters>
+						<Parameter>
+							<Name><![CDATA[resourcePool]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[amrPool]]></Code>
+							</Value>
+						</Parameter>
+					</Parameters>
+				</EmbeddedObject>
+
+				<!-- 4. Delay Block: Staging & Picking Parts at Station A -->
+				<EmbeddedObject>
+					<Id>1794500000204</Id>
+					<Name><![CDATA[pickupDelay]]></Name>
+					<X>460</X><Y>200</Y>
+					<Label><X>-15</X><Y>-25</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<ActiveObjectClass>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Delay]]></ClassName>
+					</ActiveObjectClass>
+					<GenericParameterSubstitute>
+						<GenericParameterSubstituteReference>
+							<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+							<ClassName><![CDATA[Delay]]></ClassName>
+							<ItemName><![CDATA[1412336242930]]></ItemName>
+						</GenericParameterSubstituteReference>
+					</GenericParameterSubstitute>
+					<Parameters>
+						<Parameter>
+							<Name><![CDATA[delayTime]]></Name>
+							<Value Class="CodeUnitValue">
+								<Code><![CDATA[triangular(0.5, 1.0, 1.5)]]></Code>
+								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+							</Value>
+						</Parameter>
+					</Parameters>
+				</EmbeddedObject>
+
+				<!-- 5. Delay Block: Transit across Lab to Destination Station -->
+				<EmbeddedObject>
+					<Id>1794500000205</Id>
+					<Name><![CDATA[transitDelay]]></Name>
+					<X>580</X><Y>200</Y>
+					<Label><X>-15</X><Y>-25</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<ActiveObjectClass>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Delay]]></ClassName>
+					</ActiveObjectClass>
+					<GenericParameterSubstitute>
+						<GenericParameterSubstituteReference>
+							<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+							<ClassName><![CDATA[Delay]]></ClassName>
+							<ItemName><![CDATA[1412336242930]]></ItemName>
+						</GenericParameterSubstituteReference>
+					</GenericParameterSubstitute>
+					<Parameters>
+						<Parameter>
+							<Name><![CDATA[delayTime]]></Name>
+							<Value Class="CodeUnitValue">
+								<Code><![CDATA[triangular(0.8, 1.5, 2.8)]]></Code>
+								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+							</Value>
+						</Parameter>
+					</Parameters>
+				</EmbeddedObject>
+
+				<!-- 6. Release Block: Free AMR Back to Resource Pool -->
+				<EmbeddedObject>
+					<Id>1794500000206</Id>
+					<Name><![CDATA[releaseAMR]]></Name>
+					<X>700</X><Y>200</Y>
+					<Label><X>-15</X><Y>-25</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<ActiveObjectClass>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Release]]></ClassName>
+					</ActiveObjectClass>
+					<GenericParameterSubstitute>
+						<GenericParameterSubstituteReference>
+							<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+							<ClassName><![CDATA[Release]]></ClassName>
+							<ItemName><![CDATA[1412336243149]]></ItemName>
+						</GenericParameterSubstituteReference>
+					</GenericParameterSubstitute>
+					<Parameters>
+					</Parameters>
+				</EmbeddedObject>
+
+				<!-- 7. Sink Block: Record Delivery Metrics & Wait Times -->
+				<EmbeddedObject>
+					<Id>1794500000207</Id>
+					<Name><![CDATA[deliveredSink]]></Name>
+					<X>820</X><Y>200</Y>
+					<Label><X>-15</X><Y>-25</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<ActiveObjectClass>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Sink]]></ClassName>
+					</ActiveObjectClass>
+					<GenericParameterSubstitute>
+						<GenericParameterSubstituteReference>
+							<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+							<ClassName><![CDATA[Sink]]></ClassName>
+							<ItemName><![CDATA[1412336242929]]></ItemName>
+						</GenericParameterSubstituteReference>
+					</GenericParameterSubstitute>
+					<Parameters>
+						<Parameter>
+							<Name><![CDATA[onEnter]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[
+totalDeliveredCount++;
+double wait = time() - agent.creationTime;
+averageStudentWaitTime = (averageStudentWaitTime * (totalDeliveredCount - 1) + wait) / totalDeliveredCount;
+completedOrdersPerHour = totalDeliveredCount / (time() / 60.0);
+								]]></Code>
+							</Value>
+						</Parameter>
+					</Parameters>
+				</EmbeddedObject>
+
+				<!-- 8. Resource Pool: Mobile Robot Fleet (AMRs) -->
+				<EmbeddedObject>
+					<Id>1794500000208</Id>
+					<Name><![CDATA[amrPool]]></Name>
+					<X>340</X><Y>300</Y>
+					<Label><X>-15</X><Y>-25</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<ActiveObjectClass>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[ResourcePool]]></ClassName>
+					</ActiveObjectClass>
+					<GenericParameterSubstitute>
+						<GenericParameterSubstituteReference>
+							<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+							<ClassName><![CDATA[ResourcePool]]></ClassName>
+							<ItemName><![CDATA[1412336243135]]></ItemName>
+						</GenericParameterSubstituteReference>
+					</GenericParameterSubstitute>
+					<Parameters>
+						<Parameter>
+							<Name><![CDATA[type]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[self.RESOURCE_MOVING]]></Code>
+							</Value>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[capacityDefinitionType]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[self.CAPACITY_DIRECT]]></Code>
+							</Value>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[capacity]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[numberOfAMRs]]></Code>
+							</Value>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[speed]]></Name>
+							<Value Class="CodeUnitValue">
+								<Code><![CDATA[1.2]]></Code>
+								<Unit Class="SpeedUnits"><![CDATA[MPS]]></Unit>
+							</Value>
+						</Parameter>
+					</Parameters>
+				</EmbeddedObject>
+			</EmbeddedObjects>
+
+			<!-- 2D Canvas Presentation & Documentation Title Block -->
+			<Shapes>
+				<!-- Main Header Title -->
+				<Text>
+					<Id>1794500000301</Id>
+					<Name><![CDATA[txtTitle]]></Name>
+					<X>60</X><Y>40</Y>
+					<Label><X>0</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<Color>-1</Color>
+					<Text><![CDATA[MDC AI & Robotics Lab: Multi-Method Simulation Twin]]></Text>
+					<Font>
+						<Name>Arial</Name>
+						<Size>22</Size>
+						<Style>1</Style>
+					</Font>
+				</Text>
+				<Text>
+					<Id>1794500000302</Id>
+					<Name><![CDATA[txtCourse]]></Name>
+					<X>60</X><Y>70</Y>
+					<Label><X>0</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<Color>-3866628</Color>
+					<Text><![CDATA[Simulation for Applied AI — Miami Dade College]]></Text>
+					<Font>
+						<Name>Arial</Name>
+						<Size>14</Size>
+						<Style>2</Style>
+					</Font>
+				</Text>
+
+				<!-- Team Credits Roster Callout Box -->
+				<Rectangle>
+					<Id>1794500000303</Id>
+					<Name><![CDATA[rectTeamBox]]></Name>
+					<X>60</X><Y>400</Y>
+					<Label><X>0</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<Z>0</Z>
+					<LineColor>-12490271</LineColor>
+					<FillColor>-15065564</FillColor>
+					<LineWidth>2</LineWidth>
+					<Width>820</Width>
+					<Height>140</Height>
+				</Rectangle>
+				<Text>
+					<Id>1794500000304</Id>
+					<Name><![CDATA[txtTeamHeading]]></Name>
+					<X>80</X><Y>415</Y>
+					<Label><X>0</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<Color>-13382401</Color>
+					<Text><![CDATA[👥 PROJECT TEAM & WORK BREAKDOWN]]></Text>
+					<Font>
+						<Name>Arial</Name>
+						<Size>13</Size>
+						<Style>1</Style>
+					</Font>
+				</Text>
+				<Text>
+					<Id>1794500000305</Id>
+					<Name><![CDATA[txtTeamMember1]]></Name>
+					<X>80</X><Y>440</Y>
+					<Label><X>0</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<Color>-1</Color>
+					<Text><![CDATA[• Jorge A Mendoza — Project Manager & AnyLogic Model Architect (DES Process Flow, ABM Statecharts, 3D Canvas)]]></Text>
+					<Font>
+						<Name>Arial</Name>
+						<Size>11</Size>
+						<Style>0</Style>
+					</Font>
+				</Text>
+				<Text>
+					<Id>1794500000306</Id>
+					<Name><![CDATA[txtTeamMember2]]></Name>
+					<X>80</X><Y>460</Y>
+					<Label><X>0</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<Color>-1</Color>
+					<Text><![CDATA[• Jordan Gonzalez — Reinforcement Learning Engineer (Custom Gymnasium Env, Q-Learning & PPO Optimization)]]></Text>
+					<Font>
+						<Name>Arial</Name>
+						<Size>11</Size>
+						<Style>0</Style>
+					</Font>
+				</Text>
+				<Text>
+					<Id>1794500000307</Id>
+					<Name><![CDATA[txtTeamMember3]]></Name>
+					<X>80</X><Y>480</Y>
+					<Label><X>0</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<Color>-1</Color>
+					<Text><![CDATA[• Illia Shybanov — Dashboard & Integration Specialist (Streamlit Executive Dashboard, Live Telemetry & KPIs)]]></Text>
+					<Font>
+						<Name>Arial</Name>
+						<Size>11</Size>
+						<Style>0</Style>
+					</Font>
+				</Text>
+				<Text>
+					<Id>1794500000308</Id>
+					<Name><![CDATA[txtTeamMember4]]></Name>
+					<X>80</X><Y>500</Y>
+					<Label><X>0</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<Color>-1</Color>
+					<Text><![CDATA[• Ricardo Molina Gonzalez — Simulation Experiments & Documentation Lead (5 Required Experiments, Report, Slides)]]></Text>
+					<Font>
+						<Name>Arial</Name>
+						<Size>11</Size>
+						<Style>0</Style>
+					</Font>
+				</Text>
+
+				<!-- Stations Guide Badge Box -->
+				<Rectangle>
+					<Id>1794500000310</Id>
+					<Name><![CDATA[rectStationsBox]]></Name>
+					<X>60</X><Y>560</Y>
+					<Label><X>0</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<LineColor>-14529178</LineColor>
+					<FillColor>-15919329</FillColor>
+					<LineWidth>1</LineWidth>
+					<Width>820</Width>
+					<Height>70</Height>
+				</Rectangle>
+				<Text>
+					<Id>1794500000311</Id>
+					<Name><![CDATA[txtStationsList]]></Name>
+					<X>80</X><Y>575</Y>
+					<Label><X>0</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<Color>-2039584</Color>
+					<Text><![CDATA[📍 LAB WORKSTATIONS: [A] Parts Shelf (Pickup)  |  [B] Electronics Bench (Delivery)  |  [C] QA Testing Table
+                      [D] AMR Charging Dock (Recharge Zone)  |  [E] Drone Helipad (UAV Takeoff/Touchdown)]]></Text>
+					<Font>
+						<Name>Arial</Name>
+						<Size>11</Size>
+						<Style>1</Style>
+					</Font>
+				</Text>
+			</Shapes>
+		</ActiveObjectClass>
+
+		<!--   =========   Active Object Class: AMR Agent   ========  -->
+		<ActiveObjectClass>
+			<Id>1794500000400</Id>
+			<Name><![CDATA[AMR]]></Name>
+			<Generic>false</Generic>
+			<FlowChartsUsage>ENTITY</FlowChartsUsage>
+			<AgentProperties>
+				<EnvironmentDefinesInitialLocation>true</EnvironmentDefinesInitialLocation>
+				<RotateAnimationTowardsMovement>true</RotateAnimationTowardsMovement>
+				<VelocityCode Class="CodeUnitValue">
+					<Code><![CDATA[1.2]]></Code>
+					<Unit Class="SpeedUnits"><![CDATA[MPS]]></Unit>
+				</VelocityCode>
+			</AgentProperties>
+			<PlainVariables>
+				<PlainVariable Visibility="PUBLIC">
+					<Id>1794500000410</Id>
+					<Name><![CDATA[batteryLevel]]></Name>
+					<Type><![CDATA[double]]></Type>
+					<InitialValue Class="CodeValue">
+						<Code><![CDATA[1.0]]></Code>
+					</InitialValue>
+				</PlainVariable>
+				<PlainVariable Visibility="PUBLIC">
+					<Id>1794500000411</Id>
+					<Name><![CDATA[currentStatus]]></Name>
+					<Type><![CDATA[String]]></Type>
+					<InitialValue Class="CodeValue">
+						<Code><![CDATA["Idle"]]></Code>
+					</InitialValue>
+				</PlainVariable>
+				<PlainVariable Visibility="PUBLIC">
+					<Id>1794500000412</Id>
+					<Name><![CDATA[totalDistanceTraveled]]></Name>
+					<Type><![CDATA[double]]></Type>
+					<InitialValue Class="CodeValue">
+						<Code><![CDATA[0.0]]></Code>
+					</InitialValue>
+				</PlainVariable>
+			</PlainVariables>
+		</ActiveObjectClass>
+
+		<!--   =========   Active Object Class: StudentOrder   ========  -->
+		<ActiveObjectClass>
+			<Id>1794500000500</Id>
+			<Name><![CDATA[StudentOrder]]></Name>
+			<Generic>false</Generic>
+			<FlowChartsUsage>ENTITY</FlowChartsUsage>
+			<PlainVariables>
+				<PlainVariable Visibility="PUBLIC">
+					<Id>1794500000510</Id>
+					<Name><![CDATA[creationTime]]></Name>
+					<Type><![CDATA[double]]></Type>
+					<InitialValue Class="CodeValue">
+						<Code><![CDATA[time()]]></Code>
+					</InitialValue>
+				</PlainVariable>
+				<PlainVariable Visibility="PUBLIC">
+					<Id>1794500000511</Id>
+					<Name><![CDATA[targetStation]]></Name>
+					<Type><![CDATA[String]]></Type>
+					<InitialValue Class="CodeValue">
+						<Code><![CDATA[randomTrue(0.6) ? "Station B" : "Station C"]]></Code>
+					</InitialValue>
+				</PlainVariable>
+				<PlainVariable Visibility="PUBLIC">
+					<Id>1794500000512</Id>
+					<Name><![CDATA[priorityTier]]></Name>
+					<Type><![CDATA[int]]></Type>
+					<InitialValue Class="CodeValue">
+						<Code><![CDATA[randomTrue(0.2) ? 1 : 2]]></Code>
+					</InitialValue>
+				</PlainVariable>
+			</PlainVariables>
+		</ActiveObjectClass>
+	</ActiveObjectClasses>
+
+	<!-- ========================================================================= -->
+	<!--                           RUN CONFIGURATION                               -->
+	<!-- ========================================================================= -->
+	<RunConfiguration ActiveObjectClassId="1794500000010">
+		<Id>1794500000600</Id>
+		<Name><![CDATA[RunConfiguration]]></Name>
+		<MaximumMemory>1024</MaximumMemory>
+		<ModelTimeProperties>
+			<StopOption><![CDATA[Stop at specified time]]></StopOption>
+			<InitialDate><![CDATA[1794500000000]]></InitialDate>	
+			<InitialTime><![CDATA[0.0]]></InitialTime>	
+			<FinalDate><![CDATA[1794586400000]]></FinalDate>	
+			<FinalTime><![CDATA[480.0]]></FinalTime> <!-- 8-Hour Class Day (480 minutes) -->
+		</ModelTimeProperties>
+		<AnimationProperties>
+			<StopNever>false</StopNever>
+			<ExecutionMode>realTimeScaled</ExecutionMode>
+			<RealTimeScale>2.0</RealTimeScale>
+			<EnableZoomAndPanning>true</EnableZoomAndPanning>
+			<EnableDeveloperPanel>true</EnableDeveloperPanel>
+			<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
+		</AnimationProperties>
+	</RunConfiguration>
+
+	<!-- ========================================================================= -->
+	<!--                      THE 5 REQUIRED EXPERIMENTS                           -->
+	<!-- ========================================================================= -->
+	<Experiments>
+		<!-- 1. SIMULATION EXPERIMENT: Interactive 2D/3D Run -->
+		<SimulationExperiment ActiveObjectClassId="1794500000010">
+			<Id>1794500000701</Id>
+			<Name><![CDATA[Simulation]]></Name>
+			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
+			<MaximumMemory>1024</MaximumMemory>
+			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
+			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
+			<SeedValue>42</SeedValue>
+			<SelectionModeForSimultaneousEvents>LIFO</SelectionModeForSimultaneousEvents>
+			<PresentationProperties>
+				<EnableZoomAndPanning>true</EnableZoomAndPanning>
+				<ExecutionMode><![CDATA[realTimeScaled]]></ExecutionMode>
+				<Title><![CDATA[MDC Robotics Lab Simulation : Interactive Run]]></Title>
+				<EnableDeveloperPanel>true</EnableDeveloperPanel>
+				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
+				<RealTimeScale>2.0</RealTimeScale>
+			</PresentationProperties>
+			<ModelTimeProperties>
+				<StopOption><![CDATA[Stop at specified time]]></StopOption>
+				<InitialTime><![CDATA[0.0]]></InitialTime>
+				<FinalTime><![CDATA[480.0]]></FinalTime>
+			</ModelTimeProperties>
+			<BypassInitialScreen>true</BypassInitialScreen>
+		</SimulationExperiment>
+
+		<!-- 2. OPTIMIZATION EXPERIMENT: Fleet Sizing (AMRs & Docks) -->
+		<OptimizationExperiment ActiveObjectClassId="1794500000010">
+			<Id>1794500000702</Id>
+			<Name><![CDATA[Optimization_FleetSizing]]></Name>
+			<MaximumMemory>1024</MaximumMemory>
+			<ObjectiveFunction><![CDATA[root.averageStudentWaitTime + 0.1 * (root.numberOfAMRs * 12000 + root.numberOfDocks * 3000)]]></ObjectiveFunction>
+			<OptimizationType>MINIMIZE</OptimizationType>
+			<ModelTimeProperties>
+				<StopOption><![CDATA[Stop at specified time]]></StopOption>
+				<InitialTime><![CDATA[0.0]]></InitialTime>
+				<FinalTime><![CDATA[480.0]]></FinalTime>
+			</ModelTimeProperties>
+		</OptimizationExperiment>
+
+		<!-- 3. COMPARE RUNS EXPERIMENT: Baseline FIFO vs Q-Learning vs PPO -->
+		<CompareRunsExperiment ActiveObjectClassId="1794500000010">
+			<Id>1794500000703</Id>
+			<Name><![CDATA[Compare_Dispatch_Policies]]></Name>
+			<MaximumMemory>1024</MaximumMemory>
+			<ModelTimeProperties>
+				<StopOption><![CDATA[Stop at specified time]]></StopOption>
+				<InitialTime><![CDATA[0.0]]></InitialTime>
+				<FinalTime><![CDATA[480.0]]></FinalTime>
+			</ModelTimeProperties>
+		</CompareRunsExperiment>
+
+		<!-- 4. MONTE CARLO EXPERIMENT: 100 Replications for Student Wait Times -->
+		<MonteCarloExperiment ActiveObjectClassId="1794500000010">
+			<Id>1794500000704</Id>
+			<Name><![CDATA[MonteCarlo_WaitTimes]]></Name>
+			<MaximumMemory>1024</MaximumMemory>
+			<ReplicationsNumber>100</ReplicationsNumber>
+			<ModelTimeProperties>
+				<StopOption><![CDATA[Stop at specified time]]></StopOption>
+				<InitialTime><![CDATA[0.0]]></InitialTime>
+				<FinalTime><![CDATA[480.0]]></FinalTime>
+			</ModelTimeProperties>
+		</MonteCarloExperiment>
+
+		<!-- 5. SENSITIVITY ANALYSIS EXPERIMENT: Battery Degradation & Demand Surge -->
+		<SensitivityAnalysisExperiment ActiveObjectClassId="1794500000010">
+			<Id>1794500000705</Id>
+			<Name><![CDATA[Sensitivity_BatteryAndDemand]]></Name>
+			<MaximumMemory>1024</MaximumMemory>
+			<ModelTimeProperties>
+				<StopOption><![CDATA[Stop at specified time]]></StopOption>
+				<InitialTime><![CDATA[0.0]]></InitialTime>
+				<FinalTime><![CDATA[480.0]]></FinalTime>
+			</ModelTimeProperties>
+		</SensitivityAnalysisExperiment>
+	</Experiments>
+
+	<ModelResources>
+		<Resource>
+			<Id>1794500000801</Id>
+			<Path><![CDATA[assets/robotics_lab_floorplan.png]]></Path>
+			<ReferencedFromUserCode>false</ReferencedFromUserCode>
+			<Location>FILE_SYSTEM</Location>
+		</Resource>
+	</ModelResources>
+
+	<RequiredLibraryReference>
+		<LibraryName><![CDATA[com.anylogic.libraries.processmodeling]]></LibraryName>
+		<VersionMajor>8</VersionMajor>
+		<VersionMinor>0</VersionMinor>
+		<VersionBuild>5</VersionBuild>
+	</RequiredLibraryReference>
+</Model>
+</AnyLogicWorkspace>
+"""
+
+def main():
+    dest_dir = Path(r"d:\Miami Dade College\Simulation For AI\mdc_robotics_simulation_twin\anylogic_model")
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    alp_path = dest_dir / "MDC_Robotics_Lab_Simulation.alp"
+    
+    print(f"Generating AnyLogic Project File at: {alp_path}")
+    with open(alp_path, "w", encoding="utf-8") as f:
+        f.write(ALP_TEMPLATE.strip())
+    
+    print(f"Successfully generated {alp_path.name} ({alp_path.stat().st_size:,} bytes)!")
+
+if __name__ == "__main__":
+    main()
