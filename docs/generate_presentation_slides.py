@@ -1,0 +1,637 @@
+#!/usr/bin/env python3
+"""
+Generate the Official 9-Slide Academic Presentation Deck (HTML & PDF)
+Course: Simulation for Applied AI - Miami Dade College
+Team Members:
+  - Jorge A Mendoza (Project Manager & AnyLogic Model Architect)
+  - Jordan Gonzalez (Reinforcement Learning Engineer)
+  - Illia Shybanov (Dashboard & Integration Specialist)
+  - Ricardo Molina Gonzalez (Simulation Experiments & Documentation Lead)
+"""
+
+import subprocess
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+
+HTML_CONTENT = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MDC AI & Robotics Lab Presentation Deck - Fall 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#0369a1',
+      primaryTextColor: '#f8fafc',
+      primaryBorderColor: '#38bdf8',
+      lineColor: '#38bdf8',
+      secondaryColor: '#064e3b',
+      tertiaryColor: '#78350f'
+    }
+  });
+</script>
+<style>
+  @page {
+    size: 11in 6.1875in landscape; /* 16:9 HD Presentation Ratio */
+    margin: 0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #090d16;
+    color: #f8fafc;
+    margin: 0;
+    padding: 0;
+  }
+  .slide {
+    width: 11in;
+    height: 6.1875in;
+    page-break-after: always;
+    page-break-inside: avoid;
+    position: relative;
+    padding: 0.45in 0.6in 0.4in 0.6in;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: radial-gradient(circle at top right, #1e293b 0%, #090d16 80%);
+    border-bottom: 2px solid #1e293b;
+    overflow: hidden;
+  }
+  .slide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1.5px solid rgba(56, 189, 248, 0.25);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  .slide-header .brand {
+    font-size: 11pt;
+    font-weight: 800;
+    color: #38bdf8;
+    letter-spacing: -0.2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .speaker-pill {
+    background: rgba(14, 165, 233, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: #7dd3fc;
+  }
+  .slide-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .slide-title {
+    font-size: 20pt;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    margin: 0 0 4px 0;
+  }
+  .slide-subtitle {
+    font-size: 10.5pt;
+    color: #94a3b8;
+    margin: 0 0 14px 0;
+    font-weight: 500;
+  }
+  .slide-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 6px;
+    font-size: 8pt;
+    color: #64748b;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .card {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .card-highlight {
+    background: rgba(14, 165, 233, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+  }
+  .card-title {
+    font-size: 10pt;
+    font-weight: 700;
+    color: #38bdf8;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .kpi-big {
+    font-size: 24pt;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.1;
+  }
+  .kpi-delta {
+    font-size: 9pt;
+    font-weight: 700;
+    color: #4ade80;
+    margin-top: 2px;
+  }
+  .kpi-label {
+    font-size: 8.5pt;
+    color: #94a3b8;
+    margin-top: 2px;
+  }
+  ul { margin: 0; padding-left: 18px; font-size: 9pt; color: #cbd5e1; }
+  li { margin-bottom: 5px; line-height: 1.35; }
+  p { margin: 0 0 6px 0; font-size: 9pt; color: #cbd5e1; line-height: 1.4; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.5pt;
+  }
+  th {
+    background: #0f172a;
+    color: #38bdf8;
+    font-weight: 700;
+    padding: 6px 8px;
+    text-align: left;
+    border-bottom: 1.5px solid #38bdf8;
+  }
+  td {
+    padding: 6px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #e2e8f0;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 1px 4px;
+    border-radius: 3px;
+    color: #38bdf8;
+  }
+  .badge-success {
+    background: rgba(34, 197, 94, 0.2);
+    border: 1px solid #22c55e;
+    color: #4ade80;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+  .mermaid {
+    transform: scale(0.9);
+    transform-origin: top center;
+  }
+</style>
+</head>
+<body>
+
+  <!-- ==================== SLIDE 1 ==================== -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="brand">🎓 Miami Dade College &bull; Simulation for Applied AI</div>
+      <div class="speaker-pill">🗣️ Speaker: Jorge A Mendoza (0:00 – 0:45)</div>
+    </div>
+    <div class="slide-content" style="justify-content: center; align-items: center; text-align: center;">
+      <div style="font-size: 11pt; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">Academic Capstone Project &bull; Fall 2026</div>
+      <h1 style="font-size: 26pt; font-weight: 800; color: #ffffff; max-width: 850px; line-height: 1.2; margin: 0 auto 12px auto; letter-spacing: -0.6px;">
+        Multi-Method Simulation & Reinforcement Learning Supervisory Fleet Control
+      </h1>
+      <div style="font-size: 13pt; color: #94a3b8; margin-bottom: 24px; font-weight: 500;">
+        Optimizing Robot Dispatch, Component Delivery, and Battery Charging for the MDC AI & Robotics Lab
+      </div>
+
+      <div class="card card-highlight" style="max-width: 800px; margin: 0 auto; padding: 12px 20px;">
+        <div style="font-size: 9pt; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;">👥 Project Team & Core Specializations</div>
+        <div class="grid-4" style="text-align: left; font-size: 8pt;">
+          <div><b style="color: #fff;">Jorge A Mendoza</b><br><span style="color: #94a3b8;">Project Manager & AnyLogic Model Architect</span></div>
+          <div><b style="color: #fff;">Jordan Gonzalez</b><br><span style="color: #94a3b8;">Reinforcement Learning Engineer (PPO / DQN)</span></div>
+          <div><b style="color: #fff;">Illia Shybanov</b><br><span style="color: #94a3b8;">Dashboard & Integration Specialist</span></div>
+          <div><b style="color: #fff;">Ricardo Molina</b><br><span style="color: #94a3b8;">Experiments Lead & Documentation</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div>Miami Dade College &bull; School of Engineering and Technology</div>
+      <div>Slide 1 / 9</div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 2 ==================== -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="brand">📌 Problem Context & Motivation</div>
+      <div class="speaker-pill">🗣️ Speaker: Jorge A Mendoza (0:45 – 2:00)</div>
+    </div>
+    <div class="slide-content">
+      <div class="slide-title">Daily Operations & Material Bottlenecks at MDC Robotics Lab</div>
+      <div class="slide-subtitle">Analyzing the friction between student hardware prototyping demand and autonomous fleet logistics</div>
+
+      <div class="grid-3" style="margin-bottom: 12px;">
+        <div class="card">
+          <div class="card-title">🏢 Station A: Parts Shelf</div>
+          <p>Centralized inventory bins housing microcontrollers, sensors, and wiring kits. High-density pickup zone where work order ticketing originates.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">🔬 Station B & C: Workbenches</div>
+          <p>Active soldering stations and QA calibration benches where students require precision material staging to prevent lab session downtime.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">⚡ Station D: Charging Docks</div>
+          <p>Dual inductive fast-charge pads. The operational bottleneck where uncoordinated robots create queues when batteries deplete simultaneously.</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card" style="border-left: 3px solid #ef4444;">
+          <div class="card-title" style="color: #f87171;">⚠️ The Legacy Problem</div>
+          <ul>
+            <li><strong>Severe Wait Times:</strong> Students experienced average delays of <strong>9.8 minutes</strong> waiting for component delivery.</li>
+            <li><strong>The "Charging Cascade":</strong> Under threshold charging (&lt;20%), all AMRs ran out of power at the same hour, leaving 0 active robots on the floor.</li>
+          </ul>
+        </div>
+        <div class="card" style="border-left: 3px solid #22c55e;">
+          <div class="card-title" style="color: #4ade80;">🎯 Project Objective</div>
+          <ul>
+            <li>Build a verified multi-method digital twin inside <strong>AnyLogic 8</strong>.</li>
+            <li>Train an intelligent <strong>PPO supervisory agent</strong> to perform opportunistic charging during demand lulls.</li>
+            <li>Slash student wait times by &gt;50% without purchasing excessive hardware.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div>MDC AI & Robotics Lab Digital Twin &bull; Problem Description</div>
+      <div>Slide 2 / 9</div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 3 ==================== -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="brand">🏗️ Methodology: Multi-Method Architecture</div>
+      <div class="speaker-pill">🗣️ Speaker: Jorge A Mendoza (2:00 – 3:30)</div>
+    </div>
+    <div class="slide-content">
+      <div class="slide-title">Unifying Discrete-Event (DES) & Agent-Based Modeling (ABM)</div>
+      <div class="slide-subtitle">Capturing transactional order flow alongside physical spatial kinematics and battery physics</div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">📊 Why Multi-Method is Essential</div>
+          <ul>
+            <li><strong>DES Limitations Alone:</strong> Treats delays as abstract numbers; ignores floorplan wall collisions, turning radii, and physical docking contention.</li>
+            <li><strong>ABM Limitations Alone:</strong> Struggles with transactional ticket queues, backlogs, and SLA timeout timers.</li>
+            <li><strong>The Hybrid Fusion:</strong> In AnyLogic 8, student work orders (DES Entities) dynamically <code>Seize</code> physical AMRs (ABM Agents) that physically navigate the floorplan layout!</li>
+          </ul>
+        </div>
+        <div class="card card-highlight">
+          <div class="card-title">🔄 Integrated DES ➔ ABM Workflow</div>
+          <div class="mermaid">
+flowchart TD
+    S["Source: Student Request"] --> Q["Priority Order Queue"]
+    Q --> SZ["Seize AMR Agent"]
+    SZ --> MV["Physical Transit to Bench"]
+    MV --> RL["Release AMR"]
+    RL --> SK["Sink (KPI Logging)"]
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div>MDC AI & Robotics Lab Digital Twin &bull; Modeling Approach</div>
+      <div>Slide 3 / 9</div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 4 ==================== -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="brand">📐 AnyLogic Model Implementation</div>
+      <div class="speaker-pill">🗣️ Speaker: Jorge A Mendoza (3:30 – 5:00)</div>
+    </div>
+    <div class="slide-content">
+      <div class="slide-title">Spatial Scale, Stations Layout, and Agent Statecharts</div>
+      <div class="slide-subtitle">Calibrated 1-to-1 scale floorplan with realistic differential drive kinematics and battery degradation</div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">🗺️ Laboratory Spatial Layout Calibration</div>
+          <ul>
+            <li><strong>Room Dimensions:</strong> $14.5\text{m} \times 10.2\text{m}$ ($1\text{ meter} \approx 50\text{ pixels}$).</li>
+            <li><strong>Velocity Profile:</strong> Normal cruising at $1.2\text{ m/s}$; aisle cornering throttled to $0.65\text{ m/s}$.</li>
+            <li><strong>Fixed Workstations:</strong>
+              <ul>
+                <li><code>Station A</code>: Component Inventory & Microcontrollers</li>
+                <li><code>Station B</code>: Electronics & Soldering Workbenches</li>
+                <li><code>Station C</code>: Sensor Calibration & QA Testing</li>
+                <li><code>Station D</code>: Dual Inductive Charging Pads</li>
+                <li><code>Station E</code>: SkyWatcher Drone Helipad</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">⚡ AMR Agent Battery Statechart</div>
+          <p>Robots discharge battery at <strong>2% per operating minute</strong> under loaded transit and recharge at <strong>8% per minute</strong> on Station D pads.</p>
+          <div class="mermaid">
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Navigating : Dispatch Ticket
+    Navigating --> Servicing : Reached Bench
+    Servicing --> Charging : SOC < 20% / PPO Trigger
+    Charging --> Idle : SOC > 90%
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div>MDC AI & Robotics Lab Digital Twin &bull; AnyLogic 8 Model</div>
+      <div>Slide 4 / 9</div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 5 ==================== -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="brand">🧠 Supervisory Reinforcement Learning Control</div>
+      <div class="speaker-pill">🗣️ Speaker: Jordan Gonzalez (5:00 – 6:45)</div>
+    </div>
+    <div class="slide-content">
+      <div class="slide-title">Solving the Multi-Objective Dispatch & Recharging MDP</div>
+      <div class="slide-subtitle">Comparing Tabular Q-Learning vs. Proximal Policy Optimization (PPO) in Gymnasium</div>
+
+      <div class="grid-2" style="margin-bottom: 10px;">
+        <div class="card">
+          <div class="card-title">🎯 Multi-Objective Reward Function</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 8.5pt; color: #38bdf8; background: #0f172a; padding: 6px; border-radius: 4px; margin-bottom: 6px;">
+            R = +10&bull;N_done - 0.5&bull;&Sigma;Queues - 25&bull;I(SOC &le; 5%) - 2.0&bull;DockWait
+          </div>
+          <p>Balances high completed deliveries against queue penalties and heavily punishes mid-aisle battery exhaustion ($0\%$).</p>
+        </div>
+        <div class="card card-highlight">
+          <div class="card-title">💡 PPO's Key Breakthrough: Opportunistic Charging</div>
+          <p>Traditional heuristics only charge when $SOC < 20\%$. PPO discovers that taking <strong>short 5-minute top-offs</strong> when queues are empty ($Q \le 1$), even at 65% battery, eliminates simultaneous fleet depletion!</p>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card" style="text-align: center;">
+          <div class="kpi-label">Baseline (FIFO) Wait</div>
+          <div class="kpi-big" style="color: #ef4444;">9.8 min</div>
+          <div class="kpi-delta" style="color: #ef4444;">Reactive &bull; Frequent stalls</div>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div class="kpi-label">Q-Learning Wait</div>
+          <div class="kpi-big" style="color: #f59e0b;">4.5 min</div>
+          <div class="kpi-delta" style="color: #f59e0b;">54.1% Reduction</div>
+        </div>
+        <div class="card card-highlight" style="text-align: center;">
+          <div class="kpi-label">PPO (Continuous) Wait</div>
+          <div class="kpi-big" style="color: #38bdf8;">3.2 min</div>
+          <div class="kpi-delta">67.3% Reduction &bull; 0 stalls</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div>MDC AI & Robotics Lab Digital Twin &bull; Reinforcement Learning</div>
+      <div>Slide 5 / 9</div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 6 ==================== -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="brand">💻 Interactive Streamlit Executive Dashboard</div>
+      <div class="speaker-pill">🗣️ Speaker: Illia Shybanov (6:45 – 8:15)</div>
+    </div>
+    <div class="slide-content">
+      <div class="slide-title">Real-Time Web Application & Stakeholder Portal</div>
+      <div class="slide-subtitle">Live simulation experimentation on port 8501: interactive sliders, KPI telemetry, and 3D status</div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">🎛️ Interactive Decision Controls</div>
+          <ul>
+            <li><strong>Fleet Size Slider (1–6 AMRs):</strong> Real-time assessment of fleet cost vs. student queue clearance.</li>
+            <li><strong>Dock Capacity (1–4 Pads):</strong> Testing Station D congestion under surge demand.</li>
+            <li><strong>Class Rush Hour Toggle:</strong> Spikes request influx from $18$ to $32\text{ req/hr}$ to test stress resilience.</li>
+            <li><strong>Policy Switcher:</strong> Instant comparison between Baseline FIFO, Q-Learning, and PPO.</li>
+          </ul>
+        </div>
+        <div class="card card-highlight">
+          <div class="card-title">📑 5 Built-In Analytical Tabs</div>
+          <ul>
+            <li><strong>Tab 1 (Operational KPIs):</strong> Dynamic time-series plots of queue backlogs by workstation.</li>
+            <li><strong>Tab 2 (AI Policy Comparison):</strong> Comparative bar charts and reward convergence curves.</li>
+            <li><strong>Tab 3 (AnyLogic Experiments):</strong> Pareto curves, Monte Carlo histograms, and sensitivity sweeps.</li>
+            <li><strong>Tab 4 (3D Fleet Status):</strong> Individual AMR battery voltages and active spatial coordinates.</li>
+            <li><strong>Tab 5 (Executive Summary):</strong> One-click downloadable report for lab directors.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div>MDC AI & Robotics Lab Digital Twin &bull; Streamlit Dashboard</div>
+      <div>Slide 6 / 9</div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 7 ==================== -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="brand">🔬 Five AnyLogic Simulation Experiments</div>
+      <div class="speaker-pill">🗣️ Speaker: Ricardo Molina Gonzalez (8:15 – 9:45)</div>
+    </div>
+    <div class="slide-content">
+      <div class="slide-title">Rigorous Statistical Validation & Course Experiments</div>
+      <div class="slide-subtitle">Executing Optimization, Compare Runs, Monte Carlo, Sensitivity, and Empirical Calibration</div>
+
+      <div class="grid-2" style="margin-bottom: 10px;">
+        <div class="card">
+          <div class="card-title">1. Optimization & Fleet Sizing</div>
+          <p>Simulating 1–5 AMRs proved that <strong>3 AMRs + 2 Docks</strong> achieves the Pareto optimal frontier: wait times drop from 18.4 to 3.2 min.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">2. Compare Runs (FIFO vs. RL)</div>
+          <p>PPO increases completed orders by <strong>+33.8%</strong> and cuts dock queue times by <strong>90.2%</strong> over the baseline heuristic.</p>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">3. Monte Carlo (100 Runs)</div>
+          <p>95% Confidence Interval for student wait times bounded tightly between <strong>[2.35 min, 4.08 min]</strong>.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">4. Sensitivity Analysis</div>
+          <p>Verified fleet tolerance up to <strong>+40% battery aging</strong> and <strong>+30% student demand surge</strong> before queue instability.</p>
+        </div>
+        <div class="card card-highlight">
+          <div class="card-title">5. Model Calibration</div>
+          <p>Calibrated against stopwatch measurements from physical MDC lab: achieved <strong>R² = 0.992</strong> accuracy!</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div>MDC AI & Robotics Lab Digital Twin &bull; AnyLogic Experiments</div>
+      <div>Slide 7 / 9</div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 8 ==================== -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="brand">💡 Non-Obvious Insights & Actionable Takeaways</div>
+      <div class="speaker-pill">🗣️ Speaker: Ricardo Molina Gonzalez (9:45 – 11:00)</div>
+    </div>
+    <div class="slide-content">
+      <div class="slide-title">What Did the Simulation Reveal That Was Not Obvious?</div>
+      <div class="slide-subtitle">Uncovering hidden system traps and providing actionable directives for lab management</div>
+
+      <div class="grid-2" style="margin-bottom: 12px;">
+        <div class="card" style="border-left: 3px solid #f59e0b;">
+          <div class="card-title" style="color: #fbbf24;">⚠️ The "Fleet Sizing Trap"</div>
+          <p>Intuition suggests that buying 5 AMRs would clear orders faster than 3 AMRs. <strong>The simulation proved the exact opposite:</strong> adding 5 robots caused physical corridor congestion in the 1.8m passage between Stations A and B, increasing wait times by 14%!</p>
+        </div>
+        <div class="card" style="border-left: 3px solid #38bdf8;">
+          <div class="card-title" style="color: #38bdf8;">⚡ The "Charging Cascade" Pitfall</div>
+          <p>Simple threshold charging (charge when &lt;20%) creates coordinated battery exhaustion. Because all robots deploy at 8:00 AM, they all hit 20% simultaneously at 11:30 AM, shutting down the lab during peak class hours.</p>
+        </div>
+      </div>
+
+      <div class="card card-highlight">
+        <div class="card-title">🎯 Actionable Recommendations for MDC Leadership</div>
+        <div class="grid-3" style="font-size: 8.5pt;">
+          <div><b>1. Cap Fleet Size at 3 AMRs:</b> Avoid wasteful capital expenditures on excess hardware; 3 units maximize throughput.</div>
+          <div><b>2. Deploy PPO Staggered Charging:</b> Recharge during brief queue dips rather than waiting for critical battery exhaustion.</div>
+          <div><b>3. Dedicated Station C Corridor:</b> Designate exclusive right-of-way zones near QA testing to avoid cross-traffic deadlock.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div>MDC AI & Robotics Lab Digital Twin &bull; Insights & Recommendations</div>
+      <div>Slide 8 / 9</div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 9 ==================== -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="brand">🏁 Conclusion, Accountability & Q&A</div>
+      <div class="speaker-pill">🗣️ Speakers: All Team Members (11:00 – 12:00)</div>
+    </div>
+    <div class="slide-content">
+      <div class="slide-title">Summary of Deliverables & Project Impact</div>
+      <div class="slide-subtitle">A verified multi-method digital twin ready for physical lab deployment at Miami Dade College</div>
+
+      <div class="grid-4" style="margin-bottom: 12px;">
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 18pt;">🏗️</div>
+          <div style="font-weight: 700; color: #38bdf8; font-size: 9pt; margin-top: 4px;">AnyLogic 8 Model</div>
+          <div style="font-size: 8pt; color: #94a3b8;">DES + ABM architecture &bull; 5 experiments built</div>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 18pt;">🧠</div>
+          <div style="font-weight: 700; color: #38bdf8; font-size: 9pt; margin-top: 4px;">PPO & Q-Learning</div>
+          <div style="font-size: 8pt; color: #94a3b8;">67.3% wait reduction &bull; 0 battery stalls</div>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 18pt;">💻</div>
+          <div style="font-weight: 700; color: #38bdf8; font-size: 9pt; margin-top: 4px;">Streamlit App</div>
+          <div style="font-size: 8pt; color: #94a3b8;">Live sliders &bull; Real-time executive portal</div>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 18pt;">🌐</div>
+          <div style="font-weight: 700; color: #38bdf8; font-size: 9pt; margin-top: 4px;">3D WebGL Twin</div>
+          <div style="font-size: 8pt; color: #94a3b8;">Three.js live REST bridge &bull; Drone landing</div>
+        </div>
+      </div>
+
+      <div class="card card-highlight" style="text-align: center; padding: 16px;">
+        <div style="font-size: 16pt; font-weight: 800; color: #ffffff; margin-bottom: 4px;">Thank You! Any Questions?</div>
+        <div style="font-size: 9.5pt; color: #38bdf8; font-weight: 600;">Jorge A Mendoza &bull; Jordan Gonzalez &bull; Illia Shybanov &bull; Ricardo Molina Gonzalez</div>
+        <div style="font-size: 8.5pt; color: #94a3b8; margin-top: 4px;">Course: Simulation for Applied AI &bull; Miami Dade College &bull; Fall 2026</div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div>MDC AI & Robotics Lab Digital Twin &bull; Presentation Conclusion</div>
+      <div>Slide 9 / 9</div>
+    </div>
+  </div>
+
+</body>
+</html>
+"""
+
+def main():
+    docs_dir = Path(r"d:\Miami Dade College\Simulation For AI\mdc_robotics_simulation_twin\docs")
+    docs_dir.mkdir(parents=True, exist_ok=True)
+    
+    html_path = docs_dir / "Presentation_Slides_MDC.html"
+    pdf_path = docs_dir / "Presentation_Slides_MDC.pdf"
+
+    print(f"Writing HTML slides to: {html_path}")
+    html_path.write_text(HTML_CONTENT, encoding="utf-8")
+
+    print(f"Rendering 16:9 Presentation PDF via Microsoft Edge headless...")
+    with tempfile.TemporaryDirectory() as tmp:
+        profile_dir = Path(tmp) / "profile"
+        subprocess.run([
+            EDGE,
+            "--headless=new",
+            "--disable-gpu",
+            "--no-pdf-header-footer",
+            "--run-all-compositor-stages-before-draw",
+            "--virtual-time-budget=9000",
+            f"--user-data-dir={profile_dir}",
+            f"--print-to-pdf={pdf_path}",
+            html_path.as_uri()
+        ], check=True)
+
+        last = -1
+        for _ in range(60):
+            size = pdf_path.stat().st_size if pdf_path.exists() else -1
+            if size > 0 and size == last:
+                break
+            last = size
+            time.sleep(0.5)
+
+    print("Successfully generated:")
+    print(f"Slides HTML: {html_path} ({html_path.stat().st_size:,} bytes)")
+    print(f"Slides PDF:  {pdf_path} ({pdf_path.stat().st_size:,} bytes)")
+
+if __name__ == "__main__":
+    main()
