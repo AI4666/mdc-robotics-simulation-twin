@@ -1,0 +1,447 @@
+#!/usr/bin/env python3
+"""
+Generate the Official Team Accomplishments & Project Milestone Briefing PDF & HTML
+Course: Simulation for Applied AI - Miami Dade College
+Team Members:
+  - Jorge A Mendoza (Project Manager & AnyLogic Model Architect)
+  - Jordan Gonzalez (Reinforcement Learning Engineer)
+  - Illia Shybanov (Dashboard & Integration Specialist)
+  - Ricardo Molina Gonzalez (Simulation Experiments & Documentation Lead)
+"""
+
+import subprocess
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+
+HTML_CONTENT = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Accomplishments & Project Milestone Overview - Miami Dade College</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  @page {
+    size: letter portrait;
+    margin: 0.65in 0.65in 0.65in 0.65in;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #0f172a;
+    background: #ffffff;
+    line-height: 1.45;
+    font-size: 10pt;
+    margin: 0;
+    padding: 0;
+  }
+  .page-header {
+    border-bottom: 2.5px solid #0047ba;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .inst-title {
+    font-size: 14pt;
+    font-weight: 800;
+    color: #0047ba;
+    letter-spacing: -0.2px;
+  }
+  .course-tag {
+    font-size: 9pt;
+    color: #475569;
+    font-weight: 600;
+  }
+  h1 {
+    font-size: 17pt;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.25;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.4px;
+  }
+  .subtitle {
+    font-size: 10.5pt;
+    color: #0284c7;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .team-roster {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-left: 4px solid #0047ba;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+  }
+  .team-roster-title {
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: #0047ba;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 6px;
+  }
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px 14px;
+    font-size: 8.5pt;
+  }
+  .team-member b { color: #0f172a; }
+  .team-member span { color: #475569; font-style: italic; }
+
+  h2 {
+    font-size: 11.5pt;
+    font-weight: 700;
+    color: #0f172a;
+    border-bottom: 1.5px solid #e2e8f0;
+    padding-bottom: 4px;
+    margin: 14px 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  h3 {
+    font-size: 10pt;
+    font-weight: 700;
+    color: #0369a1;
+    margin: 10px 0 4px 0;
+  }
+  p { margin: 0 0 8px 0; text-align: justify; }
+  ul, ol { margin: 0 0 8px 0; padding-left: 20px; }
+  li { margin-bottom: 4px; }
+
+  .card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+  .card-highlight {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-left: 4px solid #0284c7;
+  }
+  .card-title {
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: #0369a1;
+    margin-bottom: 4px;
+  }
+  .table-container {
+    width: 100%;
+    margin: 8px 0 12px 0;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #cbd5e1;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.5pt;
+  }
+  th {
+    background: #0f172a;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 6px 8px;
+    text-align: left;
+    border: 1px solid #334155;
+  }
+  td {
+    padding: 5px 8px;
+    border: 1px solid #e2e8f0;
+    color: #1e293b;
+  }
+  tr:nth-child(even) td { background: #f8fafc; }
+  .badge {
+    background: #dcfce7;
+    color: #15803d;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    background: #f1f5f9;
+    padding: 1px 4px;
+    border-radius: 3px;
+    color: #0369a1;
+  }
+  .page-break { page-break-before: always; }
+</style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="inst-title">Miami Dade College</div>
+      <div class="course-tag">Simulation for Applied AI &bull; Executive Team Project Briefing</div>
+    </div>
+    <div style="text-align: right; font-size: 8.5pt; color: #64748b;">
+      <div>Academic Term: Fall 2026</div>
+      <div>Project Status: 100% Complete &bull; All Milestones Met</div>
+    </div>
+  </div>
+
+  <h1>MDC AI & Robotics Lab Digital Twin & Multi-Method Simulation</h1>
+  <div class="subtitle">Comprehensive Project Accomplishments, Architecture Overview, and Presentation Guide</div>
+
+  <!-- TEAM ROSTER BLOCK -->
+  <div class="team-roster">
+    <div class="team-roster-title">👥 Project Team & Work Breakdown Structure</div>
+    <div class="team-grid">
+      <div class="team-member"><b>Jorge A Mendoza</b> — <span>Project Manager & AnyLogic Model Architect</span><br>&bull; DES process flows, ABM robot statecharts, 3D lab layout</div>
+      <div class="team-member"><b>Jordan Gonzalez</b> — <span>Reinforcement Learning Engineer</span><br>&bull; Custom Gymnasium environment, Q-Learning & PPO dispatching</div>
+      <div class="team-member"><b>Illia Shybanov</b> — <span>Dashboard & Integration Specialist</span><br>&bull; Streamlit interactive application, live telemetry, and KPIs</div>
+      <div class="team-member"><b>Ricardo Molina Gonzalez</b> — <span>Simulation Experiments & Documentation Lead</span><br>&bull; 5 mandatory AnyLogic experiments, technical report, presentation deck</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1 -->
+  <h2>1. Executive Summary: What Has Been Accomplished</h2>
+  <p>
+    This project delivers a complete, multi-tiered digital twin and simulation system for the Miami Dade College AI & Robotics Lab. The system optimizes student work order dispatching, autonomous mobile robot (AMR) material delivery, and electric vehicle battery charging to eliminate chronic laboratory wait times and mid-corridor robot stalls.
+  </p>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>System Component</th>
+          <th>Lead Contributor</th>
+          <th>Deliverable File / Location</th>
+          <th>Operational Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>AnyLogic 8 Multi-Method Model</strong></td>
+          <td>Jorge A Mendoza</td>
+          <td><code>anylogic_model/MDC_Robotics_Lab_Simulation.alp</code></td>
+          <td><span class="badge">Complete & Validated</span></td>
+        </tr>
+        <tr>
+          <td><strong>Supervisory Reinforcement Learning (PPO & Q-Learning)</strong></td>
+          <td>Jordan Gonzalez</td>
+          <td><code>rl_models/robotics_lab_env.py</code>, <code>train_ppo.py</code></td>
+          <td><span class="badge">67.3% Wait Reduction</span></td>
+        </tr>
+        <tr>
+          <td><strong>Interactive Streamlit Dashboard</strong></td>
+          <td>Illia Shybanov</td>
+          <td><code>dashboard/app.py</code> (Running at <code>http://localhost:8501</code>)</td>
+          <td><span class="badge">Live & Operational</span></td>
+        </tr>
+        <tr>
+          <td><strong>3D WebGL Digital Twin & Drone Touchdown</strong></td>
+          <td>Jorge & Ricardo</td>
+          <td><code>digital_twin_app/</code> (Running at <code>http://localhost:3000</code>)</td>
+          <td><span class="badge">Live & Verified</span></td>
+        </tr>
+        <tr>
+          <td><strong>Formal Academic Report (IEEE/MDC)</strong></td>
+          <td>Ricardo Molina Gonzalez</td>
+          <td><code>docs/Final_Project_Report_MDC.pdf</code> & <code>.html</code></td>
+          <td><span class="badge">Ready for Submission</span></td>
+        </tr>
+        <tr>
+          <td><strong>Oral Presentation Deck (16:9 Widescreen)</strong></td>
+          <td>All Team Members</td>
+          <td><code>docs/Presentation_Slides_MDC.pdf</code> & <code>.html</code></td>
+          <td><span class="badge">9 Slides with Timestamps</span></td>
+        </tr>
+        <tr>
+          <td><strong>Unified Canvas Archive</strong></td>
+          <td>All Team Members</td>
+          <td><code>MDC_Robotics_Lab_Group_Final_Submission.zip</code> (2.9 MB)</td>
+          <td><span class="badge">Archived & Ready</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 2 -->
+  <h2>2. Detailed Technical Breakthroughs</h2>
+
+  <div class="card card-highlight">
+    <div class="card-title">🏗️ 1. AnyLogic Multi-Method Simulation (`.alp`)</div>
+    <ul>
+      <li><strong>Discrete-Event Flowchart:</strong> Student request Poisson arrival &rarr; FIFO/Priority Order Queue &rarr; Seize AMR &rarr; Pick Delay (Station A) &rarr; Transit Delay &rarr; Release &rarr; Metric Sink.</li>
+      <li><strong>Agent-Based Statecharts:</strong> AMR class with continuous battery depletion (2%/min in transit) and inductive fast-charge (8%/min at Station D).</li>
+      <li><strong>5 Configured Experiments:</strong> Fleet Sizing Optimization, Compare Runs (FIFO vs. RL), Monte Carlo (100 runs), Sensitivity Analysis, and Stopwatch Calibration (R&sup2; = 0.992).</li>
+    </ul>
+  </div>
+
+  <div class="card card-highlight">
+    <div class="card-title">🧠 2. Reinforcement Learning Supervisory Control</div>
+    <ul>
+      <li><strong>67.3% Wait Time Reduction:</strong> Average student waiting dropped from <strong>9.8 minutes down to 3.2 minutes</strong>.</li>
+      <li><strong>Elimination of the "Charging Cascade":</strong> Under simple threshold charging, all robots hit 20% simultaneously around midday. The PPO agent learned <em>opportunistic top-off charging</em> during demand lulls, eliminating midday fleet shutdowns.</li>
+      <li><strong>Zero Battery Depletions:</strong> Prevented robots from ever stalling mid-aisle with 0% battery.</li>
+    </ul>
+  </div>
+
+  <div class="page-break"></div>
+
+  <div class="card card-highlight">
+    <div class="card-title">🌐 3. 3D WebGL Digital Twin & Aerial Drone Integration</div>
+    <ul>
+      <li><strong>Heterogeneous Fleet:</strong> Ground AMRs (AMR-01..03), Unitree G1 humanoid, and SkyWatcher drones (UAV-01..03).</li>
+      <li><strong>Vertical Touchdown & Takeoff:</strong> Aerial drones fly at 1.9m, descend vertically to ground level (0.22m) at Central Depot and building drop-off bays, release packages, and climb vertically before resuming cruise.</li>
+      <li><strong>Live Package Drop-Off Counters:</strong> Real-time delivery badges above each bay (e.g. <code>📍 Bay 1 Drop-Off [ 2 pkgs ]</code>) and in the sidebar buttons.</li>
+      <li><strong>Bidirectional Live Bridge:</strong> AnyLogic communicates directly with the 3D twin over <code>/api/anylogic/update</code>.</li>
+    </ul>
+  </div>
+
+  <div class="card card-highlight">
+    <div class="card-title">📊 4. Streamlit Analytics Dashboard (`http://localhost:8501`)</div>
+    <ul>
+      <li>Features all 4 team members' names, roles, and institutional affiliations in the sidebar.</li>
+      <li>Interactive controls for Fleet Sizing (1–6 AMRs), Charging Pads (1–4), and Rush Hour demand surges.</li>
+      <li>5 Analytical Tabs: Operational KPIs, RL Policy Comparisons, AnyLogic Experiment Curves, 3D Telemetry, and Executive Summary.</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 3 -->
+  <h2>3. Presentation Slide Deck & Speaker Schedule (10–12 Minutes)</h2>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Slide</th>
+          <th>Topic</th>
+          <th>Designated Speaker</th>
+          <th>Target Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Slide 1</strong></td>
+          <td>Title Slide & Project Overview</td>
+          <td><strong>Jorge A Mendoza</strong></td>
+          <td><code>0:00 – 0:45</code></td>
+        </tr>
+        <tr>
+          <td><strong>Slide 2</strong></td>
+          <td>Problem Description & Laboratory Bottlenecks</td>
+          <td><strong>Jorge A Mendoza</strong></td>
+          <td><code>0:45 – 2:00</code></td>
+        </tr>
+        <tr>
+          <td><strong>Slide 3</strong></td>
+          <td>Multi-Method Methodology (Why DES + ABM?)</td>
+          <td><strong>Jorge A Mendoza</strong></td>
+          <td><code>2:00 – 3:30</code></td>
+        </tr>
+        <tr>
+          <td><strong>Slide 4</strong></td>
+          <td>AnyLogic 8 Implementation & Spatial Scale</td>
+          <td><strong>Jorge A Mendoza</strong></td>
+          <td><code>3:30 – 5:00</code></td>
+        </tr>
+        <tr>
+          <td><strong>Slide 5</strong></td>
+          <td>Supervisory Reinforcement Learning (PPO vs. Q-Learning)</td>
+          <td><strong>Jordan Gonzalez</strong></td>
+          <td><code>5:00 – 6:45</code></td>
+        </tr>
+        <tr>
+          <td><strong>Slide 6</strong></td>
+          <td>Live Streamlit Dashboard Walkthrough</td>
+          <td><strong>Illia Shybanov</strong></td>
+          <td><code>6:45 – 8:15</code></td>
+        </tr>
+        <tr>
+          <td><strong>Slide 7</strong></td>
+          <td>The 5 AnyLogic Simulation Experiments</td>
+          <td><strong>Ricardo Molina Gonzalez</strong></td>
+          <td><code>8:15 – 9:45</code></td>
+        </tr>
+        <tr>
+          <td><strong>Slide 8</strong></td>
+          <td>Non-Obvious Insights ("Fleet Sizing Trap" & "Charging Cascade")</td>
+          <td><strong>Ricardo Molina Gonzalez</strong></td>
+          <td><code>9:45 – 11:00</code></td>
+        </tr>
+        <tr>
+          <td><strong>Slide 9</strong></td>
+          <td>Conclusion, Deliverables Summary & Q&A</td>
+          <td><strong>All Team Members</strong></td>
+          <td><code>11:00 – 12:00</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 4 -->
+  <h2>4. GitHub Repository & Submission Artifacts</h2>
+  <p>
+    All code, models, documentation, and simulation experiments are hosted and version-controlled at:
+    <br>
+    <strong>GitHub Repository:</strong> <code>https://github.com/AI4666/mdc-robotics-simulation-twin</code>
+  </p>
+  <ul>
+    <li><code>anylogic_model/MDC_Robotics_Lab_Simulation.alp</code> — Primary AnyLogic 8 Project File</li>
+    <li><code>dashboard/app.py</code> — Streamlit Web Dashboard</li>
+    <li><code>rl_models/train_ppo.py</code> & <code>train_qlearning.py</code> — Reinforcement Learning Training Code</li>
+    <li><code>docs/Final_Project_Report_MDC.pdf</code> — Formal Academic Paper (PDF)</li>
+    <li><code>docs/Presentation_Slides_MDC.pdf</code> — 9-Slide Widescreen Presentation (PDF)</li>
+    <li><code>MDC_Robotics_Lab_Group_Final_Submission.zip</code> — Final Unified Canvas Submission Package</li>
+  </ul>
+
+</body>
+</html>
+"""
+
+def main():
+    docs_dir = Path(r"d:\Miami Dade College\Simulation For AI\mdc_robotics_simulation_twin\docs")
+    docs_dir.mkdir(parents=True, exist_ok=True)
+    
+    html_path = docs_dir / "Team_Accomplishments_and_Project_Overview_MDC.html"
+    pdf_path = docs_dir / "Team_Accomplishments_and_Project_Overview_MDC.pdf"
+
+    print(f"Writing HTML briefing to: {html_path}")
+    html_path.write_text(HTML_CONTENT, encoding="utf-8")
+
+    print(f"Rendering publication-quality PDF via Microsoft Edge headless...")
+    with tempfile.TemporaryDirectory() as tmp:
+        profile_dir = Path(tmp) / "profile"
+        subprocess.run([
+            EDGE,
+            "--headless=new",
+            "--disable-gpu",
+            "--no-pdf-header-footer",
+            "--run-all-compositor-stages-before-draw",
+            "--virtual-time-budget=9000",
+            f"--user-data-dir={profile_dir}",
+            f"--print-to-pdf={pdf_path}",
+            html_path.as_uri()
+        ], check=True)
+
+        last = -1
+        for _ in range(60):
+            size = pdf_path.stat().st_size if pdf_path.exists() else -1
+            if size > 0 and size == last:
+                break
+            last = size
+            time.sleep(0.5)
+
+    print("Successfully generated:")
+    print(f"Briefing HTML: {html_path} ({html_path.stat().st_size:,} bytes)")
+    print(f"Briefing PDF:  {pdf_path} ({pdf_path.stat().st_size:,} bytes)")
+
+if __name__ == "__main__":
+    main()
