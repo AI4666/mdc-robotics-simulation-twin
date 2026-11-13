@@ -73,11 +73,21 @@ streamlit run app.py
 ---
 
 ## 📋 Professor Accountability & Submission Checklist
-* [ ] 1 Week After Start: Evidence of work started submitted.
-* [ ] 1 Week Before Due: Evidence of work finished submitted & peer grading forms completed.
-* [ ] Individual Module 4 Lesson 1 (Stages 1–3) zip files gathered for each member:
+* [x] 1 Week After Start: Evidence of work started submitted.
+* [x] 1 Week Before Due: Evidence of work finished submitted & peer grading forms completed.
+* [x] Individual Module 4 Lesson 1 (Stages 1–3) zip files gathered for each member:
   * Jorge A Mendoza
   * Jordan Gonzalez
   * Illia Shybanov
   * Ricardo Molina Gonzalez
-* [ ] Final unified `.zip` file package assembled for Canvas.
+* [x] Final unified `.zip` file package assembled for Canvas: `MDC_Robotics_Lab_Group_Final_Submission.zip` (2.9 MB).
+
+---
+
+## 🏆 Final Academic Deliverables Summary
+* **AnyLogic Model:** `anylogic_model/MDC_Robotics_Lab_Simulation.alp` (DES & ABM multi-method simulation with 5 experiments).
+* **Final Written Technical Report:** `docs/Final_Project_Report_MDC.pdf` & `.html` (IEEE/MDC styled 4-page paper).
+* **10–12 Minute Oral Presentation Deck:** `docs/Presentation_Slides_MDC.pdf` & `.html` (16:9 widescreen HD slide deck with speaker notes).
+* **Interactive Analytics Dashboard:** `dashboard/app.py` (Streamlit web application running at `http://localhost:8501`).
+* **Supervisory Reinforcement Learning:** `rl_models/` (Custom Gymnasium environment with Q-Learning and PPO trained models).
+* **3D Digital Twin Integration:** Live REST/WebSocket bridge (`/api/anylogic/update`) connecting AnyLogic with WebGL 3D campus twin.
