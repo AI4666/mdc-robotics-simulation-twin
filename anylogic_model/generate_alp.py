@@ -429,14 +429,14 @@ ALP_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
 						<Parameter>
 							<Name><![CDATA[arrivalType]]></Name>
 							<Value Class="CodeValue">
-								<Code><![CDATA[self.INTERARRIVAL_TIME]]></Code>
+								<Code><![CDATA[self.RATE]]></Code>
 							</Value>
 						</Parameter>
 						<Parameter>
-							<Name><![CDATA[interarrivalTime]]></Name>
+							<Name><![CDATA[rate]]></Name>
 							<Value Class="CodeUnitValue">
-								<Code><![CDATA[exponential(60.0 / studentArrivalRate)]]></Code>
-								<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+								<Code><![CDATA[studentArrivalRate]]></Code>
+								<Unit Class="RateUnits"><![CDATA[PER_HOUR]]></Unit>
 							</Value>
 						</Parameter>
 						<Parameter>
@@ -484,9 +484,15 @@ ALP_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
 					</GenericParameterSubstitute>
 					<Parameters>
 						<Parameter>
+							<Name><![CDATA[maximumCapacity]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[true]]></Code>
+							</Value>
+						</Parameter>
+						<Parameter>
 							<Name><![CDATA[capacity]]></Name>
 							<Value Class="CodeValue">
-								<Code><![CDATA[100]]></Code>
+								<Code><![CDATA[10000]]></Code>
 							</Value>
 						</Parameter>
 						<Parameter>
@@ -519,6 +525,18 @@ ALP_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
 						</GenericParameterSubstituteReference>
 					</GenericParameterSubstitute>
 					<Parameters>
+						<Parameter>
+							<Name><![CDATA[maximumCapacity]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[true]]></Code>
+							</Value>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[capacity]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[10000]]></Code>
+							</Value>
+						</Parameter>
 						<Parameter>
 							<Name><![CDATA[resourcePool]]></Name>
 							<Value Class="CodeValue">
