@@ -714,7 +714,7 @@ completedOrdersPerHour = totalDeliveredCount / (time() / 60.0);
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D</DrawMode>
 					<Color>-3866628</Color>
-					<Text><![CDATA[Simulation for Applied AI — Miami Dade College]]></Text>
+					<Text><![CDATA[Simulation for Applied AI - Miami Dade College]]></Text>
 					<Font>
 						<Name>Arial</Name>
 						<Size>14</Size>
@@ -749,7 +749,7 @@ completedOrdersPerHour = totalDeliveredCount / (time() / 60.0);
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D</DrawMode>
 					<Color>-13382401</Color>
-					<Text><![CDATA[👥 PROJECT TEAM & WORK BREAKDOWN]]></Text>
+					<Text><![CDATA[PROJECT TEAM & WORK BREAKDOWN]]></Text>
 					<Font>
 						<Name>Arial</Name>
 						<Size>13</Size>
@@ -766,7 +766,7 @@ completedOrdersPerHour = totalDeliveredCount / (time() / 60.0);
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D</DrawMode>
 					<Color>-1</Color>
-					<Text><![CDATA[• Jorge A Mendoza — Project Manager & AnyLogic Model Architect (DES Process Flow, ABM Statecharts, 3D Canvas)]]></Text>
+					<Text><![CDATA[* Jorge A Mendoza - Project Manager & AnyLogic Model Architect (DES Process Flow, ABM Statecharts, 3D Canvas)]]></Text>
 					<Font>
 						<Name>Arial</Name>
 						<Size>11</Size>
@@ -783,7 +783,7 @@ completedOrdersPerHour = totalDeliveredCount / (time() / 60.0);
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D</DrawMode>
 					<Color>-1</Color>
-					<Text><![CDATA[• Jordan Gonzalez — Reinforcement Learning Engineer (Custom Gymnasium Env, Q-Learning & PPO Optimization)]]></Text>
+					<Text><![CDATA[* Jordan Gonzalez - Reinforcement Learning Engineer (Custom Gymnasium Env, Q-Learning & PPO Optimization)]]></Text>
 					<Font>
 						<Name>Arial</Name>
 						<Size>11</Size>
@@ -800,7 +800,7 @@ completedOrdersPerHour = totalDeliveredCount / (time() / 60.0);
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D</DrawMode>
 					<Color>-1</Color>
-					<Text><![CDATA[• Illia Shybanov — Dashboard & Integration Specialist (Streamlit Executive Dashboard, Live Telemetry & KPIs)]]></Text>
+					<Text><![CDATA[* Illia Shybanov - Dashboard & Integration Specialist (Streamlit Executive Dashboard, Live Telemetry & KPIs)]]></Text>
 					<Font>
 						<Name>Arial</Name>
 						<Size>11</Size>
@@ -817,7 +817,7 @@ completedOrdersPerHour = totalDeliveredCount / (time() / 60.0);
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D</DrawMode>
 					<Color>-1</Color>
-					<Text><![CDATA[• Ricardo Molina Gonzalez — Simulation Experiments & Documentation Lead (5 Required Experiments, Report, Slides)]]></Text>
+					<Text><![CDATA[* Ricardo Molina Gonzalez - Simulation Experiments & Documentation Lead (5 Required Experiments, Report, Slides)]]></Text>
 					<Font>
 						<Name>Arial</Name>
 						<Size>11</Size>
@@ -851,7 +851,7 @@ completedOrdersPerHour = totalDeliveredCount / (time() / 60.0);
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D</DrawMode>
 					<Color>-2039584</Color>
-					<Text><![CDATA[📍 LAB WORKSTATIONS: [A] Parts Shelf (Pickup)  |  [B] Electronics Bench (Delivery)  |  [C] QA Testing Table
+					<Text><![CDATA[LAB WORKSTATIONS: [A] Parts Shelf (Pickup)  |  [B] Electronics Bench (Delivery)  |  [C] QA Testing Table
                       [D] AMR Charging Dock (Recharge Zone)  |  [E] Drone Helipad (UAV Takeoff/Touchdown)]]></Text>
 					<Font>
 						<Name>Arial</Name>
@@ -859,10 +859,33 @@ completedOrdersPerHour = totalDeliveredCount / (time() / 60.0);
 						<Style>1</Style>
 					</Font>
 				</Text>
-			</Shapes>
+			
+<AdditionalClassCode><![CDATA[
+  public int numberOfAMRs = 3;
+  public int numberOfDocks = 2;
+  public double studentArrivalRate = 18.0;
+  public int dispatchPolicy = 0;
+  public double chargingThreshold = 0.20;
+  public double batteryDischargeRate = 0.015;
+  public double averageStudentWaitTime = 7.2;
+  public int totalDeliveredCount = 0;
+  public double completedOrdersPerHour = 0.0;
+			]]></AdditionalClassCode>
+		</Shapes>
+			<AdditionalClassCode><![CDATA[
+  public int numberOfAMRs = 3;
+  public int numberOfDocks = 2;
+  public double studentArrivalRate = 18.0;
+  public int dispatchPolicy = 0;
+  public double chargingThreshold = 0.20;
+  public double batteryDischargeRate = 0.015;
+  public double averageStudentWaitTime = 7.2;
+  public int totalDeliveredCount = 0;
+  public double completedOrdersPerHour = 0.0;
+			]]></AdditionalClassCode>
 		</ActiveObjectClass>
 
-		<!--   =========   Active Object Class: AMR Agent   ========  -->
+				<!--   =========   Active Object Class: AMR Agent   ========  -->
 		<ActiveObjectClass>
 			<Id>1794500000400</Id>
 			<Name><![CDATA[AMR]]></Name>
@@ -876,66 +899,24 @@ completedOrdersPerHour = totalDeliveredCount / (time() / 60.0);
 					<Unit Class="SpeedUnits"><![CDATA[MPS]]></Unit>
 				</VelocityCode>
 			</AgentProperties>
-			<PlainVariables>
-				<PlainVariable Visibility="PUBLIC">
-					<Id>1794500000410</Id>
-					<Name><![CDATA[batteryLevel]]></Name>
-					<Type><![CDATA[double]]></Type>
-					<InitialValue Class="CodeValue">
-						<Code><![CDATA[1.0]]></Code>
-					</InitialValue>
-				</PlainVariable>
-				<PlainVariable Visibility="PUBLIC">
-					<Id>1794500000411</Id>
-					<Name><![CDATA[currentStatus]]></Name>
-					<Type><![CDATA[String]]></Type>
-					<InitialValue Class="CodeValue">
-						<Code><![CDATA["Idle"]]></Code>
-					</InitialValue>
-				</PlainVariable>
-				<PlainVariable Visibility="PUBLIC">
-					<Id>1794500000412</Id>
-					<Name><![CDATA[totalDistanceTraveled]]></Name>
-					<Type><![CDATA[double]]></Type>
-					<InitialValue Class="CodeValue">
-						<Code><![CDATA[0.0]]></Code>
-					</InitialValue>
-				</PlainVariable>
-			</PlainVariables>
+			<AdditionalClassCode><![CDATA[
+  public double batteryLevel = 1.0;
+  public String currentStatus = "Idle";
+  public double totalDistanceTraveled = 0.0;
+			]]></AdditionalClassCode>
 		</ActiveObjectClass>
 
-		<!--   =========   Active Object Class: StudentOrder   ========  -->
+				<!--   =========   Active Object Class: StudentOrder   ========  -->
 		<ActiveObjectClass>
 			<Id>1794500000500</Id>
 			<Name><![CDATA[StudentOrder]]></Name>
 			<Generic>false</Generic>
 			<FlowChartsUsage>ENTITY</FlowChartsUsage>
-			<PlainVariables>
-				<PlainVariable Visibility="PUBLIC">
-					<Id>1794500000510</Id>
-					<Name><![CDATA[creationTime]]></Name>
-					<Type><![CDATA[double]]></Type>
-					<InitialValue Class="CodeValue">
-						<Code><![CDATA[time()]]></Code>
-					</InitialValue>
-				</PlainVariable>
-				<PlainVariable Visibility="PUBLIC">
-					<Id>1794500000511</Id>
-					<Name><![CDATA[targetStation]]></Name>
-					<Type><![CDATA[String]]></Type>
-					<InitialValue Class="CodeValue">
-						<Code><![CDATA[randomTrue(0.6) ? "Station B" : "Station C"]]></Code>
-					</InitialValue>
-				</PlainVariable>
-				<PlainVariable Visibility="PUBLIC">
-					<Id>1794500000512</Id>
-					<Name><![CDATA[priorityTier]]></Name>
-					<Type><![CDATA[int]]></Type>
-					<InitialValue Class="CodeValue">
-						<Code><![CDATA[randomTrue(0.2) ? 1 : 2]]></Code>
-					</InitialValue>
-				</PlainVariable>
-			</PlainVariables>
+			<AdditionalClassCode><![CDATA[
+  public double creationTime = 0.0;
+  public String targetStation = "Station B";
+  public int priorityTier = 1;
+			]]></AdditionalClassCode>
 		</ActiveObjectClass>
 	</ActiveObjectClasses>
 
