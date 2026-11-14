@@ -874,18 +874,6 @@ completedOrdersPerHour = totalDeliveredCount / (time() / 60.0);
 						<Style>1</Style>
 					</Font>
 				</Text>
-			
-<AdditionalClassCode><![CDATA[
-  public int numberOfAMRs = 3;
-  public int numberOfDocks = 2;
-  public double studentArrivalRate = 18.0;
-  public int dispatchPolicy = 0;
-  public double chargingThreshold = 0.20;
-  public double batteryDischargeRate = 0.015;
-  public double averageStudentWaitTime = 7.2;
-  public int totalDeliveredCount = 0;
-  public double completedOrdersPerHour = 0.0;
-			]]></AdditionalClassCode>
 		</Shapes>
 			<AdditionalClassCode><![CDATA[
   public int numberOfAMRs = 3;
@@ -918,6 +906,7 @@ completedOrdersPerHour = totalDeliveredCount / (time() / 60.0);
   public double batteryLevel = 1.0;
   public String currentStatus = "Idle";
   public double totalDistanceTraveled = 0.0;
+  private void instantiatePersistentElements_xjal() {}
 			]]></AdditionalClassCode>
 		</ActiveObjectClass>
 
@@ -931,6 +920,7 @@ completedOrdersPerHour = totalDeliveredCount / (time() / 60.0);
   public double creationTime = 0.0;
   public String targetStation = "Station B";
   public int priorityTier = 1;
+  private void instantiatePersistentElements_xjal() {}
 			]]></AdditionalClassCode>
 		</ActiveObjectClass>
 	</ActiveObjectClasses>
