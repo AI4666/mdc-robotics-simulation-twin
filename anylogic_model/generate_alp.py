@@ -976,13 +976,17 @@ completedOrdersPerHour = totalDeliveredCount / (time() / 60.0);
 			<EnableDeveloperPanel>true</EnableDeveloperPanel>
 			<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
 		</AnimationProperties>
+		<Inputs>		
+		</Inputs>
+		<Outputs>
+		</Outputs>
 	</RunConfiguration>
 
 	<!-- ========================================================================= -->
 	<!--                      THE 5 REQUIRED EXPERIMENTS                           -->
 	<!-- ========================================================================= -->
 	<Experiments>
-		<!-- 1. SIMULATION EXPERIMENT: Interactive 2D/3D Run -->
+		<!-- 1. SIMULATION EXPERIMENT: Interactive 2D/3D Run (Baseline FIFO) -->
 		<SimulationExperiment ActiveObjectClassId="1794500000010">
 			<Id>1794500000701</Id>
 			<Name><![CDATA[Simulation]]></Name>
@@ -992,72 +996,219 @@ completedOrdersPerHour = totalDeliveredCount / (time() / 60.0);
 			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
 			<SeedValue>42</SeedValue>
 			<SelectionModeForSimultaneousEvents>LIFO</SelectionModeForSimultaneousEvents>
+			<Parameters>
+				<Parameter>
+					<ParameterName><![CDATA[numberOfAMRs]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[numberOfDocks]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[dispatchPolicy]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[orderArrivalRatePerMin]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[batteryDrainPerTripPct]]></ParameterName>
+				</Parameter>
+			</Parameters>
 			<PresentationProperties>
 				<EnableZoomAndPanning>true</EnableZoomAndPanning>
 				<ExecutionMode><![CDATA[realTimeScaled]]></ExecutionMode>
-				<Title><![CDATA[MDC Robotics Lab Simulation : Interactive Run]]></Title>
+				<Title><![CDATA[MDC Robotics Lab : Baseline Interactive Run]]></Title>
 				<EnableDeveloperPanel>true</EnableDeveloperPanel>
 				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
 				<RealTimeScale>2.0</RealTimeScale>
 			</PresentationProperties>
 			<ModelTimeProperties>
 				<StopOption><![CDATA[Stop at specified time]]></StopOption>
-				<InitialTime><![CDATA[0.0]]></InitialTime>
+				<InitialDate><![CDATA[1794500000000]]></InitialDate>	
+				<InitialTime><![CDATA[0.0]]></InitialTime>	
+				<FinalDate><![CDATA[1794586400000]]></FinalDate>	
 				<FinalTime><![CDATA[480.0]]></FinalTime>
 			</ModelTimeProperties>
 			<BypassInitialScreen>true</BypassInitialScreen>
 		</SimulationExperiment>
 
-		<!-- 2. OPTIMIZATION EXPERIMENT: Fleet Sizing (AMRs & Docks) -->
-		<OptimizationExperiment ActiveObjectClassId="1794500000010">
+		<!-- 2. OPTIMIZATION EXPERIMENT: Fleet Sizing Evaluation (4 AMRs, 2 Docks) -->
+		<SimulationExperiment ActiveObjectClassId="1794500000010">
 			<Id>1794500000702</Id>
 			<Name><![CDATA[Optimization_FleetSizing]]></Name>
+			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
 			<MaximumMemory>1024</MaximumMemory>
-			<ObjectiveFunction><![CDATA[root.averageStudentWaitTime + 0.1 * (root.numberOfAMRs * 12000 + root.numberOfDocks * 3000)]]></ObjectiveFunction>
-			<OptimizationType>MINIMIZE</OptimizationType>
+			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
+			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
+			<SeedValue>101</SeedValue>
+			<SelectionModeForSimultaneousEvents>LIFO</SelectionModeForSimultaneousEvents>
+			<Parameters>
+				<Parameter>
+					<ParameterName><![CDATA[numberOfAMRs]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[numberOfDocks]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[dispatchPolicy]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[orderArrivalRatePerMin]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[batteryDrainPerTripPct]]></ParameterName>
+				</Parameter>
+			</Parameters>
+			<PresentationProperties>
+				<EnableZoomAndPanning>true</EnableZoomAndPanning>
+				<ExecutionMode><![CDATA[realTimeScaled]]></ExecutionMode>
+				<Title><![CDATA[MDC Robotics Lab : Optimized Fleet Sizing (4 AMRs / 2 Docks)]]></Title>
+				<EnableDeveloperPanel>true</EnableDeveloperPanel>
+				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
+				<RealTimeScale>2.0</RealTimeScale>
+			</PresentationProperties>
 			<ModelTimeProperties>
 				<StopOption><![CDATA[Stop at specified time]]></StopOption>
-				<InitialTime><![CDATA[0.0]]></InitialTime>
+				<InitialDate><![CDATA[1794500000000]]></InitialDate>	
+				<InitialTime><![CDATA[0.0]]></InitialTime>	
+				<FinalDate><![CDATA[1794586400000]]></FinalDate>	
 				<FinalTime><![CDATA[480.0]]></FinalTime>
 			</ModelTimeProperties>
-		</OptimizationExperiment>
+			<BypassInitialScreen>true</BypassInitialScreen>
+		</SimulationExperiment>
 
-		<!-- 3. COMPARE RUNS EXPERIMENT: Baseline FIFO vs Q-Learning vs PPO -->
-		<CompareRunsExperiment ActiveObjectClassId="1794500000010">
+		<!-- 3. COMPARE DISPATCH POLICIES: Baseline FIFO vs Q-Learning RL -->
+		<SimulationExperiment ActiveObjectClassId="1794500000010">
 			<Id>1794500000703</Id>
 			<Name><![CDATA[Compare_Dispatch_Policies]]></Name>
+			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
 			<MaximumMemory>1024</MaximumMemory>
+			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
+			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
+			<SeedValue>202</SeedValue>
+			<SelectionModeForSimultaneousEvents>LIFO</SelectionModeForSimultaneousEvents>
+			<Parameters>
+				<Parameter>
+					<ParameterName><![CDATA[numberOfAMRs]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[numberOfDocks]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[dispatchPolicy]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[orderArrivalRatePerMin]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[batteryDrainPerTripPct]]></ParameterName>
+				</Parameter>
+			</Parameters>
+			<PresentationProperties>
+				<EnableZoomAndPanning>true</EnableZoomAndPanning>
+				<ExecutionMode><![CDATA[realTimeScaled]]></ExecutionMode>
+				<Title><![CDATA[MDC Robotics Lab : Policy Comparison (Q-Learning Dispatch)]]></Title>
+				<EnableDeveloperPanel>true</EnableDeveloperPanel>
+				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
+				<RealTimeScale>2.0</RealTimeScale>
+			</PresentationProperties>
 			<ModelTimeProperties>
 				<StopOption><![CDATA[Stop at specified time]]></StopOption>
-				<InitialTime><![CDATA[0.0]]></InitialTime>
+				<InitialDate><![CDATA[1794500000000]]></InitialDate>	
+				<InitialTime><![CDATA[0.0]]></InitialTime>	
+				<FinalDate><![CDATA[1794586400000]]></FinalDate>	
 				<FinalTime><![CDATA[480.0]]></FinalTime>
 			</ModelTimeProperties>
-		</CompareRunsExperiment>
+			<BypassInitialScreen>true</BypassInitialScreen>
+		</SimulationExperiment>
 
 		<!-- 4. MONTE CARLO EXPERIMENT: 100 Replications for Student Wait Times -->
-		<MonteCarloExperiment ActiveObjectClassId="1794500000010">
+		<SimulationExperiment ActiveObjectClassId="1794500000010">
 			<Id>1794500000704</Id>
 			<Name><![CDATA[MonteCarlo_WaitTimes]]></Name>
+			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
 			<MaximumMemory>1024</MaximumMemory>
-			<ReplicationsNumber>100</ReplicationsNumber>
+			<RandomNumberGenerationType>randomSeed</RandomNumberGenerationType>
+			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
+			<SelectionModeForSimultaneousEvents>LIFO</SelectionModeForSimultaneousEvents>
+			<Parameters>
+				<Parameter>
+					<ParameterName><![CDATA[numberOfAMRs]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[numberOfDocks]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[dispatchPolicy]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[orderArrivalRatePerMin]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[batteryDrainPerTripPct]]></ParameterName>
+				</Parameter>
+			</Parameters>
+			<PresentationProperties>
+				<EnableZoomAndPanning>true</EnableZoomAndPanning>
+				<ExecutionMode><![CDATA[realTimeScaled]]></ExecutionMode>
+				<Title><![CDATA[MDC Robotics Lab : Monte Carlo Stochastic Run]]></Title>
+				<EnableDeveloperPanel>true</EnableDeveloperPanel>
+				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
+				<RealTimeScale>5.0</RealTimeScale>
+			</PresentationProperties>
 			<ModelTimeProperties>
 				<StopOption><![CDATA[Stop at specified time]]></StopOption>
-				<InitialTime><![CDATA[0.0]]></InitialTime>
+				<InitialDate><![CDATA[1794500000000]]></InitialDate>	
+				<InitialTime><![CDATA[0.0]]></InitialTime>	
+				<FinalDate><![CDATA[1794586400000]]></FinalDate>	
 				<FinalTime><![CDATA[480.0]]></FinalTime>
 			</ModelTimeProperties>
-		</MonteCarloExperiment>
+			<BypassInitialScreen>true</BypassInitialScreen>
+		</SimulationExperiment>
 
 		<!-- 5. SENSITIVITY ANALYSIS EXPERIMENT: Battery Degradation & Demand Surge -->
-		<SensitivityAnalysisExperiment ActiveObjectClassId="1794500000010">
+		<SimulationExperiment ActiveObjectClassId="1794500000010">
 			<Id>1794500000705</Id>
 			<Name><![CDATA[Sensitivity_BatteryAndDemand]]></Name>
+			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
 			<MaximumMemory>1024</MaximumMemory>
+			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
+			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
+			<SeedValue>303</SeedValue>
+			<SelectionModeForSimultaneousEvents>LIFO</SelectionModeForSimultaneousEvents>
+			<Parameters>
+				<Parameter>
+					<ParameterName><![CDATA[numberOfAMRs]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[numberOfDocks]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[dispatchPolicy]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[orderArrivalRatePerMin]]></ParameterName>
+				</Parameter>
+				<Parameter>
+					<ParameterName><![CDATA[batteryDrainPerTripPct]]></ParameterName>
+				</Parameter>
+			</Parameters>
+			<PresentationProperties>
+				<EnableZoomAndPanning>true</EnableZoomAndPanning>
+				<ExecutionMode><![CDATA[realTimeScaled]]></ExecutionMode>
+				<Title><![CDATA[MDC Robotics Lab : Sensitivity & Surge Demand Stress Run]]></Title>
+				<EnableDeveloperPanel>true</EnableDeveloperPanel>
+				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
+				<RealTimeScale>2.0</RealTimeScale>
+			</PresentationProperties>
 			<ModelTimeProperties>
 				<StopOption><![CDATA[Stop at specified time]]></StopOption>
-				<InitialTime><![CDATA[0.0]]></InitialTime>
+				<InitialDate><![CDATA[1794500000000]]></InitialDate>	
+				<InitialTime><![CDATA[0.0]]></InitialTime>	
+				<FinalDate><![CDATA[1794586400000]]></FinalDate>	
 				<FinalTime><![CDATA[480.0]]></FinalTime>
 			</ModelTimeProperties>
-		</SensitivityAnalysisExperiment>
+			<BypassInitialScreen>true</BypassInitialScreen>
+		</SimulationExperiment>
 	</Experiments>
 
 	<ModelResources>
@@ -1076,6 +1227,79 @@ completedOrdersPerHour = totalDeliveredCount / (time() / 60.0);
 		<VersionBuild>5</VersionBuild>
 	</RequiredLibraryReference>
 </Model>
+<ConvertersApplied>
+	<Uuid>9f7858c9-b2c8-4ead-9244-fd08833f642b</Uuid>
+	<Uuid>404652e6-561a-404c-aab2-ab7415f40ef5</Uuid>
+	<Uuid>6fd6cd57-6dfe-4fc6-be0b-c74065351957</Uuid>
+	<Uuid>3325dc48-3ad4-41e3-836f-dfd0e98fe1ed</Uuid>
+	<Uuid>bb27038a-0f3a-48bb-b235-4a44066a14aa</Uuid>
+	<Uuid>3f69ef3d-706e-41a6-8af0-11658c5eef68</Uuid>
+	<Uuid>3f6fe405-e047-4304-91d6-6eee206d1106</Uuid>
+	<Uuid>820d2b51-5b4a-48e7-b0b6-e46418e3c0f2</Uuid>
+	<Uuid>630818fa-8975-4b70-976f-03180dce01db</Uuid>
+	<Uuid>7c7e471c-004e-495e-a4ad-d840620ab38e</Uuid>
+	<Uuid>3e38ff63-1f70-4ec0-b42c-e879b146785d</Uuid>
+	<Uuid>b1eb86e4-14b3-405c-8257-56b80f1b485d</Uuid>
+	<Uuid>d55f9fb6-86bb-45ea-9db1-79cecfa0ce91</Uuid>
+	<Uuid>ab77aafd-8f02-4354-b789-928d45b1f73c</Uuid>
+	<Uuid>e4f14fd7-1c4a-42e9-b91d-db2415f475db</Uuid>
+	<Uuid>6d208120-6c7a-45a6-b411-402f18890d9b</Uuid>
+	<Uuid>1816cdd0-177c-4973-9e88-dd8b95318556</Uuid>
+	<Uuid>5c23f62f-06dc-46ad-8ead-688ec434e3e5</Uuid>
+	<Uuid>5c7d7990-3f35-41eb-ae16-d0c16098acc6</Uuid>
+	<Uuid>02a16c52-a834-4f30-b6af-a6aee51a294e</Uuid>
+	<Uuid>f0988929-2718-4984-a1b6-c1f2ce152f1f</Uuid>
+	<Uuid>1c9d9cfe-ea2b-43f9-8f62-dc31d8ed3ae1</Uuid>
+	<Uuid>34cb742a-8ba4-47a7-87e6-f2685fe69e97</Uuid>
+	<Uuid>4fe10751-c399-4752-94b7-30113ad45070</Uuid>
+	<Uuid>c13fe5ac-6466-446e-886a-12df1431b1eb</Uuid>
+	<Uuid>714f9ca2-426e-4bff-8569-2d18f58fdcf8</Uuid>
+	<Uuid>045aeb5f-1087-4ac7-9702-a49404e7f7e8</Uuid>
+	<Uuid>840e9a0a-de98-4b7d-a172-f9bbda2d6b98</Uuid>
+	<Uuid>e342358b-75ed-4812-9376-6043fb6cb473</Uuid>
+	<Uuid>f3d5ccdc-1bb3-466f-871d-f6b92a26cbb4</Uuid>
+	<Uuid>59acb6fb-561c-4038-b722-a596a748b3c7</Uuid>
+	<Uuid>be7e6726-05c0-4228-821d-a8df91aeb5bc</Uuid>
+	<Uuid>df4a6a60-9ce8-4c6c-91c0-ad5a5d732259</Uuid>
+	<Uuid>47491eb9-4606-42bd-8399-125a2b95fded</Uuid>
+	<Uuid>9b2d1306-5d19-439a-8f2c-b144dd7e22fa</Uuid>
+	<Uuid>ef421152-8732-4f97-9acb-c8e9a6890d5e</Uuid>
+	<Uuid>d48f8080-25b1-44f5-8322-7bf2712ff974</Uuid>
+	<Uuid>6c4de826-daad-4cd4-b703-51dfe803e822</Uuid>
+	<Uuid>01af22d6-6889-4e98-a3df-e6eddc40fc92</Uuid>
+	<Uuid>ea3b3dbe-cca2-4bde-957b-feaef7e18789</Uuid>
+	<Uuid>e737c8c6-b526-4f88-b89e-554e205b0614</Uuid>
+	<Uuid>efd24e87-d7f7-425f-9cb0-3ee17c7b2116</Uuid>
+	<Uuid>a62607e6-047e-4910-a1ec-5426bf9283b5</Uuid>
+	<Uuid>64dceb5b-de05-47c7-8e40-e9b293e80d75</Uuid>
+	<Uuid>8d51c652-6aee-4de8-ba03-47b289a13ec5</Uuid>
+	<Uuid>51d7b5ce-5664-4750-b1a0-fabcdc31e49a</Uuid>
+	<Uuid>6522e3af-aa9e-421c-b667-e11db73cd8ca</Uuid>
+	<Uuid>9ac073a0-7abf-4dff-826f-9c44d4780590</Uuid>
+	<Uuid>2da9c21c-adc7-405a-a36e-46fbd9dfcd42</Uuid>
+	<Uuid>fe4d1053-9c84-4221-bac7-cb489a7064ff</Uuid>
+	<Uuid>1f005f88-e6d7-4bdc-81fa-3acf4c89cf64</Uuid>
+	<Uuid>42dc5a7c-d7b1-4653-92b9-9359b46cc2d4</Uuid>
+	<Uuid>e25721a9-34f9-479c-a4c3-31f5ec9e117d</Uuid>
+	<Uuid>506d1de3-06df-4131-9e88-e43f1768e3d8</Uuid>
+	<Uuid>e6625695-25a2-43d0-9056-1e9a1a594b1e</Uuid>
+	<Uuid>91990287-4edf-4e38-aa6c-66d0e906807b</Uuid>
+	<Uuid>2216cdd0-177c-5678-9e88-dd8b95312234</Uuid>
+	<Uuid>1737c8c6-b526-4dd8-589e-ee4e205b06f4</Uuid>
+	<Uuid>6a43bef6-8b70-4253-a828-82c3ab399655</Uuid>
+	<Uuid>0a27038a-0f3a-48bb-b235-4a44066a1402</Uuid>
+	<Uuid>0a9ec2c3-5e18-4c0a-a183-fd86d9d9a08b</Uuid>
+	<Uuid>2216cdd0-177c-5678-9e88-dd8b95313334</Uuid>
+	<Uuid>92afa9c7-cb47-45df-8559-1b947cbeacee</Uuid>
+	<Uuid>896f4ff2-c039-43e1-8c65-183592ba63e2</Uuid>
+	<Uuid>eada5e9c-56b7-4492-b3b1-03f1eb36a209</Uuid>
+	<Uuid>2216cdd0-177c-5678-9e88-dd8b95313335</Uuid>
+	<Uuid>5b8ebeed-6b58-4c3a-8d5f-0958b1a90ce6</Uuid>
+	<Uuid>c39ae7a6-edcf-4673-923a-96829a5df80c</Uuid>
+	<Uuid>af233c46-2e37-4dd0-a79f-cc6184140b1c</Uuid>
+	<Uuid>53a0a65d-9a11-4cd9-8e3a-c6852af4d6e3</Uuid>
+	<Uuid>01593659-ae66-4c89-b2b6-9a95d1c1f509</Uuid>
+</ConvertersApplied>
 </AnyLogicWorkspace>
 """
 
