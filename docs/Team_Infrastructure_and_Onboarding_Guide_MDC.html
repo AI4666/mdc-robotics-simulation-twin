@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Infrastructure Audit & Developer Onboarding Guide — MDC Simulation for Applied AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  @page {
+    size: letter portrait;
+    margin: 0.5in 0.55in 0.5in 0.55in;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #0f172a;
+    background: #ffffff;
+    line-height: 1.42;
+    font-size: 9.2pt;
+    margin: 0;
+    padding: 0;
+  }
+  .page-header {
+    border-bottom: 2.5px solid #0047ba;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .inst-title {
+    font-size: 13pt;
+    font-weight: 800;
+    color: #0047ba;
+    letter-spacing: -0.2px;
+  }
+  .course-tag {
+    font-size: 8.5pt;
+    color: #475569;
+    font-weight: 600;
+  }
+  h1 {
+    font-size: 15.5pt;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+    margin: 0 0 4px 0;
+    letter-spacing: -0.3px;
+  }
+  .subtitle {
+    font-size: 9.5pt;
+    color: #0284c7;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  h2 {
+    font-size: 11pt;
+    font-weight: 700;
+    color: #0047ba;
+    border-bottom: 1.5px solid #cbd5e1;
+    padding-bottom: 3px;
+    margin: 12px 0 6px 0;
+    break-after: avoid;
+  }
+  h3 {
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 6px 0 3px 0;
+    break-after: avoid;
+  }
+  p { margin: 0 0 6px 0; }
+  ul, ol { margin: 0 0 6px 0; padding-left: 18px; }
+  li { margin-bottom: 3px; }
+
+  .meta-banner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-left: 4px solid #0047ba;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    font-size: 8.2pt;
+  }
+  .meta-banner div strong {
+    display: block;
+    font-size: 6.8pt;
+    text-transform: uppercase;
+    color: #64748b;
+    letter-spacing: 0.4px;
+  }
+  .meta-banner div span {
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  .arch-box {
+    background: #0f172a;
+    color: #f8fafc;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin: 8px 0 10px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.4pt;
+    line-height: 1.35;
+    white-space: pre;
+    overflow-x: hidden;
+    border: 1px solid #334155;
+  }
+
+  .table-wrap {
+    width: 100%;
+    margin: 6px 0 10px 0;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #cbd5e1;
+  }
+  table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 8.1pt;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  th {
+    background: #0f172a;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 5px 7px;
+    text-align: left;
+    border: 1px solid #334155;
+  }
+  td {
+    padding: 5px 7px;
+    border: 1px solid #e2e8f0;
+    color: #1e293b;
+    vertical-align: top;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  tr:nth-child(even) td { background: #f8fafc; }
+
+  .badge-ok {
+    display: inline-block;
+    background: #dcfce7;
+    color: #15803d;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-size: 7.2pt;
+    margin-bottom: 2px;
+  }
+  .badge-partial {
+    display: inline-block;
+    background: #fef3c7;
+    color: #b45309;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-size: 7.2pt;
+    margin-bottom: 2px;
+  }
+
+  .role-card {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-left: 4px solid #0284c7;
+    border-radius: 6px;
+    padding: 8px 11px;
+    margin-bottom: 8px;
+    break-inside: avoid;
+  }
+  .role-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 3px;
+    margin-bottom: 5px;
+  }
+  .role-name {
+    font-size: 9.8pt;
+    font-weight: 800;
+    color: #0f172a;
+  }
+  .role-title {
+    font-size: 8.2pt;
+    font-weight: 600;
+    color: #0284c7;
+  }
+
+  .callout {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-left: 4px solid #0284c7;
+    border-radius: 5px;
+    padding: 8px 11px;
+    margin: 8px 0;
+    font-size: 8.5pt;
+    break-inside: avoid;
+  }
+  .callout-warn {
+    background: #fffbeb;
+    border-color: #fde68a;
+    border-left-color: #f59e0b;
+  }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.6pt;
+    background: #f1f5f9;
+    padding: 1px 4px;
+    border-radius: 3px;
+    color: #0369a1;
+    word-break: break-word;
+  }
+  pre {
+    background: #0f172a;
+    color: #f8fafc;
+    padding: 7px 10px;
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    line-height: 1.32;
+    margin: 4px 0 6px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .page-break { page-break-before: always; }
+</style>
+</head>
+<body>
+
+  <!-- ==================== PAGE 1: INFRASTRUCTURE & DIRECTORY MAP ==================== -->
+  <div class="page-header">
+    <div>
+      <div class="inst-title">Miami Dade College &bull; Simulation for Applied AI</div>
+      <div class="course-tag">Technical Infrastructure Audit, Codebase Map &amp; Team Contribution Guide</div>
+    </div>
+    <div style="text-align: right; font-size: 8pt; color: #64748b;">
+      <div>Document Type: Developer Onboarding &amp; Audit</div>
+      <div>Team: Jorge, Jordan, Illia, Ricardo</div>
+    </div>
+  </div>
+
+  <h1>Project Infrastructure &amp; Team Engineering Guide</h1>
+  <div class="subtitle">How Our Two Repositories Work Together, Current Verification Status, and How Every Team Member Can Contribute &amp; Improve It</div>
+
+  <div class="meta-banner">
+    <div><strong>Repo 1 (Simulation &amp; AI)</strong><span>mdc_robotics_simulation_twin</span></div>
+    <div><strong>Repo 2 (3D Digital Twin)</strong><span>AI-3D-Robotics-Lab</span></div>
+    <div><strong>Active Services</strong><span>Port 3000 (3D) &amp; Port 8501 (UI)</span></div>
+    <div><strong>Simulation Engine</strong><span>AnyLogic 8 (.alp) + Python Gym</span></div>
+  </div>
+
+  <h2>1. High-Level Infrastructure Overview</h2>
+  <p>
+    Our project is organized across <strong>two interconnected repositories</strong> that combine three core technologies: (1) an <strong>AnyLogic 8 Multi-Method Simulation Engine</strong> (<code>.alp</code>), (2) a <strong>Python Reinforcement Learning &amp; Streamlit Analytics Stack</strong> (<code>mdc_robotics_simulation_twin</code>), and (3) a <strong>Node.js + Three.js 3D WebGL Digital Twin</strong> (<code>AI-3D-Robotics-Lab</code>).
+  </p>
+
+  <div class="arch-box">┌───────────────────────────────────────────────────────────────────────────────────────────┐
+│                         1. ANYLOGIC 8 SIMULATION ENGINE (Java)                            │
+│        File: mdc_robotics_simulation_twin/anylogic_model/MDC_Robotics_Lab_Simulation.alp  │
+│  • Discrete-Event (DES) Pipeline: orderSource ➔ orderQueue ➔ seizeAMR ➔ Delay ➔ Sink      │
+│  • Agent-Based (ABM) Fleet: AMR agents, StudentOrder entities, ResourcePool (amrPool)     │
+│  • 5 Configured Experiment Blocks: Baseline, Optimization, Compare, MonteCarlo, Sensitiv. │
+└───────────────────────────┬───────────────────────────────────────────┬───────────────────┘
+                            │                                           │
+        Channel A: HTTP POST│ /api/anylogic/update                      │ Channel B: JSON / CSV Logs
+        (Robot X,Y, Battery)│                                           │ &amp; Policy Parameters
+                            ▼                                           ▼
+┌───────────────────────────────────────────────────┐   ┌───────────────────────────────────┐
+│       2. 3D WEBGL DIGITAL TWIN (Port 3000)        │   │  3. RL ENGINE &amp; STREAMLIT (8501)  │
+│       Repo: AI-3D-Robotics-Lab/digital_twin_app   │   │  Repo: mdc_robotics_simulation_twin│
+│  • server.js: Express REST + WebSocket (/ws)      │◄──┼─ • rl_models/robotics_lab_env.py  │
+│  • world_model.js: 6 AMRs, 1 G1, 3 UAV Drones     │   │  • train_ppo.py &amp; train_qlearning │
+│  • public/app.js: Three.js 3D Lab &amp; North Campus  │   │  • ppo_results.json / q_table.npy │
+│  • public/parcels.js: 1,000-pkg Depot &amp; 3 SLAs    │   │  • dashboard/app.py: 5-Tab UI     │
+│  • public/pedestrians.js: 24 Campus Pedestrians   │   │    with Plotly KPIs &amp; Sliders     │
+└───────────────────────────────────────────────────┘   └───────────────────────────────────┘</div>
+
+  <h2>2. Complete Directory &amp; File Map</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 33%;">File / Path</th>
+          <th style="width: 17%;">Owner / Lead</th>
+          <th style="width: 50%;">What It Does in the Infrastructure</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>mdc_robotics_simulation_twin/anylogic_model/MDC_Robotics_Lab_Simulation.alp</code></td>
+          <td><strong>Jorge Mendoza</strong> &amp; <strong>Ricardo Molina</strong></td>
+          <td>AnyLogic 8 XML project file (1,277 lines). Contains <code>Main</code> DES flowchart, <code>AMR</code> and <code>StudentOrder</code> agent classes, and 5 experiment definitions.</td>
+        </tr>
+        <tr>
+          <td><code>mdc_robotics_simulation_twin/rl_models/robotics_lab_env.py</code></td>
+          <td><strong>Jordan Gonzalez</strong></td>
+          <td>Custom Gymnasium environment (<code>MDCRoboticsLabEnv</code>) with an 8-dimensional observation space and 5 discrete dispatch/charging actions.</td>
+        </tr>
+        <tr>
+          <td><code>mdc_robotics_simulation_twin/rl_models/train_ppo.py</code> &amp; <code>train_qlearning.py</code></td>
+          <td><strong>Jordan Gonzalez</strong></td>
+          <td>Trains PPO (Stable-Baselines3 / fallback policy gradient) and Tabular Q-Learning; outputs <code>ppo_results.json</code>, <code>q_learning_results.json</code>, and <code>q_table.npy</code>.</td>
+        </tr>
+        <tr>
+          <td><code>mdc_robotics_simulation_twin/dashboard/app.py</code></td>
+          <td><strong>Illia Shybanov</strong></td>
+          <td>5-tab Streamlit web application (Port 8501) with interactive sidebar sliders (Fleet size 1–6, Charging pads 1–4, Rush hour, Policy selector) and Plotly charts.</td>
+        </tr>
+        <tr>
+          <td><code>mdc_robotics_simulation_twin/docs/Final_Project_Report_MDC.pdf</code> &amp; <code>Presentation_Slides_MDC.pdf</code></td>
+          <td><strong>Ricardo Molina</strong> &amp; All Team</td>
+          <td>Formal academic report, 9-slide widescreen presentation deck, and Python HTML-to-PDF generator scripts (<code>generate_*.py</code>).</td>
+        </tr>
+        <tr>
+          <td><code>AI-3D-Robotics-Lab/digital_twin_app/server.js</code> &amp; <code>world_model.js</code></td>
+          <td><strong>Jorge Mendoza</strong></td>
+          <td>Node.js Express + WebSocket server (Port 3000). Hosts <code>POST /api/anylogic/update</code>, <code>GET /api/robots</code>, A* path planner, and CSP fleet scheduler.</td>
+        </tr>
+        <tr>
+          <td><code>AI-3D-Robotics-Lab/digital_twin_app/public/app.js</code>, <code>parcels.js</code>, <code>pedestrians.js</code></td>
+          <td><strong>Jorge Mendoza</strong> &amp; <strong>Ricardo Molina</strong></td>
+          <td>Three.js 3D scene supporting both the Indoor Robotics Lab (<code>robotics_lab.glb</code>) and MDC North Campus (<code>mdc_north_campus_osm.glb</code>), drone vertical landing, 1,000-pkg depot, and 24 walking students/faculty.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-warn">
+    <strong>Important Context for the Team — Option 1 (Indoor Lab) vs. Option 2 (Smart Campus):</strong><br>
+    Our codebase currently contains <strong>both</strong> Option 1 and Option 2 elements:
+    <ul style="margin-top: 3px; margin-bottom: 0;">
+      <li>The <strong>Python RL environment</strong> (<code>robotics_lab_env.py</code>), <strong>AnyLogic model</strong> (<code>.alp</code>), and <strong>Streamlit dashboard</strong> (<code>dashboard/app.py</code>) are currently built around <strong>Option 1 (Indoor AI &amp; Robotics Lab: Stations A, B, C, D)</strong>.</li>
+      <li>The <strong>3D WebGL Digital Twin</strong> (<code>AI-3D-Robotics-Lab</code>) supports <strong>both</strong> Option 1 (Indoor Lab) and <strong>Option 2 (MDC North Campus Autonomous Courier Logistics)</strong> via <code>parcels.js</code> and <code>pedestrians.js</code>.</li>
+    </ul>
+  </div>
+
+  <!-- ==================== PAGE 2: AUDIT VERIFICATION MATRIX ==================== -->
+  <div class="page-break"></div>
+
+  <h2>3. Codebase Verification Matrix (What Is Built vs. What Needs Improvement)</h2>
+  <p>
+    We conducted a line-by-line audit comparing our project documentation and architecture diagrams against the actual files on disk. Use this table to see what is 100% verified and where each team member can make high-impact improvements:
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 23%;">Subsystem / Feature</th>
+          <th style="width: 15%;">Audit Status</th>
+          <th style="width: 33%;">What Is Currently in the Code</th>
+          <th style="width: 29%;">Improvement Opportunity for Team</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>3D WebGL Server &amp; AnyLogic Endpoint</strong><br>(<code>server.js</code>)</td>
+          <td><span class="badge-ok">100% Verified</span></td>
+          <td><code>POST /api/anylogic/update</code> (lines 59–67) merges incoming robot coordinates/battery into <code>world_model.js</code> and broadcasts <code>ROBOT_UPDATE</code> over WebSockets to Three.js.</td>
+          <td>Already working. Can add an endpoint to log incoming AnyLogic telemetry to CSV for Ricardo's analysis.</td>
+        </tr>
+        <tr>
+          <td><strong>3D Drone Touchdown, Depot &amp; Bay Counters</strong><br>(<code>parcels.js</code>, <code>app.js</code>)</td>
+          <td><span class="badge-ok">100% Verified</span></td>
+          <td>Drones cruise at <code>1.9m</code>, descend vertically to <code>0.22m</code> at Central Depot &amp; building bays, detach yellow 3D parcels, and increment live <code>📍 Bay X Drop-Off</code> badges.</td>
+          <td>Optional: Add Option 2's 3-bin modular lockbox batching and 3-minute recipient timeout / smart locker fallback in <code>parcels.js</code>.</td>
+        </tr>
+        <tr>
+          <td><strong>3D Campus Pedestrian Swarms</strong><br>(<code>pedestrians.js</code>)</td>
+          <td><span class="badge-ok">100% Verified</span></td>
+          <td>Simulates 24 students &amp; faculty walking along the MDC North Campus sidewalk graph with Low (6), Normal (12), and Rush (24) density modes and LiDAR yielding.</td>
+          <td>Optional: Sync pedestrian density index directly with the Python RL environment's congestion variable.</td>
+        </tr>
+        <tr>
+          <td><strong>AnyLogic DES Flowchart</strong><br>(<code>.alp</code> file)</td>
+          <td><span class="badge-ok">Verified (Option 1)</span></td>
+          <td>Models <code>orderSource</code> &rarr; <code>orderQueue</code> &rarr; <code>seizeAMR</code> &rarr; <code>pickupDelay</code> &rarr; <code>transitDelay</code> &rarr; <code>releaseAMR</code> &rarr; <code>deliveredSink</code> with <code>amrPool</code>.</td>
+          <td>If presenting Option 2, expand the DES pipeline to include 3 SLA priority queues and locker fallback branches.</td>
+        </tr>
+        <tr>
+          <td><strong>AnyLogic ABM Statechart &amp; Live HTTP Stream</strong><br>(<code>.alp</code> file)</td>
+          <td><span class="badge-partial">Partial / Needs Wiring</span></td>
+          <td><code>AMR</code> agent class has <code>batteryLevel</code> and <code>currentStatus</code> fields, and the Java <code>HttpClient</code> code is written in the Bridge Guide doc, but is <strong>not yet embedded</strong> inside the <code>.alp</code> file.</td>
+          <td><strong>Jorge:</strong> Add a 1-second periodic <code>Event</code> in AnyLogic with the Java <code>HttpClient</code> POST snippet and add visual <code>&lt;StatechartElements&gt;</code> to <code>AMR</code>.</td>
+        </tr>
+        <tr>
+          <td><strong>AnyLogic 5 Experiments Configuration</strong><br>(<code>.alp</code> file)</td>
+          <td><span class="badge-partial">Minor Parameter Mismatch</span></td>
+          <td>Contains 5 experiment blocks (<code>Simulation</code>, <code>Optimization_FleetSizing</code>, <code>Compare_Dispatch_Policies</code>, <code>MonteCarlo_WaitTimes</code>, <code>Sensitivity_BatteryAndDemand</code>).</td>
+          <td><strong>Ricardo:</strong> Fix 2 parameter names in the experiment XML tags (<code>orderArrivalRatePerMin</code> &rarr; <code>studentArrivalRate</code>; <code>batteryDrainPerTripPct</code> &rarr; <code>batteryDischargeRate</code>).</td>
+        </tr>
+        <tr>
+          <td><strong>Python RL Environment &amp; Training Scripts</strong><br>(<code>rl_models/</code>)</td>
+          <td><span class="badge-ok">Verified (Option 1)</span><br><span class="badge-partial">Option 2 Pending</span></td>
+          <td><code>robotics_lab_env.py</code> implements Option 1: 8-D state space <code>[Q_A, Q_B, Q_C, B_1..3, Docks, Phase]</code> and 5 discrete actions. Outputs <code>ppo_results.json</code> &amp; <code>q_learning_results.json</code>.</td>
+          <td><strong>Jordan:</strong> Can add Option 2's 10-D state vector (S<sub>t</sub> &isin; &#8477;<sup>10</sup>) and 9 combinatorial actions (express dispatch, 3-bin batching, opportunistic top-off, bypass route).</td>
+        </tr>
+        <tr>
+          <td><strong>Streamlit 5-Tab Analytics Dashboard</strong><br>(<code>dashboard/app.py</code>)</td>
+          <td><span class="badge-partial">UI Complete / Data Simulated</span></td>
+          <td>All 5 tabs, KPI cards, sliders, and team credits render cleanly on Port 8501. However, charts currently use in-script formulas/NumPy arrays rather than reading the JSON files.</td>
+          <td><strong>Illia:</strong> Load <code>ppo_results.json</code> &amp; <code>q_learning_results.json</code> into Tab 2, and fetch live robot states from <code>http://localhost:3000/api/robots</code> in Tab 4.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ==================== PAGE 3: INDIVIDUAL TEAM MEMBER PLAYBOOKS ==================== -->
+  <div class="page-break"></div>
+
+  <h2>4. Actionable Contribution Playbook by Team Member</h2>
+  <p>
+    To make it easy for everyone to participate and improve their module without stepping on each other's files, each team member has a dedicated folder and clear upgrade tasks below:
+  </p>
+
+  <!-- JORGE -->
+  <div class="role-card">
+    <div class="role-header">
+      <span class="role-name">1. Jorge A Mendoza</span>
+      <span class="role-title">Project Manager, AnyLogic Architect &amp; 3D Digital Twin Lead</span>
+    </div>
+    <p><strong>Primary Files:</strong> <code>anylogic_model/MDC_Robotics_Lab_Simulation.alp</code> &amp; <code>AI-3D-Robotics-Lab/digital_twin_app/</code></p>
+    <ul>
+      <li><strong>What Is Already Built:</strong> Full 3D WebGL Digital Twin server (Port 3000), 10-robot fleet, A* pathfinding, drone vertical landing/takeoff, 1,000-package depot, pedestrian swarms, and the baseline AnyLogic <code>.alp</code> model.</li>
+      <li><strong>How to Improve / Next Tasks:</strong>
+        <ol>
+          <li><strong>Embed the Live Bridge Event in AnyLogic:</strong> Open <code>MDC_Robotics_Lab_Simulation.alp</code> in AnyLogic 8, drag an <strong>Event</strong> block onto <code>Main</code> (set to cyclic, 1.0 second), and paste the Java <code>HttpClient</code> POST snippet so AnyLogic streams live (X, Y) and battery telemetry to <code>http://localhost:3000/api/anylogic/update</code> while running.</li>
+          <li><strong>Add Explicit ABM Statechart Blocks:</strong> Inside the <code>AMR</code> agent class in AnyLogic, add visual statechart states (<code>IDLE_DEPOT</code> &rarr; <code>LOADING</code> &rarr; <code>IN_TRANSIT</code> &rarr; <code>CHARGING</code>) driven by <code>batteryDischargeRate</code>.</li>
+        </ol>
+      </li>
+    </ul>
+  </div>
+
+  <!-- JORDAN -->
+  <div class="role-card">
+    <div class="role-header">
+      <span class="role-name">2. Jordan Gonzalez</span>
+      <span class="role-title">Reinforcement Learning Engineer</span>
+    </div>
+    <p><strong>Primary Files:</strong> <code>mdc_robotics_simulation_twin/rl_models/robotics_lab_env.py</code>, <code>train_ppo.py</code>, <code>train_qlearning.py</code></p>
+    <ul>
+      <li><strong>What Is Already Built:</strong> Custom Gymnasium environment (<code>MDCRoboticsLabEnv</code>) with 8 state variables and 5 actions, plus working Q-Learning and PPO training scripts that export <code>q_table.npy</code>, <code>q_learning_results.json</code>, and <code>ppo_results.json</code>.</li>
+      <li><strong>How to Improve / Next Tasks:</strong>
+        <ol>
+          <li><strong>Upgrade Environment to Option 2 Full Specification (or Dual-Mode):</strong> Add support for the 10-dimensional state vector S<sub>t</sub> &isin; &#8477;<sup>10</sup> (<code>[Q_HubA, Q_HubB, Q_HubC, U_HubA, U_HubB, U_HubC, SOC_R1, SOC_R2, SOC_R3, Ped_Density, Docks_Free]</code>) and 9 discrete actions (<code>Action 0..2</code> Immediate Urgent Dispatch, <code>Action 3..5</code> Multi-Compartment Batch &amp; Route, <code>Action 6</code> Opportunistic Top-off Charge, <code>Action 7</code> Congestion-Bypass Route, <code>Action 8</code> Standby).</li>
+          <li><strong>Export Per-Episode Wait &amp; SLA Violation Metrics:</strong> Include <code>wait_time_history</code> and <code>sla_violations_history</code> arrays inside <code>ppo_results.json</code> and <code>q_learning_results.json</code> so Illia's Streamlit dashboard can plot exact empirical training curves.</li>
+        </ol>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ILLIA -->
+  <div class="role-card">
+    <div class="role-header">
+      <span class="role-name">3. Illia Shybanov</span>
+      <span class="role-title">Streamlit Dashboard &amp; UI Integration Specialist</span>
+    </div>
+    <p><strong>Primary Files:</strong> <code>mdc_robotics_simulation_twin/dashboard/app.py</code></p>
+    <ul>
+      <li><strong>What Is Already Built:</strong> Complete 5-tab Streamlit web application (<code>app.py</code>) with custom CSS styling, interactive parameter sliders in the sidebar, KPI banner, and Plotly charts across all 5 tabs.</li>
+      <li><strong>How to Improve / Next Tasks:</strong>
+        <ol>
+          <li><strong>Connect Tab 2 to Jordan's Real JSON Outputs:</strong> Replace the synthetic NumPy reward curves in Tab 2 (lines 183–187 of <code>dashboard/app.py</code>) by loading <code>../rl_models/ppo_results.json</code> and <code>../rl_models/q_learning_results.json</code>:
+<pre>rl_dir = Path(__file__).resolve().parent.parent / "rl_models"
+ppo_data = json.loads((rl_dir / "ppo_results.json").read_text())
+q_data   = json.loads((rl_dir / "q_learning_results.json").read_text())</pre>
+          </li>
+          <li><strong>Connect Tab 4 to Live 3D Digital Twin Telemetry (Port 3000):</strong> Use Python's <code>urllib.request</code> or <code>requests.get("http://localhost:3000/api/robots", timeout=1.0)</code> in Tab 4 (with a graceful fallback if Port 3000 is offline) so the dashboard displays real-time robot battery levels, coordinates, and statuses directly from the 3D simulation.</li>
+        </ol>
+      </li>
+    </ul>
+  </div>
+
+  <!-- RICARDO -->
+  <div class="role-card">
+    <div class="role-header">
+      <span class="role-name">4. Ricardo Molina Gonzalez</span>
+      <span class="role-title">Simulation Experiments &amp; Technical Documentation Lead</span>
+    </div>
+    <p><strong>Primary Files:</strong> <code>anylogic_model/MDC_Robotics_Lab_Simulation.alp</code>, <code>docs/ANYLOGIC_EXPERIMENTS_GUIDE.md</code>, <code>docs/Final_Project_Report_MDC.pdf</code></p>
+    <ul>
+      <li><strong>What Is Already Built:</strong> 5 <code>&lt;SimulationExperiment&gt;</code> blocks in the <code>.alp</code> file, the IEEE-style Final Project Report, and the 9-slide Oral Presentation deck.</li>
+      <li><strong>How to Improve / Next Tasks:</strong>
+        <ol>
+          <li><strong>Fix Parameter Names in <code>.alp</code> Experiments:</strong> In <code>MDC_Robotics_Lab_Simulation.alp</code> (lines 984–1167), update the experiment parameter references from <code>orderArrivalRatePerMin</code> &rarr; <code>studentArrivalRate</code> and <code>batteryDrainPerTripPct</code> &rarr; <code>batteryDischargeRate</code> so they match the exact parameter names defined on <code>Main</code> (lines 104 &amp; 143).</li>
+          <li><strong>Export Real Experiment CSVs:</strong> Save the output data from the 5 AnyLogic experiments into a <code>dashboard/experiment_data/</code> folder (CSV/JSON) so Tab 3 of Illia's dashboard and the final report tables are backed by exported run logs.</li>
+        </ol>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ==================== SECTION 5: QUICK START & GIT WORKFLOW ==================== -->
+  <h2>5. How to Run the Full Stack Locally (3-Terminal Setup)</h2>
+  <p>Every team member can run and test the entire integrated project on their machine in 3 steps:</p>
+
+  <pre># TERMINAL 1: Start the 3D WebGL Digital Twin Server (Port 3000)
+cd "d:\Miami Dade College\AI-3D-Robotics-Lab\digital_twin_app"
+npm install
+npm start
+# Open http://localhost:3000 in your browser to view the 3D Lab &amp; MDC North Campus!
+
+# TERMINAL 2: Train RL Models &amp; Launch the Streamlit Dashboard (Port 8501)
+cd "d:\Miami Dade College\Simulation For AI\mdc_robotics_simulation_twin"
+pip install -r requirements.txt
+python rl_models/train_qlearning.py
+python rl_models/train_ppo.py
+streamlit run dashboard/app.py
+# Open http://localhost:8501 in your browser to interact with the 5-Tab Analytics Dashboard!
+
+# STEP 3: Open &amp; Run the AnyLogic 8 Model
+# Launch AnyLogic 8 -> Open "mdc_robotics_simulation_twin/anylogic_model/MDC_Robotics_Lab_Simulation.alp"
+# Run any of the 5 configured Simulation Experiments.</pre>
+
+  <h2>6. Team Git &amp; Collaboration Workflow</h2>
+  <ul>
+    <li><strong>Branching by Role:</strong> When working on improvements, create a feature branch for your module (e.g., <code>git checkout -b jordan/rl-option2</code>, <code>illia/live-dashboard-json</code>, <code>ricardo/alp-experiments</code>, <code>jorge/anylogic-http-bridge</code>) before merging into <code>main</code>.</li>
+    <li><strong>Testing Before Commit:</strong>
+      <ul>
+        <li>For <code>AI-3D-Robotics-Lab/digital_twin_app</code>: Run <code>npm test</code> to verify all A*, zone, robot clearance, and API unit tests pass.</li>
+        <li>For <code>mdc_robotics_simulation_twin</code>: Run <code>python rl_models/train_ppo.py</code> and verify <code>streamlit run dashboard/app.py</code> launches without errors.</li>
+      </ul>
+    </li>
+    <li><strong>Rebuilding Documentation PDFs:</strong> Any time a team member updates one of the documentation scripts in <code>mdc_robotics_simulation_twin/docs/</code>, run <code>python docs/generate_team_infrastructure_guide.py</code> (or the corresponding <code>generate_*.py</code> script) to automatically regenerate both the HTML and PDF versions.</li>
+  </ul>
+
+</body>
+</html>
