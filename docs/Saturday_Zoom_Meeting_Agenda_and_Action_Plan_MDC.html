@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saturday 12:00 PM Zoom Meeting Agenda & Team Action Plan — MDC Simulation for Applied AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  @page {
+    size: letter portrait;
+    margin: 0.32in 0.42in 0.32in 0.42in;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #0f172a;
+    background: #ffffff;
+    line-height: 1.24;
+    font-size: 8.0pt;
+    margin: 0;
+    padding: 0;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2.5px solid #0047ba;
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+  }
+  .inst {
+    font-size: 12pt;
+    font-weight: 800;
+    color: #0047ba;
+  }
+  .sub-inst {
+    font-size: 8pt;
+    font-weight: 600;
+    color: #475569;
+  }
+  .meeting-badge {
+    background: #e0f2fe;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+    font-weight: 700;
+    font-size: 8pt;
+    padding: 3px 8px;
+    border-radius: 5px;
+    text-align: right;
+  }
+  h1 {
+    font-size: 14pt;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 2px 0;
+    letter-spacing: -0.3px;
+  }
+  .subtitle {
+    font-size: 8.8pt;
+    font-weight: 600;
+    color: #0284c7;
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: #0047ba;
+    border-bottom: 1.5px solid #cbd5e1;
+    padding-bottom: 2px;
+    margin: 5px 0 4px 0;
+  }
+  p { margin: 0 0 4px 0; }
+  ul, ol { margin: 0 0 4px 0; padding-left: 16px; }
+  li { margin-bottom: 2px; }
+
+  .agenda-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .agenda-step {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-top: 3px solid #0284c7;
+    border-radius: 5px;
+    padding: 6px 8px;
+  }
+  .step-time {
+    font-size: 7.2pt;
+    font-weight: 700;
+    color: #0284c7;
+    text-transform: uppercase;
+  }
+  .step-title {
+    font-size: 8.4pt;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 1px 0 3px 0;
+  }
+  .step-desc {
+    font-size: 7.6pt;
+    color: #334155;
+  }
+
+  .decision-box {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-left: 4px solid #f59e0b;
+    border-radius: 5px;
+    padding: 6px 10px;
+    margin-bottom: 8px;
+    font-size: 8.2pt;
+  }
+
+  table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 7.6pt;
+    margin-bottom: 6px;
+  }
+  th {
+    background: #0f172a;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 3.5px 6px;
+    text-align: left;
+    border: 1px solid #334155;
+  }
+  td {
+    padding: 3.5px 6px;
+    border: 1px solid #e2e8f0;
+    vertical-align: top;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  tr:nth-child(even) td { background: #f8fafc; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 8px;
+  }
+  .box-dark {
+    background: #0f172a;
+    color: #f8fafc;
+    border-radius: 6px;
+    padding: 7px 9px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.2pt;
+    line-height: 1.32;
+    white-space: pre-wrap;
+  }
+  .box-checklist {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-left: 4px solid #16a34a;
+    border-radius: 6px;
+    padding: 5px 8px;
+    font-size: 7.6pt;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.4pt;
+    background: #f1f5f9;
+    padding: 1px 3px;
+    border-radius: 3px;
+    color: #0369a1;
+  }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <div class="inst">Miami Dade College &bull; Simulation for Applied AI</div>
+      <div class="sub-inst">Unified GitHub Repo: <code>https://github.com/AI4666/mdc-robotics-simulation-twin</code></div>
+    </div>
+    <div class="meeting-badge">
+      📅 Team Zoom Sync &bull; Saturday @ 12:00 PM<br>
+      Team: Jorge, Ricardo, Jordan, Illia
+    </div>
+  </div>
+
+  <h1>Saturday Zoom Meeting Agenda &amp; Team Action Plan</h1>
+  <div class="subtitle">Aligning Our 3D Digital Twin, AnyLogic 8 Model, Reinforcement Learning Engine, and Streamlit Dashboard</div>
+
+  <!-- 1. 20-MINUTE AGENDA -->
+  <h2>1. 20-Minute Zoom Run-of-Show</h2>
+  <div class="agenda-grid">
+    <div class="agenda-step">
+      <div class="step-time">0:00 – 0:05 (5 Min)</div>
+      <div class="step-title">1. Live System Demo</div>
+      <div class="step-desc">Walk through the live 3D Digital Twin (<code>Port 3000</code>), Streamlit Dashboard (<code>Port 8501</code>), and unified GitHub repo structure.</div>
+    </div>
+    <div class="agenda-step">
+      <div class="step-time">0:05 – 0:10 (5 Min)</div>
+      <div class="step-title">2. Architecture Alignment</div>
+      <div class="step-desc">Align Option 1 (Indoor Lab) vs. Option 2 (MDC North Campus Logistics) across AnyLogic, Python RL, and Streamlit.</div>
+    </div>
+    <div class="agenda-step">
+      <div class="step-time">0:10 – 0:17 (7 Min)</div>
+      <div class="step-title">3. Role-by-Role Tasks</div>
+      <div class="step-desc">Assign exact files, wiring tasks, and improvement goals to Ricardo, Jordan, Illia, and Jorge.</div>
+    </div>
+    <div class="agenda-step">
+      <div class="step-time">0:17 – 0:20 (3 Min)</div>
+      <div class="step-title">4. Git &amp; Syllabus Check</div>
+      <div class="step-desc">Confirm folder ownership rules, branch workflow, and collect the 4 individual Module 4 AnyLogic zip files.</div>
+    </div>
+  </div>
+
+  <!-- 2. KEY TEAM DECISION -->
+  <div class="decision-box">
+    <strong>🎯 Key Team Alignment Decision (Option 1 vs. Option 2):</strong>
+    Our embedded <strong>3D Digital Twin</strong> (<code>digital_twin_app/</code>) already supports <strong>both</strong> the Indoor Robotics Lab (Option 1) and the <strong>MDC North Campus Autonomous Courier Logistics (Option 2)</strong> with the 1,000-package depot, 3 SLA priority tiers, drones landing, and 24 pedestrians. As we upgrade the <strong>AnyLogic model</strong> (<code>.alp</code>), <strong>Python RL environment</strong> (<code>rl_models/</code>), and <strong>Streamlit Dashboard</strong> (<code>dashboard/</code>), let's make sure their parameters and labels align consistently with our final chosen scenario.
+  </div>
+
+  <!-- 3. ACTION ITEMS BY TEAM MEMBER -->
+  <h2>2. What Has Happened vs. What Needs to Happen Next (By Team Member)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 17%;">Team Member &amp; Folder</th>
+        <th style="width: 35%;">What Is Already Built in the Repo</th>
+        <th style="width: 48%;">Action Items &amp; Next Improvements to Execute</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Ricardo Molina</strong><br><code>anylogic_model/</code><br><code>digital_twin_app/</code><br><code>docs/</code></td>
+        <td>
+          &bull; <code>MDC_Robotics_Lab_Simulation.alp</code> with DES pipeline &amp; 5 experiment blocks.<br>
+          &bull; <code>digital_twin_app/</code> embedded directly in repo.<br>
+          &bull; Drafted Final Report &amp; 9-Slide Deck.
+        </td>
+        <td>
+          <strong>1. Test 3D App Locally:</strong> Run <code>git pull</code>, then <code>cd digital_twin_app &amp;&amp; npm install &amp;&amp; npm start</code>.<br>
+          <strong>2. Fix Experiment Parameter Tags in <code>.alp</code>:</strong> Rename <code>orderArrivalRatePerMin</code> &rarr; <code>studentArrivalRate</code> and <code>batteryDrainPerTripPct</code> &rarr; <code>batteryDischargeRate</code>.<br>
+          <strong>3. Upgrade AnyLogic Simulation:</strong> Expand the DES/ABM flowchart &amp; export real CSV/JSON experiment tables for Tab 3 of the dashboard.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Jordan Gonzalez</strong><br><code>rl_models/</code></td>
+        <td>
+          &bull; <code>robotics_lab_env.py</code> (Gymnasium env with 8-D state &amp; 5 actions).<br>
+          &bull; <code>train_ppo.py</code> &amp; <code>train_qlearning.py</code>.<br>
+          &bull; <code>ppo_results.json</code>, <code>q_learning_results.json</code>, <code>q_table.npy</code>.
+        </td>
+        <td>
+          <strong>1. Expand RL Environment for Option 2 Campus Specs:</strong> Add support for the 10-D state vector (S<sub>t</sub> &isin; &#8477;<sup>10</sup>: Hub queues, Urgent parcels, Rover SOCs, Pedestrian density, Free docks) and 9 discrete actions (Express, 3-Bin Batching, Top-off Charge, Bypass).<br>
+          <strong>2. Export Full Training Curves:</strong> Add <code>wait_time_history</code> and <code>sla_violations_history</code> arrays to <code>ppo_results.json</code> and <code>q_learning_results.json</code>.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Illia Shybanov</strong><br><code>dashboard/</code></td>
+        <td>
+          &bull; <code>dashboard/app.py</code> (5-tab Streamlit web app on Port 8501 with sliders, KPI banner, and Plotly charts).
+        </td>
+        <td>
+          <strong>1. Wire Tab 2 to Jordan's Real JSON Files:</strong> Replace the synthetic NumPy arrays (lines 183–187) with <code>json.loads()</code> reading <code>../rl_models/ppo_results.json</code> and <code>q_learning_results.json</code>.<br>
+          <strong>2. Wire Tab 4 to Live Port 3000 Telemetry:</strong> Poll <code>GET http://localhost:3000/api/robots</code> (with a <code>try/except</code> offline fallback) so Tab 4 shows live 3D robot battery &amp; status.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Jorge Mendoza</strong><br><code>digital_twin_app/</code><br><code>anylogic_model/</code></td>
+        <td>
+          &bull; Built 3D WebGL Digital Twin server (Port 3000), <code>POST /api/anylogic/update</code> bridge, 10-robot fleet, A* planner, depot, &amp; pedestrians.<br>
+          &bull; Unified the repo &amp; onboarding docs.
+        </td>
+        <td>
+          <strong>1. Wire the Live AnyLogic HTTP Bridge:</strong> Work with Ricardo to embed the 1-second cyclic Java <code>HttpClient</code> POST event inside <code>MDC_Robotics_Lab_Simulation.alp</code> so AnyLogic moves the 3D rovers on Port 3000 live.<br>
+          <strong>2. Coordinate Pull Requests &amp; Final Integration:</strong> Review team branches and assemble the final Canvas submission package.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 4. QUICK COMMANDS & MANDATORY CHECKLIST -->
+  <h2>3. Quick Commands &amp; Mandatory Course Deliverables Checklist</h2>
+  <div class="two-col">
+    <div class="box-dark"># 1. Pull Latest Unified Repo (Includes digital_twin_app!)
+git pull origin main
+
+# 2. Run 3D Digital Twin Server (Port 3000)
+cd digital_twin_app &amp;&amp; npm install &amp;&amp; npm start
+
+# 3. Run RL Training &amp; Streamlit Dashboard (Port 8501)
+pip install -r requirements.txt
+python rl_models/train_qlearning.py &amp;&amp; python rl_models/train_ppo.py
+streamlit run dashboard/app.py</div>
+
+    <div class="box-checklist">
+      <strong>✅ Before Leaving Saturday's Call — Confirm:</strong>
+      <ul style="margin-top: 4px; margin-bottom: 0;">
+        <li><strong>Everyone Can Clone &amp; Run:</strong> Every member has pulled <code>main</code> and verified their folder runs locally.</li>
+        <li><strong>Folder / Branch Rule:</strong> Edit only your assigned folder (or push to your own branch: <code>ricardo/...</code>, <code>jordan/...</code>, <code>illia/...</code>) to avoid merge conflicts.</li>
+        <li><strong>Mandatory Module 4 Zips:</strong> Each team member must send their individual <strong>AnyLogic Module 4 Lesson 1 (Stages 1–3) <code>.zip</code></strong> so it can be bundled into the final Canvas zip.</li>
+        <li><strong>Next Check-In Date:</strong> Set target day for merging all updates before final presentation rehearsal.</li>
+      </ul>
+    </div>
+  </div>
+
+</body>
+</html>
