@@ -38,6 +38,11 @@ mdc_robotics_simulation_twin/
 │   ├── app.py                    # 5-Tab Streamlit Dashboard
 │   └── requirements.txt          # Web app dependencies (streamlit, plotly, pandas)
 │
+├── digital_twin_app/             # 3D WebGL Digital Twin & AnyLogic Live Bridge (Jorge & Ricardo)
+│   ├── server.js                 # Node.js Express + WebSocket Server (Port 3000, /api/anylogic/update)
+│   ├── world_model.js            # 10-Robot Heterogeneous Fleet & Campus/Lab Stations
+│   └── public/                   # Three.js 3D WebGL App (mdc_north_campus_osm.glb, parcels.js, pedestrians.js)
+│
 └── docs/                         # Reports, Guides & Presentation (Ricardo)
     ├── ANYLOGIC_EXPERIMENTS_GUIDE.md     # Step-by-step for the 5 AnyLogic experiments
     ├── FINAL_PROJECT_REPORT_TEMPLATE.md  # 2-3 page written summary paper
@@ -65,7 +70,15 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-### 3. Running AnyLogic Simulation Experiments (Jorge & Ricardo)
+### 3. Running the 3D WebGL Digital Twin Server (Jorge & Ricardo)
+```bash
+cd digital_twin_app
+npm install
+npm start
+# Opens at http://localhost:3000 (Receives live AnyLogic updates at POST /api/anylogic/update)
+```
+
+### 4. Running AnyLogic Simulation Experiments (Jorge & Ricardo)
 1. Open AnyLogic 8.
 2. Load the `.alp` file inside `/anylogic_model`.
 3. Follow `docs/ANYLOGIC_EXPERIMENTS_GUIDE.md` to run the 5 experiments (Optimization, Compare Runs, Monte Carlo, Sensitivity, Calibration).

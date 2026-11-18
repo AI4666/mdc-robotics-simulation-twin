@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robotics Lab Classroom - 3D Digital Twin</title>
+  <link rel="stylesheet" href="styles.css?v=34">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Loading Screen -->
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <h2 style="color: #38bdf8; font-weight: 600;">Loading Polycam Robotics Lab...</h2>
+    <p id="loading-progress" style="color: #94a3b8; font-size: 13px;">Preparing 3D mesh & textures</p>
+  </div>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="brand-badge" id="brand-badge-panel" title="⠿ Drag to reposition anywhere • Double-click to reset">
+      <span class="drag-handle-grip">⠿</span>
+      <div class="status-indicator"></div>
+      <div>
+        <h1>Robotics Lab Classroom <span>Twin</span></h1>
+        <p style="font-size: 11px; color: #94a3b8;">Polycam Photogrammetry + AnyLogic Sim Bridge</p>
+      </div>
+    </div>
+
+    <div class="controls-toolbar" id="controls-toolbar-panel" title="⠿ Drag to reposition toolbar anywhere • Double-click to reset">
+      <span class="drag-handle-grip" style="margin-right: 4px;">⠿</span>
+      <button id="btn-camera-orbit" class="tool-btn active">🎥 Free Orbit</button>
+      <button id="btn-camera-top" class="tool-btn">📐 2D Floorplan</button>
+      <div class="cam-dropdown-wrapper">
+        <button id="btn-camera-fpv" class="tool-btn" title="Enter Robot Cam (Observer Mode)">🤖 Robot Cam (FPV)</button>
+        <button id="btn-camera-fpv-arrow" class="tool-btn cam-arrow-btn" title="Select Specific Robot Cam">▾</button>
+        <div id="robot-cam-dropdown" class="robot-cam-dropdown-menu" style="display: none;">
+          <div class="rc-dropdown-header">
+            <span class="rc-header-title">👁️ Robot Cam &bull; Observer Mode</span>
+            <span class="rc-header-sub">View autonomous live feed &bull; View only</span>
+          </div>
+          <div class="rc-dropdown-list">
+            <div class="rc-dropdown-item" data-robot="AMR-01">
+              <span class="rc-item-avatar">🚜</span>
+              <div class="rc-item-info">
+                <span class="rc-item-name">AMR-01 &bull; Inspector Alpha</span>
+                <span class="rc-item-sub">Front Bumper Cam &bull; Autonomous Patrol</span>
+              </div>
+              <span class="rc-item-badge">View 👁️</span>
+            </div>
+            <div class="rc-dropdown-item" data-robot="AMR-02">
+              <span class="rc-item-avatar">🚜</span>
+              <div class="rc-item-info">
+                <span class="rc-item-name">AMR-02 &bull; Logistics Beta</span>
+                <span class="rc-item-sub">Freight AMR &bull; Autonomous Patrol</span>
+              </div>
+              <span class="rc-item-badge">View 👁️</span>
+            </div>
+            <div class="rc-dropdown-item" data-robot="AMR-03">
+              <span class="rc-item-avatar">🚜</span>
+              <div class="rc-item-info">
+                <span class="rc-item-name">AMR-03 &bull; Courier Gamma</span>
+                <span class="rc-item-sub">High-Speed AMR &bull; Autonomous Patrol</span>
+              </div>
+              <span class="rc-item-badge">View 👁️</span>
+            </div>
+            <div class="rc-dropdown-item" data-robot="AMR-04">
+              <span class="rc-item-avatar">🚜</span>
+              <div class="rc-item-info">
+                <span class="rc-item-name">AMR-04 &bull; Express Delta</span>
+                <span class="rc-item-sub">Express Courier &bull; Sidewalk Route</span>
+              </div>
+              <span class="rc-item-badge">View 👁️</span>
+            </div>
+            <div class="rc-dropdown-item" data-robot="AMR-05">
+              <span class="rc-item-avatar">🚜</span>
+              <div class="rc-item-info">
+                <span class="rc-item-name">AMR-05 &bull; Rover Epsilon</span>
+                <span class="rc-item-sub">Campus Courier &bull; Quad Deliveries</span>
+              </div>
+              <span class="rc-item-badge">View 👁️</span>
+            </div>
+            <div class="rc-dropdown-item" data-robot="AMR-06">
+              <span class="rc-item-avatar">🚜</span>
+              <div class="rc-item-info">
+                <span class="rc-item-name">AMR-06 &bull; Security Zeta</span>
+                <span class="rc-item-sub">Security Patrol &bull; Perimeter Guard</span>
+              </div>
+              <span class="rc-item-badge">View 👁️</span>
+            </div>
+            <div class="rc-dropdown-item" data-robot="HUM-01">
+              <span class="rc-item-avatar">🤖</span>
+              <div class="rc-item-info">
+                <span class="rc-item-name">HUM-01 &bull; Unitree G1 Silver</span>
+                <span class="rc-item-sub">Bipedal Visor Cam &bull; Autonomous Walk</span>
+              </div>
+              <span class="rc-item-badge">View 👁️</span>
+            </div>
+            <div class="rc-dropdown-item" data-robot="UAV-01">
+              <span class="rc-item-avatar">🚁</span>
+              <div class="rc-item-info">
+                <span class="rc-item-name">UAV-01 &bull; SkyWatcher Drone</span>
+                <span class="rc-item-sub">Aerial Gimbal Cam &bull; Aerial Survey</span>
+              </div>
+              <span class="rc-item-badge">View 👁️</span>
+            </div>
+            <div class="rc-dropdown-item" data-robot="UAV-02">
+              <span class="rc-item-avatar">🚁</span>
+              <div class="rc-item-info">
+                <span class="rc-item-name">UAV-02 &bull; AeroCourier-2</span>
+                <span class="rc-item-sub">Corridor Transit &bull; Rooftop Scan</span>
+              </div>
+              <span class="rc-item-badge">View 👁️</span>
+            </div>
+            <div class="rc-dropdown-item" data-robot="UAV-03">
+              <span class="rc-item-avatar">🚁</span>
+              <div class="rc-item-info">
+                <span class="rc-item-name">UAV-03 &bull; PerimeterEye-3</span>
+                <span class="rc-item-sub">High-Altitude Cam &bull; Perimeter Overlook</span>
+              </div>
+              <span class="rc-item-badge">View 👁️</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="width: 1px; background: rgba(255,255,255,0.1); margin: 0 4px;"></div>
+      <button id="btn-sim-play" class="tool-btn">⏸ Pause Sim</button>
+
+      <!-- Consolidated On/Off Switches Dropdown Box -->
+      <div class="switches-dropdown-wrapper" style="position: relative; display: inline-block;">
+        <button id="btn-toggle-switches" class="tool-btn" title="Toggle On/Off Switches for Boundaries, Building Names, Students">
+          🔘 On/Off Switches ▾
+        </button>
+        <div id="switches-dropdown-menu" class="switches-dropdown-menu" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; min-width: 250px; background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(16px); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 10px; padding: 12px; box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.2); z-index: 1000; flex-direction: column; gap: 8px;">
+          <div style="font-size: 11px; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; margin-bottom: 4px;">
+            🔘 On/Off Switches
+          </div>
+
+          <!-- Boundaries Switch -->
+          <label style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #e2e8f0; cursor: pointer; padding: 6px 8px; border-radius: 6px; background: rgba(255,255,255,0.04); transition: background 0.15s;">
+            <span style="display: flex; align-items: center; gap: 6px;">🛡️ <b>Boundaries</b></span>
+            <input type="checkbox" id="switch-boundaries" checked style="cursor: pointer; width: 16px; height: 16px; accent-color: #38bdf8;">
+          </label>
+
+          <!-- Building Names Switch -->
+          <label id="switch-bldg-names-row" style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #e2e8f0; cursor: pointer; padding: 6px 8px; border-radius: 6px; background: rgba(255,255,255,0.04); transition: background 0.15s;">
+            <span style="display: flex; align-items: center; gap: 6px;">🏛️ <b>Building Names</b></span>
+            <input type="checkbox" id="switch-bldg-names" checked style="cursor: pointer; width: 16px; height: 16px; accent-color: #38bdf8;">
+          </label>
+
+          <!-- Students Switch -->
+          <label id="switch-students-row" style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #e2e8f0; cursor: pointer; padding: 6px 8px; border-radius: 6px; background: rgba(255,255,255,0.04); transition: background 0.15s;">
+            <span style="display: flex; align-items: center; gap: 6px;">🚶 <b>Students</b></span>
+            <input type="checkbox" id="switch-students" checked style="cursor: pointer; width: 16px; height: 16px; accent-color: #10b981;">
+          </label>
+
+          <!-- Student Name Tags Switch -->
+          <label id="switch-student-names-row" style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #e2e8f0; cursor: pointer; padding: 6px 8px; border-radius: 6px; background: rgba(255,255,255,0.04); transition: background 0.15s;">
+            <span style="display: flex; align-items: center; gap: 6px;">🏷️ <b>Student Name Tags</b></span>
+            <input type="checkbox" id="switch-student-names" checked style="cursor: pointer; width: 16px; height: 16px; accent-color: #10b981;">
+          </label>
+
+          <!-- Central Depot Switch -->
+          <label id="switch-depot-row" style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #e2e8f0; cursor: pointer; padding: 6px 8px; border-radius: 6px; background: rgba(255,255,255,0.04); transition: background 0.15s;">
+            <span style="display: flex; align-items: center; gap: 6px;">📦 <b>Central Depot (1,000 Pkgs)</b></span>
+            <input type="checkbox" id="switch-depot" checked style="cursor: pointer; width: 16px; height: 16px; accent-color: #f59e0b;">
+          </label>
+        </div>
+      </div>
+
+      <button id="btn-add-boundary" class="tool-btn" style="border-color: #ef4444; color: #fca5a5;">➕ Add Keep-Out Zone</button>
+      <button id="btn-clear-custom" class="tool-btn" style="display: none; color: #94a3b8;" title="Clear custom zones">🗑️ Clear Zones (<span id="custom-count">0</span>)</button>
+      <button id="btn-reset-stations" class="tool-btn" style="color: #cbd5e1;" title="Reset Stations A-E to original default locations">📍 Reset Stations</button>
+      <button id="btn-fleet-manager" class="tool-btn" style="border-color: #38bdf8; color: #38bdf8; font-weight: 700; background: rgba(56, 189, 248, 0.12);" title="Add or remove robots from active simulation">🤖 Fleet Manager (<span id="btn-active-robot-count">10</span>)</button>
+      <button id="btn-toggle-tuner" class="tool-btn">⚙️ Scale & Align</button>
+      <button id="btn-open-ai-planner" class="tool-btn" style="border-color: #10b981; color: #6ee7b7; font-weight: 700; background: rgba(16, 185, 129, 0.15);" title="Open AI & ML Fleet Optimization Modal">🧠 AI &amp; ML Planner</button>
+      <div style="width: 1px; background: rgba(255,255,255,0.1); margin: 0 4px;"></div>
+      <div class="mesh-selector-wrapper">
+        <label for="select-mesh" style="font-size: 12px; font-weight: 600; color: #94a3b8;">🗺️ Scan:</label>
+        <select id="select-mesh" class="mesh-dropdown">
+          <option value="robotics_lab.glb">🏫 Robotics Lab Classroom</option>
+          <option value="scan_house.glb">🏡 House & Yard Scan</option>
+          <option value="mdc_north_campus.glb">🎓 MDC North Campus</option>
+          <option value="mdc_north_campus_osm.glb" selected>🏛️ MDC North Campus (OSM CAD)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mesh & Boundary Calibration Panel -->
+  <div id="calibration-panel" class="calibration-panel" style="display: none;">
+    <div class="panel-header">
+      <h3>⚙️ Align & Scale Calibration</h3>
+      <button id="btn-close-tuner" class="close-btn">&times;</button>
+    </div>
+    <div class="tuner-group">
+      <label title="Real meters per app unit on this scan. Every robot is shown at its real size.">Scan Scale: 1 unit = <span id="val-meters-per-unit">1.82 m</span></label>
+      <input type="range" id="slider-meters-per-unit" min="0.5" max="5.0" step="0.01" value="1.82">
+      <button id="btn-measure-scan" class="tool-btn" style="width: 100%; justify-content: center; margin-top: 6px;" title="Click two points on the scan and enter the real distance between them">📏 Measure Scan Scale</button>
+      <div id="scan-measure-panel" style="display: none; flex-direction: column; gap: 6px; margin-top: 6px; font-size: 12px;">
+        <div id="scan-measure-step" style="color: #38bdf8; font-weight: 600;">Click the first point on the scan.</div>
+        <div>Measured: <b id="scan-measure-units">–</b></div>
+        <label>Real distance: <input type="number" id="input-measure-real" min="0" step="0.01" value="2.03" style="width: 80px;"> m</label>
+        <div>Result: <b id="scan-measure-result">–</b></div>
+        <div id="scan-measure-error" style="color: #f87171;"></div>
+        <div style="display: flex; gap: 8px;">
+          <button id="btn-measure-cancel" class="tool-btn" style="flex: 1; justify-content: center;">Cancel</button>
+          <button id="btn-measure-save" class="tool-btn active" style="flex: 1; justify-content: center;" disabled>Save</button>
+        </div>
+      </div>
+    </div>
+    <div class="tuner-group">
+      <label>Classroom Mesh Scale: <span id="val-mesh-scale">1.00x</span></label>
+      <input type="range" id="slider-mesh-scale" min="0.20" max="3.50" step="0.02" value="1.00">
+    </div>
+    <div class="tuner-group">
+      <label>Mesh Rotation Y: <span id="val-mesh-rot">0°</span></label>
+      <input type="range" id="slider-mesh-rot" min="-180" max="180" step="1" value="0">
+    </div>
+    <div class="tuner-group">
+      <label>Mesh Elevation (Height Y): <span id="val-mesh-y">0.00m</span></label>
+      <input type="range" id="slider-mesh-y" min="-2.00" max="2.00" step="0.01" value="0.00">
+    </div>
+    <div class="tuner-row">
+      <div class="tuner-group" style="flex: 1;">
+        <label>Mesh Offset X: <span id="val-mesh-x">0.0m</span></label>
+        <input type="range" id="slider-mesh-x" min="-3" max="3" step="0.05" value="0">
+      </div>
+      <div class="tuner-group" style="flex: 1;">
+        <label>Mesh Offset Z: <span id="val-mesh-z">0.0m</span></label>
+        <input type="range" id="slider-mesh-z" min="-3" max="3" step="0.05" value="0">
+      </div>
+    </div>
+    <div class="tuner-row">
+      <div class="tuner-group" style="flex: 1;">
+        <label>Boundary Width: <span id="val-bound-w">5.6m</span></label>
+        <input type="range" id="slider-bound-w" min="2.0" max="28.0" step="0.1" value="5.6">
+      </div>
+      <div class="tuner-group" style="flex: 1;">
+        <label>Boundary Depth: <span id="val-bound-d">3.6m</span></label>
+        <input type="range" id="slider-bound-d" min="2.0" max="28.0" step="0.1" value="3.6">
+      </div>
+    </div>
+    <div style="margin: 6px 0 10px 0;">
+      <button id="btn-snap-grid-bounds" class="tool-btn" style="width: 100%; justify-content: center; border-color: #38bdf8; color: #38bdf8; font-weight: 700; background: rgba(56, 189, 248, 0.12);" title="Expand perimeter boundaries to match the 24m × 24m grid floor">
+        📐 Expand to Full Grid Size (24m × 24m)
+      </button>
+    </div>
+    <div class="tuner-actions">
+      <button id="btn-reset-alignment" class="tool-btn" style="flex: 1; justify-content: center;">🔄 Reset</button>
+      <button id="btn-lock-alignment" class="tool-btn active" style="flex: 1; justify-content: center;">💾 Save</button>
+    </div>
+  </div>
+
+  <!-- Keep-Out Zone Editor & Resizer Panel -->
+  <div id="zone-editor-panel" class="zone-editor-panel" style="display: none;">
+    <div class="panel-header">
+      <h3 id="zone-editor-title">🛡️ Zone Resizer & Editor</h3>
+      <button id="btn-close-zone-editor" class="close-btn">&times;</button>
+    </div>
+
+    <div id="zone-status-text" style="font-size: 11px; color: #38bdf8; font-weight: 600;">
+      Select a zone to resize or adjust dimensions below:
+    </div>
+
+    <!-- Quick Zone Chips / Selector -->
+    <div id="zone-chips" class="zone-chips-container">
+      <!-- Generated dynamically -->
+    </div>
+
+    <!-- Quick Sizing Presets -->
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+      <label style="font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Quick Dimension Presets</label>
+      <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+        <button class="preset-btn" data-w="0.80" data-d="0.80" data-h="0.85">0.8×0.8m</button>
+        <button class="preset-btn" data-w="1.50" data-d="1.00" data-h="0.85">1.5×1.0m</button>
+        <button class="preset-btn" data-w="3.00" data-d="2.00" data-h="0.90">3×2m</button>
+        <button class="preset-btn" data-w="5.00" data-d="3.50" data-h="1.20">5×3.5m</button>
+        <button class="preset-btn" data-w="8.00" data-d="5.00" data-h="1.50">8×5m (Room)</button>
+        <button class="preset-btn" data-w="15.00" data-d="10.00" data-h="2.00">15×10m (Yard)</button>
+      </div>
+    </div>
+
+    <!-- Quick Scale Multipliers -->
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+      <label style="font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Scale Multipliers</label>
+      <div style="display: flex; gap: 4px;">
+        <button class="scale-mult-btn" data-scale="0.5">0.5×</button>
+        <button class="scale-mult-btn" data-scale="1.5">1.5×</button>
+        <button class="scale-mult-btn" data-scale="2.0">2.0×</button>
+        <button class="scale-mult-btn" data-add="1.0">+1.0m</button>
+        <button class="scale-mult-btn" data-add="-1.0">-1.0m</button>
+      </div>
+    </div>
+
+    <!-- Dimension Sliders with Direct Numeric Typing -->
+    <div class="tuner-group">
+      <div class="tuner-num-row">
+        <label>Width (X Axis):</label>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <input type="number" id="input-zone-w" min="0.10" max="50.00" step="0.10" value="1.20" class="tuner-number-input">
+          <span style="font-size: 11px; color: #94a3b8;">m</span>
+        </div>
+      </div>
+      <input type="range" id="slider-zone-w" min="0.10" max="30.00" step="0.10" value="1.20">
+    </div>
+
+    <div class="tuner-group">
+      <div class="tuner-num-row">
+        <label>Depth (Z Axis):</label>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <input type="number" id="input-zone-d" min="0.10" max="50.00" step="0.10" value="0.80" class="tuner-number-input">
+          <span style="font-size: 11px; color: #94a3b8;">m</span>
+        </div>
+      </div>
+      <input type="range" id="slider-zone-d" min="0.10" max="30.00" step="0.10" value="0.80">
+    </div>
+
+    <div class="tuner-group">
+      <div class="tuner-num-row">
+        <label>Height (Y Axis):</label>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <input type="number" id="input-zone-h" min="0.10" max="10.00" step="0.05" value="0.85" class="tuner-number-input">
+          <span style="font-size: 11px; color: #94a3b8;">m</span>
+        </div>
+      </div>
+      <input type="range" id="slider-zone-h" min="0.10" max="8.00" step="0.05" value="0.85">
+    </div>
+
+    <!-- Rotation Controls -->
+    <div class="tuner-group">
+      <div class="tuner-num-row">
+        <label>Rotate (Heading):</label>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <input type="number" id="input-zone-rot" min="-180" max="180" step="1" value="0" class="tuner-number-input">
+          <span style="font-size: 11px; color: #94a3b8;">°</span>
+        </div>
+      </div>
+      <input type="range" id="slider-zone-rot" min="-180" max="180" step="1" value="0">
+      <div class="angle-btn-row">
+        <button class="preset-btn preset-rot-btn" data-rot="-90">-90°</button>
+        <button class="preset-btn preset-rot-btn" data-rot="-45">-45°</button>
+        <button class="preset-btn preset-rot-btn" data-rot="-15">-15°</button>
+        <button class="preset-btn preset-rot-btn" data-rot="0" style="font-weight: 700; color: #38bdf8;">0°</button>
+        <button class="preset-btn preset-rot-btn" data-rot="15">+15°</button>
+        <button class="preset-btn preset-rot-btn" data-rot="45">+45°</button>
+        <button class="preset-btn preset-rot-btn" data-rot="90">+90°</button>
+        <button class="preset-btn preset-rot-btn" data-rot="180">180°</button>
+      </div>
+    </div>
+
+    <!-- Drag & Drop & Keyboard Hint -->
+    <div style="font-size: 11px; color: #38bdf8; background: rgba(56, 189, 248, 0.1); border: 1px dashed rgba(56, 189, 248, 0.4); border-radius: 8px; padding: 7px 10px; margin-top: 4px; display: flex; flex-direction: column; gap: 3px;">
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <span style="font-size: 14px;">✋</span>
+        <span><b>Drag in 3D:</b> Click &amp; drag box to reposition anywhere.</span>
+      </div>
+      <div style="font-size: 10px; color: #94a3b8;">
+        ⌨️ Press <b>R</b> to rotate +15° (<b>Shift+R</b> for -15°) &bull; <b>+ / -</b> to scale &bull; <b>Del</b> to delete
+      </div>
+    </div>
+
+    <!-- Floor Position Fine-Tuning Sliders -->
+    <div class="tuner-group">
+      <div class="tuner-num-row">
+        <label>Position X (West / East):</label>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <input type="number" id="input-zone-posx" min="-50.00" max="50.00" step="0.10" value="0.00" class="tuner-number-input">
+          <span style="font-size: 11px; color: #94a3b8;">m</span>
+        </div>
+      </div>
+      <input type="range" id="slider-zone-posx" min="-30.00" max="30.00" step="0.10" value="0.00">
+    </div>
+
+    <div class="tuner-group">
+      <div class="tuner-num-row">
+        <label>Position Z (North / South):</label>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <input type="number" id="input-zone-posz" min="-50.00" max="50.00" step="0.10" value="0.00" class="tuner-number-input">
+          <span style="font-size: 11px; color: #94a3b8;">m</span>
+        </div>
+      </div>
+      <input type="range" id="slider-zone-posz" min="-30.00" max="30.00" step="0.10" value="0.00">
+    </div>
+
+    <div class="tuner-actions" style="margin-top: 6px;">
+      <button id="btn-delete-zone" class="tool-btn" style="border-color: #ef4444; color: #fca5a5; flex: 1.2; justify-content: center; display: none; font-weight: 600;">🗑️ Delete Boundary</button>
+      <button id="btn-done-zone" class="tool-btn active" style="flex: 1; justify-content: center;">✅ Done</button>
+    </div>
+    <div id="restore-defaults-container" style="margin-top: 4px; display: none;">
+      <button id="btn-restore-obstacles" class="tool-btn" style="width: 100%; justify-content: center; font-size: 11px; color: #94a3b8;">🔄 Restore Default Tables</button>
+    </div>
+  </div>
+
+  <!-- Sidebar / Telemetry Fleet Manager -->
+  <div class="sidebar" id="fleet-sidebar">
+    <div class="panel-title fleet-drag-header" id="fleet-sidebar-header" title="Drag Fleet Telemetry anywhere • Double-click to reset">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="drag-handle-grip" title="Click and drag to move">⠿</span>
+        <span>Fleet Telemetry</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span id="fleet-count" style="color: #38bdf8;">5 Active</span>
+        <button id="btn-open-rover-sidebar-hdr" onclick="window.openRoverDashboard &amp;&amp; window.openRoverDashboard()" style="background: rgba(2, 132, 199, 0.2); border: 1px solid rgba(56, 189, 248, 0.45); border-radius: 4px; color: #38bdf8; font-size: 10px; cursor: pointer; padding: 2px 7px; font-weight: 700;" title="Open AMR Rover Dashboard & AI Chat">🚜 AMR Dash</button>
+        <button id="btn-reset-sidebar-pos" class="sidebar-reset-pos-btn" title="Reset sidebar position to default">↺</button>
+      </div>
+    </div>
+
+    <div id="robot-cards-container">
+      <!-- Generated dynamically -->
+    </div>
+
+    <div class="panel-title" style="margin-top: 4px; display: flex; justify-content: space-between; align-items: center;">
+      <span>Lab Stations & Waypoints</span>
+      <button id="btn-toggle-all-stations" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 4px; color: #38bdf8; font-size: 10px; cursor: pointer; padding: 2px 7px; font-weight: 600;" title="Click to show or hide all stations">👁️ All ON</button>
+    </div>
+    <div class="stations-grid">
+      <button class="station-btn" data-station="inventory" title="Click to select/focus. Click again or toggle icon to remove/restore.">
+        <span class="station-title">📦 Station A: Parts</span>
+        <span class="station-btn-toggle" title="Click to remove or restore">👁️</span>
+      </button>
+      <button class="station-btn" data-station="electronics" title="Click to select/focus. Click again or toggle icon to remove/restore.">
+        <span class="station-title">🧪 Station B: Electro</span>
+        <span class="station-btn-toggle" title="Click to remove or restore">👁️</span>
+      </button>
+      <button class="station-btn" data-station="testing" title="Click to select/focus. Click again or toggle icon to remove/restore.">
+        <span class="station-title">🔬 Station C: Testing</span>
+        <span class="station-btn-toggle" title="Click to remove or restore">👁️</span>
+      </button>
+      <button class="station-btn" data-station="charger" title="Click to select/focus. Click again or toggle icon to remove/restore.">
+        <span class="station-title">⚡ Station D: Charger</span>
+        <span class="station-btn-toggle" title="Click to remove or restore">👁️</span>
+      </button>
+      <button class="station-btn" data-station="helipad" style="grid-column: span 2; border-color: #f97316; color: #fdba74;" title="Click to select/focus. Click again or toggle icon to remove/restore.">
+        <span class="station-title">🚁 Station E: Drone Helipad</span>
+        <span class="station-btn-toggle" title="Click to remove or restore">👁️</span>
+      </button>
+    </div>
+
+    <!-- Dedicated 6 AMR Home Staging Docks (Draggable in 3D) -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; margin-bottom: 5px;">
+      <span style="font-size: 11px; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.5px;">⚡ AMR Home Docks (Draggable)</span>
+      <span style="font-size: 10px; color: #94a3b8;">Bays 1–6</span>
+    </div>
+    <div class="stations-grid" style="grid-template-columns: repeat(3, 1fr); gap: 4px;">
+      <button class="station-btn" data-station="dock1" style="border-color: rgba(56, 189, 248, 0.4); color: #38bdf8; padding: 4px 2px;" title="Bay 1: AMR-01 Dock (Click to select/focus. Drag pad in 3D to move location!)">
+        <span class="station-title" style="font-size: 10px;">🅿️ Bay 1 <span style="font-size: 8px; opacity: 0.8;">[AMR-1]</span></span>
+        <span class="station-btn-toggle" title="Toggle visibility">👁️</span>
+      </button>
+      <button class="station-btn" data-station="dock2" style="border-color: rgba(74, 222, 128, 0.4); color: #4ade80; padding: 4px 2px;" title="Bay 2: AMR-02 Dock (Click to select/focus. Drag pad in 3D to move location!)">
+        <span class="station-title" style="font-size: 10px;">🅿️ Bay 2 <span style="font-size: 8px; opacity: 0.8;">[AMR-2]</span></span>
+        <span class="station-btn-toggle" title="Toggle visibility">👁️</span>
+      </button>
+      <button class="station-btn" data-station="dock3" style="border-color: rgba(250, 204, 21, 0.4); color: #facc15; padding: 4px 2px;" title="Bay 3: AMR-03 Dock (Click to select/focus. Drag pad in 3D to move location!)">
+        <span class="station-title" style="font-size: 10px;">🅿️ Bay 3 <span style="font-size: 8px; opacity: 0.8;">[AMR-3]</span></span>
+        <span class="station-btn-toggle" title="Toggle visibility">👁️</span>
+      </button>
+      <button class="station-btn" data-station="dock4" style="border-color: rgba(192, 132, 252, 0.4); color: #c084fc; padding: 4px 2px;" title="Bay 4: AMR-04 Dock (Click to select/focus. Drag pad in 3D to move location!)">
+        <span class="station-title" style="font-size: 10px;">🅿️ Bay 4 <span style="font-size: 8px; opacity: 0.8;">[AMR-4]</span></span>
+        <span class="station-btn-toggle" title="Toggle visibility">👁️</span>
+      </button>
+      <button class="station-btn" data-station="dock5" style="border-color: rgba(45, 212, 191, 0.4); color: #2dd4bf; padding: 4px 2px;" title="Bay 5: AMR-05 Dock (Click to select/focus. Drag pad in 3D to move location!)">
+        <span class="station-title" style="font-size: 10px;">🅿️ Bay 5 <span style="font-size: 8px; opacity: 0.8;">[AMR-5]</span></span>
+        <span class="station-btn-toggle" title="Toggle visibility">👁️</span>
+      </button>
+      <button class="station-btn" data-station="dock6" style="border-color: rgba(248, 113, 113, 0.4); color: #f87171; padding: 4px 2px;" title="Bay 6: AMR-06 Dock (Click to select/focus. Drag pad in 3D to move location!)">
+        <span class="station-title" style="font-size: 10px;">🅿️ Bay 6 <span style="font-size: 8px; opacity: 0.8;">[AMR-6]</span></span>
+        <span class="station-btn-toggle" title="Toggle visibility">👁️</span>
+      </button>
+    </div>
+
+    <!-- Official MDC North Campus Buildings Directory (CAD Map) -->
+    <div id="campus-buildings-box" class="campus-buildings-box" style="display: none; margin-top: 10px; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 8px; padding: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 11px; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.5px;">🏛️ Campus Buildings (CAD)</span>
+        <div style="display: flex; gap: 5px; align-items: center;">
+          <button id="btn-toggle-bldg-names-side" class="tool-btn active" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 4px; color: #38bdf8; font-size: 9px; cursor: pointer; padding: 1px 6px; font-weight: 600;" title="Toggle floating building rooftop labels">🏷️ Names: ON</button>
+          <button id="btn-reset-buildings" onclick="window.resetCustomBuildingPositions && window.resetCustomBuildingPositions();" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 4px; color: #38bdf8; font-size: 9px; cursor: pointer; padding: 1px 6px; font-weight: 600;" title="Reset building bays & labels to default locations">🔄 Reset</button>
+        </div>
+      </div>
+      <div id="campus-buildings-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;"></div>
+    </div>
+
+    <!-- Campus Pedestrian Swarms & Crowd Control -->
+    <div id="campus-pedestrians-box" class="campus-pedestrians-box" style="display: none; margin-top: 10px; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 8px; padding: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 11px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px;">🚶 Pedestrians & Rush</span>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <label style="display: flex; align-items: center; gap: 3px; font-size: 10px; color: #cbd5e1; cursor: pointer;" title="Show or hide students walking on campus">
+            <input type="checkbox" id="pedestrians-toggle" checked style="cursor: pointer;"> Students
+          </label>
+          <label style="display: flex; align-items: center; gap: 3px; font-size: 10px; color: #cbd5e1; cursor: pointer;" title="Show or hide name tags floating above students' heads">
+            <input type="checkbox" id="ped-names-toggle" checked style="cursor: pointer;"> Names
+          </label>
+        </div>
+      </div>
+      <div style="font-size: 10px; color: #94a3b8; margin-bottom: 8px;">
+        Simulates students and faculty walking between buildings on campus sidewalks.
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 10px;">
+        <span style="color: #cbd5e1;">Density Mode:</span>
+        <select id="pedestrian-density-select" style="background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 4px; color: #e2e8f0; font-size: 10px; padding: 2px 6px; cursor: pointer;">
+          <option value="low">Quiet Campus (6)</option>
+          <option value="normal" selected>Normal Traffic (12)</option>
+          <option value="rush">Class-Break Rush (24)</option>
+        </select>
+      </div>
+      <div id="pedestrians-status-metrics" style="background: rgba(0, 0, 0, 0.25); border-radius: 4px; padding: 5px 8px; font-size: 10px; color: #6ee7b7; display: flex; justify-content: space-between;">
+        <span>👥 <b id="ped-active-count">12</b> Active</span>
+        <span>🛑 <b id="ped-yield-count">0</b> Yields</span>
+        <span>🛡️ <b id="ped-safety-rate">100%</b> Safe</span>
+      </div>
+    </div>
+
+    <!-- Campus Courier Logistics & Parcel Missions -->
+    <div id="campus-logistics-box" class="campus-logistics-box" style="display: none; margin-top: 10px; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 8px; padding: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 11px; font-weight: 700; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.5px;">📦 Courier Parcel Dispatch</span>
+        <label style="display: flex; align-items: center; gap: 4px; font-size: 10px; color: #cbd5e1; cursor: pointer;">
+          <input type="checkbox" id="auto-dispatch-toggle" checked style="cursor: pointer; accent-color: #f59e0b;"> Auto
+        </label>
+      </div>
+
+      <!-- Central Depot Staging Inventory Banner -->
+      <div style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 6px; padding: 4px 8px; margin-bottom: 6px; font-size: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="color: #fde68a;">🏢 <b>Central Depot Inventory</b></span>
+        <span style="font-weight: 800; color: #fbbf24;"><span id="logistics-stockpile-count">1,000</span> pkgs</span>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 8px;">
+        <div style="background: rgba(0,0,0,0.3); border-radius: 4px; padding: 4px 6px; text-align: center;">
+          <div style="font-size: 9px; color: #94a3b8;">Delivered</div>
+          <div id="logistics-delivered-count" style="font-size: 13px; font-weight: 800; color: #10b981;">0</div>
+        </div>
+        <div style="background: rgba(0,0,0,0.3); border-radius: 4px; padding: 4px 6px; text-align: center;">
+          <div style="font-size: 9px; color: #94a3b8;">On-Time</div>
+          <div id="logistics-ontime-rate" style="font-size: 13px; font-weight: 800; color: #38bdf8;">100%</div>
+        </div>
+        <div style="background: rgba(0,0,0,0.3); border-radius: 4px; padding: 4px 6px; text-align: center;">
+          <div style="font-size: 9px; color: #94a3b8;">Avg Time</div>
+          <div id="logistics-avg-time" style="font-size: 13px; font-weight: 800; color: #f59e0b;">0s</div>
+        </div>
+      </div>
+
+      <!-- Live Delivered Breakdown by Drop-off Bay -->
+      <div id="logistics-bays-summary" style="display: none; background: rgba(0,0,0,0.25); border-radius: 4px; padding: 4px 6px; font-size: 9px; color: #94a3b8; margin-bottom: 8px; line-height: 1.4;"></div>
+
+      <!-- Live Order Queue -->
+      <div id="logistics-orders-list" style="max-height: 140px; overflow-y: auto; margin-bottom: 8px;"></div>
+
+      <!-- Manual Dispatch Action Buttons -->
+      <div style="display: flex; gap: 4px;">
+        <button id="btn-dispatch-urgent" class="tool-btn" style="flex: 1; padding: 3px 2px; font-size: 9px; justify-content: center; background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.5); color: #fca5a5;" title="Dispatch high-priority exam or laboratory supply parcel (65s SLA)">🚨 Urgent Order</button>
+        <button id="btn-dispatch-standard" class="tool-btn" style="flex: 1; padding: 3px 2px; font-size: 9px; justify-content: center; background: rgba(14, 165, 233, 0.2); border-color: rgba(14, 165, 233, 0.5); color: #7dd3fc;" title="Dispatch standard inter-department mail parcel (120s SLA)">📦 Standard Order</button>
+      </div>
+    </div>
+
+    <div class="anylogic-box">
+      <h4>⚡ AnyLogic Live Bridge</h4>
+      <p style="color: #94a3b8;">AnyLogic can drive this 3D model directly over REST / WebSocket!</p>
+      <div class="code-snippet">// In AnyLogic 'On Step' or cyclic event:
+sendRobotCoords("AMR-01", robot.getX(), robot.getY());
+// Bridge URL: http://localhost:3000/api/anylogic/update</div>
+    </div>
+
+    <div style="font-size: 11px; color: #64748b; text-align: center;">
+      Tip: Click anywhere on the floor to dispatch the selected robot!
+    </div>
+  </div>
+
+  <!-- Bottom Interactive Banner -->
+  <div class="dispatch-banner">
+    <span>🎯 <b>Interactive Dispatch Mode</b>: Click any point on the classroom floor to route <span id="dispatch-target-name" style="color: #38bdf8;">AMR-01</span></span>
+  </div>
+
+  <!-- Unitree G1 Silver Dashboard Control & AI Command Console Modal -->
+  <div id="g1-dashboard-modal" class="dashboard-modal" style="display: none;">
+    <div class="dashboard-backdrop" id="g1-dashboard-backdrop"></div>
+    <div class="dashboard-window">
+      <!-- Window Header -->
+      <div class="dashboard-header">
+        <div class="dashboard-title-group">
+          <div class="dashboard-avatar">🤖</div>
+          <div>
+            <div class="dashboard-title">Unitree G1 Edu Plus Silver</div>
+            <div class="dashboard-subtitle">Bipedal Humanoid Robotic Assistant &bull; ID: <code>HUM-01</code> &bull; <span class="status-online">● ONLINE / TELEMETRY LINKED</span></div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+          <button id="btn-header-g1-cam" class="modal-cam-header-btn" title="Enter First-Person Visor Cam & Walk">🎥 Cockpit Cam &amp; Walk</button>
+          <button id="btn-close-g1-modal" class="modal-close-btn">&times;</button>
+        </div>
+      </div>
+
+      <!-- Window Body: 2 Columns (Telemetry on Left, AI Chat Console on Right) -->
+      <div class="dashboard-body">
+        <!-- Left: Telemetry Grid -->
+        <div class="dashboard-telemetry-pane">
+          <div class="telemetry-section-title">⚡ Power & Battery Subsystem</div>
+          <div class="telemetry-grid">
+            <div class="telemetry-card">
+              <span class="telemetry-label">Battery Charge</span>
+              <span class="telemetry-value highlight" id="g1-stat-battery">93%</span>
+              <div class="battery-bar-container"><div id="g1-battery-bar" class="battery-bar-fill" style="width: 93%;"></div></div>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Core Voltage</span>
+              <span class="telemetry-value" id="g1-stat-voltage">48.2 V</span>
+              <span class="telemetry-sub" style="color: #4ade80;">Nominal</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Pack Temp</span>
+              <span class="telemetry-value" id="g1-stat-temp">31.4°C</span>
+              <span class="telemetry-sub" style="color: #4ade80;">Optimal</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Est. Runtime</span>
+              <span class="telemetry-value">3.4 hrs</span>
+              <span class="telemetry-sub">Continuous Walk</span>
+            </div>
+          </div>
+
+          <div class="telemetry-section-title" style="margin-top: 10px;">🏃 Bipedal Gait & Locomotion</div>
+          <div class="telemetry-grid">
+            <div class="telemetry-card">
+              <span class="telemetry-label">Walking Speed</span>
+              <span class="telemetry-value" id="g1-stat-speed">0.85 m/s</span>
+              <span class="telemetry-sub" id="g1-stat-state" style="color: #38bdf8;">Bipedal Walking</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Step Cadence</span>
+              <span class="telemetry-value" id="g1-stat-cadence">1.8 Hz</span>
+              <span class="telemetry-sub">Stride: 0.45m</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Floor Position (X, Z)</span>
+              <span class="telemetry-value highlight" id="g1-stat-coords">-0.16m, 0.83m</span>
+              <span class="telemetry-sub">Classroom Grid</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Current Heading</span>
+              <span class="telemetry-value" id="g1-stat-heading">-90°</span>
+              <span class="telemetry-sub">Orientation</span>
+            </div>
+          </div>
+
+          <div class="telemetry-section-title" style="margin-top: 10px;">🦾 23-DoF Actuator Joint Health</div>
+          <div class="joint-health-list">
+            <div class="joint-item"><span>Waist Actuator</span><span class="joint-ok">● 100% OK</span></div>
+            <div class="joint-item"><span>Hip Pitch &amp; Roll</span><span class="joint-ok">● 100% OK</span></div>
+            <div class="joint-item"><span>Knee Servos (L/R)</span><span class="joint-ok">● 100% OK</span></div>
+            <div class="joint-item"><span>Ankle Joints (L/R)</span><span class="joint-ok">● 100% OK</span></div>
+            <div class="joint-item"><span>Arm &amp; Shoulder Servos</span><span class="joint-ok">● 100% OK</span></div>
+            <div class="joint-item"><span>Dexterous Hands (L/R)</span><span class="joint-ok">● 100% OK</span></div>
+          </div>
+
+          <div class="telemetry-section-title" style="margin-top: 10px;">📡 Perception & Safety</div>
+          <div class="telemetry-card" style="margin-top: 4px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; font-size: 11px;">
+              <span class="telemetry-label">LiDAR Obstacle Clearance</span>
+              <span id="g1-stat-lidar-dist" style="color: #38bdf8; font-weight: 600;">Clear (&gt; 2.5m)</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11px;">
+              <span class="telemetry-label">OBB Collision Shield</span>
+              <span id="g1-stat-avoidance" style="color: #4ade80; font-weight: 600;">Active 100% Barrier</span>
+            </div>
+          </div>
+
+          <div class="telemetry-section-title" style="margin-top: 10px;">📍 Waypoint Patrol Route (Place &amp; Activate)</div>
+          <div class="telemetry-card" style="margin-top: 4px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
+              <span class="telemetry-label">Patrol Circuit:</span>
+              <span id="g1-waypoint-count" style="color: #38bdf8; font-weight: 700;">6 Waypoints Mapped</span>
+            </div>
+            <div style="display: flex; gap: 6px;">
+              <button id="btn-g1-edit-waypoints" class="wp-ctrl-btn" style="flex: 1; padding: 6px 8px; font-size: 11px; font-weight: 700; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.5); background: rgba(14, 165, 233, 0.2); color: #38bdf8; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.2s;" title="Show waypoints on the floor to drag and reposition them">
+                📍 Show &amp; Place Waypoints
+              </button>
+              <button id="btn-g1-activate-waypoints" class="wp-ctrl-btn" style="flex: 1; padding: 6px 8px; font-size: 11px; font-weight: 700; border-radius: 6px; border: 1px solid rgba(34, 197, 94, 0.5); background: rgba(34, 197, 94, 0.2); color: #4ade80; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.2s;" title="Activate waypoint patrol and hide waypoints from the map">
+                🚀 Activate &amp; Hide
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Interactive AI Command Chat Console -->
+        <div class="dashboard-chat-pane">
+          <div class="chat-header">
+            <span class="chat-title">💬 Unitree G1 Command Console</span>
+            <span style="font-size: 11px; color: #38bdf8;">Real-Time AI Dispatch</span>
+          </div>
+
+          <!-- Chat Message Stream -->
+          <div id="g1-chat-stream" class="chat-stream">
+            <div class="chat-bubble g1-bubble">
+              <div class="bubble-sender">🤖 Unitree G1 Silver</div>
+              <div class="bubble-text">Unitree G1 Edu Plus online and operational! I am ready to receive your commands. Tell me where to walk, what station to inspect, or what task to execute.</div>
+              <div class="bubble-time">Just now</div>
+            </div>
+          </div>
+
+          <!-- Quick Action Command Chips -->
+          <div class="chat-quick-actions">
+            <button class="quick-cmd-btn g1-cmd-btn" id="btn-g1-cockpit-cam" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.4), rgba(168, 85, 247, 0.3)); border-color: #38bdf8; color: #ffffff; font-weight: 700;" title="Switch camera directly to Unitree G1 visor and navigate!">🎥 Cockpit Cam &amp; Walk</button>
+            <button class="quick-cmd-btn" id="btn-chip-g1-edit-wp" style="border-color: #38bdf8; color: #38bdf8; font-weight: 700;">📍 Place Waypoints</button>
+            <button class="quick-cmd-btn" id="btn-chip-g1-act-wp" style="border-color: #4ade80; color: #4ade80; font-weight: 700;">🚀 Activate Route</button>
+            <button class="quick-cmd-btn" data-cmd="Wave hello">👋 Wave</button>
+            <button class="quick-cmd-btn" data-cmd="Go to Testing Table">🔬 Testing Table</button>
+            <button class="quick-cmd-btn" data-cmd="Go to Electronics Bench">🧪 Electronics</button>
+            <button class="quick-cmd-btn" data-cmd="Go to Parts Shelf">📦 Parts Shelf</button>
+            <button class="quick-cmd-btn" data-cmd="Go to Charger Dock">⚡ Charger Dock</button>
+            <button class="quick-cmd-btn" data-cmd="Go to Drone Helipad">🚁 Drone Helipad</button>
+            <button class="quick-cmd-btn" data-cmd="Stop">🛑 Halt</button>
+            <button class="quick-cmd-btn" data-cmd="Resume patrol">▶️ Resume</button>
+            <button class="quick-cmd-btn" data-cmd="Report status">📊 Status</button>
+          </div>
+
+          <!-- Chat Input Form -->
+          <form id="g1-chat-form" class="chat-input-form" onsubmit="return false;">
+            <input type="text" id="g1-chat-input" class="chat-input" placeholder="Tell G1 where to go (e.g. 'go to testing table', 'wave', 'speed up')..." autocomplete="off">
+            <button type="submit" id="btn-send-g1-cmd" class="chat-send-btn">Send ↵</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SkyWatcher Drone Dashboard Control & AI Command Console Modal -->
+  <div id="drone-dashboard-modal" class="dashboard-modal" style="display: none;">
+    <div class="dashboard-backdrop" id="drone-dashboard-backdrop"></div>
+    <div class="dashboard-window drone-theme-window">
+      <!-- Window Header -->
+      <div class="dashboard-header drone-header">
+        <div class="dashboard-title-group">
+          <div class="dashboard-avatar drone-avatar">🚁</div>
+          <div>
+            <div class="dashboard-title">SkyWatcher Aerial Drone</div>
+            <div class="dashboard-subtitle">Autonomous Quadcopter Scout &bull; ID: <code>UAV-01</code> &bull; <span class="status-online" style="color: #c084fc;">● FLIGHT TELEMETRY LINKED</span></div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+          <button id="btn-header-drone-cam" class="modal-cam-header-btn drone-cam-btn" title="Enter Aerial Cockpit Cam & Fly">🎥 Cockpit Cam &amp; Fly</button>
+          <button id="btn-close-drone-modal" class="modal-close-btn">&times;</button>
+        </div>
+      </div>
+      <div class="rover-switcher-pills" style="display: flex; gap: 6px; align-items: center; padding: 6px 16px; background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid rgba(192, 132, 252, 0.2);">
+        <span style="font-size: 11px; color: #cbd5e1; font-weight: 600;">Active UAV:</span>
+        <button class="drone-pill-btn active" data-drone="UAV-01" id="pill-UAV-01" onclick="window.switchDroneDashboard && window.switchDroneDashboard('UAV-01')">UAV-01</button>
+        <button class="drone-pill-btn" data-drone="UAV-02" id="pill-UAV-02" onclick="window.switchDroneDashboard && window.switchDroneDashboard('UAV-02')">UAV-02</button>
+        <button class="drone-pill-btn" data-drone="UAV-03" id="pill-UAV-03" onclick="window.switchDroneDashboard && window.switchDroneDashboard('UAV-03')">UAV-03</button>
+      </div>
+
+      <!-- Window Body: 2 Columns (Telemetry on Left, AI Chat Console on Right) -->
+      <div class="dashboard-body">
+        <!-- Left: Telemetry Grid -->
+        <div class="dashboard-telemetry-pane">
+          <div class="telemetry-section-title">✈️ Flight &amp; Altitude Subsystem</div>
+          <div class="telemetry-grid">
+            <div class="telemetry-card">
+              <span class="telemetry-label">Flight Altitude (AGL)</span>
+              <span class="telemetry-value highlight" id="drone-stat-alt" style="color: #c084fc;">1.92 m</span>
+              <span class="telemetry-sub" id="drone-stat-climb">Climb: +0.0 m/s</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Airspeed / Ground</span>
+              <span class="telemetry-value" id="drone-stat-speed">1.35 m/s</span>
+              <span class="telemetry-sub" id="drone-stat-state" style="color: #38bdf8;">In Flight / Survey</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Attitude (Roll / Pitch)</span>
+              <span class="telemetry-value" id="drone-stat-bank">R: 0.0° | P: 0.0°</span>
+              <span class="telemetry-sub">Inertial Gyro</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Floor Position (X, Z)</span>
+              <span class="telemetry-value highlight" id="drone-stat-coords">0.00m, 0.00m</span>
+              <span class="telemetry-sub" id="drone-stat-heading">Heading: 0°</span>
+            </div>
+          </div>
+
+          <div class="telemetry-section-title" style="margin-top: 10px;">⚡ 4S LiPo Avionics Power</div>
+          <div class="telemetry-grid">
+            <div class="telemetry-card">
+              <span class="telemetry-label">Pack Capacity</span>
+              <span class="telemetry-value highlight" id="drone-stat-battery">89%</span>
+              <div class="battery-bar-container"><div id="drone-battery-bar" class="battery-bar-fill" style="width: 89%; background: linear-gradient(90deg, #c084fc, #38bdf8);"></div></div>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Pack Voltage</span>
+              <span class="telemetry-value" id="drone-stat-voltage">16.4 V</span>
+              <span class="telemetry-sub" style="color: #4ade80;">4S LiPo Nominal</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Current Draw</span>
+              <span class="telemetry-value" id="drone-stat-current">12.6 A</span>
+              <span class="telemetry-sub" id="drone-stat-power">206.6 Watts</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Est. Flight Endurance</span>
+              <span class="telemetry-value" id="drone-stat-runtime">15.8 min</span>
+              <span class="telemetry-sub">Active Cruise</span>
+            </div>
+          </div>
+
+          <div class="telemetry-section-title" style="margin-top: 10px;">🌪️ Quad-Rotor Propulsion Health</div>
+          <div class="joint-health-list">
+            <div class="joint-item"><span>Motor 1 (Front-Left CCW)</span><span class="joint-ok" id="drone-m1-rpm" style="color: #c084fc;">● 6,840 RPM</span></div>
+            <div class="joint-item"><span>Motor 2 (Front-Right CW)</span><span class="joint-ok" id="drone-m2-rpm" style="color: #c084fc;">● 6,820 RPM</span></div>
+            <div class="joint-item"><span>Motor 3 (Rear-Left CW)</span><span class="joint-ok" id="drone-m3-rpm" style="color: #c084fc;">● 6,850 RPM</span></div>
+            <div class="joint-item"><span>Motor 4 (Rear-Right CCW)</span><span class="joint-ok" id="drone-m4-rpm" style="color: #c084fc;">● 6,830 RPM</span></div>
+            <div class="joint-item"><span>4-in-1 DShot ESC Telemetry</span><span class="joint-ok">● 100% Synced</span></div>
+          </div>
+
+          <div class="telemetry-section-title" style="margin-top: 10px;">📡 Navigation &amp; Sensor Suite</div>
+          <div class="telemetry-card" style="margin-top: 4px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; font-size: 11px;">
+              <span class="telemetry-label">GNSS / RTK Satellite Lock</span>
+              <span style="color: #4ade80; font-weight: 600;">● 19 Sats (RTK Fix ±0.02m)</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11px;">
+              <span class="telemetry-label">Downward Optical Flow &amp; LiDAR</span>
+              <span id="drone-stat-lidar" style="color: #38bdf8; font-weight: 600;">Ground Lock Active</span>
+            </div>
+          </div>
+
+          <div class="telemetry-section-title" style="margin-top: 10px;">📍 Aerial Waypoint Flight Path (Place &amp; Activate)</div>
+          <div class="telemetry-card" style="margin-top: 4px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
+              <span class="telemetry-label">Flight Path:</span>
+              <span id="drone-waypoint-count" style="color: #c084fc; font-weight: 700;">5 Flight Waypoints Mapped</span>
+            </div>
+            <div style="display: flex; gap: 6px;">
+              <button id="btn-drone-edit-waypoints" class="wp-ctrl-btn" style="flex: 1; padding: 6px 8px; font-size: 11px; font-weight: 700; border-radius: 6px; border: 1px solid rgba(192, 132, 252, 0.5); background: rgba(192, 132, 252, 0.2); color: #c084fc; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.2s;" title="Show flight waypoints in 3D to drag and reposition them">
+                📍 Show &amp; Place Flight Waypoints
+              </button>
+              <button id="btn-drone-activate-waypoints" class="wp-ctrl-btn" style="flex: 1; padding: 6px 8px; font-size: 11px; font-weight: 700; border-radius: 6px; border: 1px solid rgba(34, 197, 94, 0.5); background: rgba(34, 197, 94, 0.2); color: #4ade80; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.2s;" title="Activate waypoint flight and hide waypoints from the map">
+                🚀 Activate &amp; Hide
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Interactive AI Command Chat Console -->
+        <div class="dashboard-chat-pane">
+          <div class="chat-header">
+            <span class="chat-title">🚁 UAV-01 Flight Command Console</span>
+            <span style="font-size: 11px; color: #c084fc;">Real-Time Aerial Dispatch</span>
+          </div>
+
+          <!-- Chat Message Stream -->
+          <div id="drone-chat-stream" class="chat-stream">
+            <div class="chat-bubble drone-bubble">
+              <div class="bubble-sender">🚁 SkyWatcher Drone</div>
+              <div class="bubble-text">SkyWatcher UAV-01 avionics online and flight-ready! Propellers synchronized at 1.9m cruise altitude. Standing by for navigation or station surveillance commands.</div>
+              <div class="bubble-time">Just now</div>
+            </div>
+          </div>
+
+          <!-- Quick Action Command Chips -->
+          <div class="chat-quick-actions">
+            <button class="quick-cmd-btn drone-cmd-btn" id="btn-drone-cockpit-cam" style="background: linear-gradient(135deg, rgba(192, 132, 252, 0.4), rgba(56, 189, 248, 0.3)); border-color: #c084fc; color: #ffffff; font-weight: 700;" title="Switch camera directly to drone cockpit and fly!">🎥 Cockpit Cam &amp; Fly</button>
+            <button class="quick-cmd-btn drone-cmd-btn" id="btn-chip-drone-edit-wp" style="border-color: #c084fc; color: #c084fc; font-weight: 700;">📍 Place Waypoints</button>
+            <button class="quick-cmd-btn drone-cmd-btn" id="btn-chip-drone-act-wp" style="border-color: #4ade80; color: #4ade80; font-weight: 700;">🚀 Activate Route</button>
+            <button class="quick-cmd-btn drone-cmd-btn" data-cmd="Fly to Drone Helipad">🚁 Drone Helipad</button>
+            <button class="quick-cmd-btn drone-cmd-btn" data-cmd="Fly to Testing Table">🔬 Testing Table</button>
+            <button class="quick-cmd-btn drone-cmd-btn" data-cmd="Fly to Electronics Bench">🧪 Electronics</button>
+            <button class="quick-cmd-btn drone-cmd-btn" data-cmd="Fly to Parts Shelf">📦 Parts Shelf</button>
+            <button class="quick-cmd-btn drone-cmd-btn" data-cmd="Fly to Charger Dock">⚡ Charger Dock</button>
+            <button class="quick-cmd-btn drone-cmd-btn" data-cmd="Hover here">🛑 Hover</button>
+            <button class="quick-cmd-btn drone-cmd-btn" data-cmd="Land on helipad">🛬 Land</button>
+            <button class="quick-cmd-btn drone-cmd-btn" data-cmd="Take off">🛫 Take Off</button>
+            <button class="quick-cmd-btn drone-cmd-btn" data-cmd="Resume patrol">▶️ Resume</button>
+            <button class="quick-cmd-btn drone-cmd-btn" data-cmd="Report status">📊 Flight Report</button>
+          </div>
+
+          <!-- Chat Input Form -->
+          <form id="drone-chat-form" class="chat-input-form" onsubmit="return false;">
+            <input type="text" id="drone-chat-input" class="chat-input" placeholder="Give flight instructions (e.g. 'fly to testing table', 'land on helipad', 'hover')..." autocomplete="off">
+            <button type="submit" id="btn-send-drone-cmd" class="chat-send-btn drone-send-btn">Dispatch ↵</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Autonomous AMR Rover Dashboard Control & AI Command Console Modal -->
+  <div id="rover-dashboard-modal" class="dashboard-modal" style="display: none;">
+    <div class="dashboard-backdrop" id="rover-dashboard-backdrop" onclick="window.closeRoverDashboard &amp;&amp; window.closeRoverDashboard()"></div>
+    <div class="dashboard-window rover-theme-window" id="rover-window-el">
+      <!-- Window Header -->
+      <div class="dashboard-header rover-header">
+        <div class="dashboard-title-group">
+          <div class="dashboard-avatar rover-avatar" id="rover-header-avatar">🚜</div>
+          <div>
+            <div class="dashboard-title" id="rover-header-title">Inspector Alpha</div>
+            <div class="dashboard-subtitle">Autonomous Mobile Robot (AMR) &bull; ID: <code id="rover-header-id">AMR-01</code> &bull; <span class="status-online" id="rover-header-status-badge">● SLAM TELEMETRY LINKED</span></div>
+          </div>
+        </div>
+        <div class="rover-switcher-pills" style="display: flex; gap: 6px; align-items: center; margin-left: auto; margin-right: 12px; flex-wrap: wrap;">
+          <button class="rover-pill-btn active" data-rover="AMR-01" id="pill-AMR-01" onclick="window.openRoverDashboard && window.openRoverDashboard('AMR-01')">AMR-01</button>
+          <button class="rover-pill-btn" data-rover="AMR-02" id="pill-AMR-02" onclick="window.openRoverDashboard && window.openRoverDashboard('AMR-02')">AMR-02</button>
+          <button class="rover-pill-btn" data-rover="AMR-03" id="pill-AMR-03" onclick="window.openRoverDashboard && window.openRoverDashboard('AMR-03')">AMR-03</button>
+          <button class="rover-pill-btn" data-rover="AMR-04" id="pill-AMR-04" onclick="window.openRoverDashboard && window.openRoverDashboard('AMR-04')">AMR-04</button>
+          <button class="rover-pill-btn" data-rover="AMR-05" id="pill-AMR-05" onclick="window.openRoverDashboard && window.openRoverDashboard('AMR-05')">AMR-05</button>
+          <button class="rover-pill-btn" data-rover="AMR-06" id="pill-AMR-06" onclick="window.openRoverDashboard && window.openRoverDashboard('AMR-06')">AMR-06</button>
+        </div>
+        <button id="btn-rover-toggle-lidar" class="modal-cam-header-btn" onclick="window.toggleRoverLidar &amp;&amp; window.toggleRoverLidar()" style="border-color: #4ade80; color: #4ade80; background: rgba(34, 197, 94, 0.2); margin-right: 8px;" title="Toggle 3D Live LiDAR Laser Beams for this AMR">📡 LiDAR: ON</button>
+        <button id="btn-header-rover-cam" class="modal-cam-header-btn rover-cam-btn" title="Enter First-Person Bumper Cam & Drive" style="margin-right: 8px;">🎥 Cockpit Cam &amp; Drive</button>
+        <button id="btn-close-rover-modal" class="modal-close-btn" onclick="window.closeRoverDashboard &amp;&amp; window.closeRoverDashboard()">&times;</button>
+      </div>
+
+      <!-- Window Body: 2 Columns (Telemetry on Left, AI Chat Console on Right) -->
+      <div class="dashboard-body">
+        <!-- Left: Telemetry Grid -->
+        <div class="dashboard-telemetry-pane">
+          <div class="telemetry-section-title">🚜 Drivetrain &amp; Differential Wheels</div>
+          <div class="telemetry-grid">
+            <div class="telemetry-card">
+              <span class="telemetry-label">Ground Velocity</span>
+              <span class="telemetry-value highlight" id="rover-stat-speed">0.85 m/s</span>
+              <span class="telemetry-sub" id="rover-stat-state" style="color: #38bdf8;">Patrolling</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Wheel RPM (L / R)</span>
+              <span class="telemetry-value" id="rover-stat-wheels">L: 115 | R: 115</span>
+              <span class="telemetry-sub" id="rover-stat-diff">Differential Drive</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Floor Position (X, Z)</span>
+              <span class="telemetry-value highlight" id="rover-stat-coords">0.00m, 0.00m</span>
+              <span class="telemetry-sub" id="rover-stat-heading">Heading: 0°</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Trip Odometer</span>
+              <span class="telemetry-value" id="rover-stat-odometer">42.8 m</span>
+              <span class="telemetry-sub">Accumulated Drive</span>
+            </div>
+          </div>
+
+          <div class="telemetry-section-title" style="margin-top: 10px;">⚡ 24V Industrial LiFePO4 Power</div>
+          <div class="telemetry-grid">
+            <div class="telemetry-card">
+              <span class="telemetry-label">Battery Level</span>
+              <span class="telemetry-value highlight" id="rover-stat-battery">85%</span>
+              <div class="battery-bar-container"><div id="rover-battery-bar" class="battery-bar-fill" style="width: 85%;"></div></div>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Pack Voltage</span>
+              <span class="telemetry-value" id="rover-stat-voltage">26.1 V</span>
+              <span class="telemetry-sub" id="rover-stat-charge-state" style="color: #4ade80;">Active Transit</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Current Draw</span>
+              <span class="telemetry-value" id="rover-stat-current">4.8 A</span>
+              <span class="telemetry-sub" id="rover-stat-power">125.3 Watts</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-label">Shift Runtime Est.</span>
+              <span class="telemetry-value" id="rover-stat-runtime">6.4 hrs</span>
+              <span class="telemetry-sub">Continuous Duty</span>
+            </div>
+          </div>
+
+          <div class="telemetry-section-title" style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <span>📡 360° Safety LiDAR &amp; Safety Fields</span>
+            <button id="btn-rover-toggle-lidar-sec" onclick="window.toggleRoverLidar &amp;&amp; window.toggleRoverLidar()" style="background: rgba(34, 197, 94, 0.2); border: 1px solid #4ade80; color: #4ade80; border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s;" title="Toggle 3D Real-Time LiDAR Beams for this robot">📡 LiDAR: ON</button>
+          </div>
+          <div class="joint-health-list">
+            <div class="joint-item"><span>360° LiDAR Scanner</span><span class="joint-ok" id="rover-stat-lidar-rpm">● Active (12 rad/s)</span></div>
+            <div class="joint-item"><span>3D Laser Scan Beams</span><span class="joint-ok" id="rover-stat-lidar-beams-state" style="color: #4ade80; font-weight: 700;">● 28 Beams Active</span></div>
+            <div class="joint-item"><span>Safety Field (Warning 1.0m)</span><span class="joint-ok" id="rover-stat-safety-warn">● Clear (> 1.0m)</span></div>
+            <div class="joint-item"><span>Safety Field (Stop 0.45m)</span><span class="joint-ok" id="rover-stat-safety-stop">● Clear Barrier</span></div>
+            <div class="joint-item"><span>Front &amp; Rear Optical Bumpers</span><span class="joint-ok">● Nominal (0 Hits)</span></div>
+            <div class="joint-item"><span>Wheel Traction / Slip Sensor</span><span class="joint-ok">● Nominal (0% Slip)</span></div>
+          </div>
+
+          <div class="telemetry-section-title" style="margin-top: 10px;">📦 Payload Bay &amp; SLAM Navigation</div>
+          <div class="telemetry-card" style="margin-top: 4px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between; font-size: 11px;">
+              <span class="telemetry-label">Payload Bed Status</span>
+              <span id="rover-stat-payload" style="color: #4ade80; font-weight: 600;">Ready / Capacity 30 kg</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11px;">
+              <span class="telemetry-label">SLAM Localization</span>
+              <span style="color: #38bdf8; font-weight: 600;">Nav2 High-Precision Locked</span>
+            </div>
+          </div>
+
+          <div class="telemetry-section-title" style="margin-top: 10px;">📍 SLAM Waypoint Patrol Routine (Place &amp; Activate)</div>
+          <div class="telemetry-card" style="margin-top: 4px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
+              <span class="telemetry-label">Waypoints:</span>
+              <span id="rover-waypoint-count" style="color: #38bdf8; font-weight: 700;">4 Waypoints Mapped</span>
+            </div>
+            <div style="display: flex; gap: 6px;">
+              <button id="btn-rover-edit-waypoints" class="wp-ctrl-btn" style="flex: 1; padding: 6px 8px; font-size: 11px; font-weight: 700; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.5); background: rgba(14, 165, 233, 0.2); color: #38bdf8; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.2s;" title="Show waypoints on the floor to drag and reposition them">
+                📍 Show &amp; Place Waypoints
+              </button>
+              <button id="btn-rover-activate-waypoints" class="wp-ctrl-btn" style="flex: 1; padding: 6px 8px; font-size: 11px; font-weight: 700; border-radius: 6px; border: 1px solid rgba(34, 197, 94, 0.5); background: rgba(34, 197, 94, 0.2); color: #4ade80; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.2s;" title="Activate waypoint patrol and hide waypoints from the map">
+                🚀 Activate &amp; Hide
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Interactive AI Command Chat Console -->
+        <div class="dashboard-chat-pane">
+          <div class="chat-header">
+            <span class="chat-title" id="rover-chat-header-title">🚜 AMR Command Console</span>
+            <span style="font-size: 11px; color: #38bdf8;" id="rover-chat-subtitle">Autonomous AMR Dispatch</span>
+          </div>
+
+          <!-- Chat Message Stream -->
+          <div id="rover-chat-stream" class="chat-stream">
+            <!-- Messages populated dynamically per rover -->
+          </div>
+
+          <!-- Quick Action Command Chips -->
+          <div class="chat-quick-actions">
+            <button class="quick-cmd-btn rover-cmd-btn" id="btn-rover-cockpit-cam" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.4), rgba(56, 189, 248, 0.3)); border-color: #22c55e; color: #ffffff; font-weight: 700;" title="Switch camera directly to rover cockpit/bumper and navigate!">🎥 Cockpit Cam &amp; Drive</button>
+            <button class="quick-cmd-btn rover-cmd-btn" id="btn-chip-rover-edit-wp" style="border-color: #38bdf8; color: #38bdf8; font-weight: 700;">📍 Place Waypoints</button>
+            <button class="quick-cmd-btn rover-cmd-btn" id="btn-chip-rover-act-wp" style="border-color: #4ade80; color: #4ade80; font-weight: 700;">🚀 Activate Route</button>
+            <button class="quick-cmd-btn rover-cmd-btn" data-cmd="Go to Testing Table">🔬 Testing Table</button>
+            <button class="quick-cmd-btn rover-cmd-btn" data-cmd="Go to Electronics Bench">🧪 Electronics</button>
+            <button class="quick-cmd-btn rover-cmd-btn" data-cmd="Go to Parts Shelf">📦 Parts Shelf</button>
+            <button class="quick-cmd-btn rover-cmd-btn" data-cmd="Go to Charger Dock">⚡ Charger Dock</button>
+            <button class="quick-cmd-btn rover-cmd-btn" data-cmd="Go to Drone Helipad">🚁 Drone Helipad</button>
+            <button class="quick-cmd-btn rover-cmd-btn" data-cmd="Halt">🛑 Halt</button>
+            <button class="quick-cmd-btn rover-cmd-btn" data-cmd="Resume patrol">▶️ Resume</button>
+            <button class="quick-cmd-btn rover-cmd-btn" data-cmd="Dock and charge">🔌 Dock &amp; Charge</button>
+            <button class="quick-cmd-btn rover-cmd-btn" data-cmd="Report status">📊 Diagnostics</button>
+          </div>
+
+          <!-- Chat Input Form -->
+          <form id="rover-chat-form" class="chat-input-form" onsubmit="return false;">
+            <input type="text" id="rover-chat-input" class="chat-input" placeholder="Dispatch rover (e.g. 'go to parts shelf', 'dock and charge', 'halt')..." autocomplete="off">
+            <button type="submit" id="btn-send-rover-cmd" class="chat-send-btn rover-send-btn">Dispatch ↵</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SkyWatcher Drone Cockpit FPV HUD & Flight Controls Overlay -->
+  <div id="drone-fpv-hud" class="drone-fpv-hud" style="display: none;">
+    <!-- Top Cockpit Status Bar -->
+    <div class="hud-top-bar">
+      <div class="hud-brand">
+        <span class="hud-pulse-dot"></span>
+        <span class="hud-brand-title">🚁 SKYWATCHER UAV-01 COCKPIT CAM</span>
+        <span id="hud-flight-mode" class="hud-mode-badge manual">🎮 MANUAL PILOT</span>
+      </div>
+
+      <div class="hud-telemetry-readouts">
+        <div class="hud-stat-box">
+          <span class="hud-stat-label">ALT (AGL)</span>
+          <span class="hud-stat-val" id="hud-stat-alt">1.92m</span>
+        </div>
+        <div class="hud-stat-box">
+          <span class="hud-stat-label">AIRSPEED</span>
+          <span class="hud-stat-val" id="hud-stat-spd">0.0 m/s</span>
+        </div>
+        <div class="hud-stat-box">
+          <span class="hud-stat-label">HEADING</span>
+          <span class="hud-stat-val" id="hud-stat-hdg">0° [N]</span>
+        </div>
+        <div class="hud-stat-box">
+          <span class="hud-stat-label">BATTERY</span>
+          <span class="hud-stat-val" id="hud-stat-bat">89%</span>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <button id="btn-hud-toggle-sidebar" class="hud-exit-btn" style="background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;" title="Toggle Fleet Telemetry Sidebar (F)">📋 Fleet</button>
+        <button id="btn-hud-exit-fpv" class="hud-exit-btn" title="Exit Cockpit Camera (Esc)">✕ Exit Cam</button>
+      </div>
+    </div>
+
+    <!-- Robot Quick Switcher & Quick Navigation Bar -->
+    <div class="hud-robot-switcher-bar">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="hud-switcher-label">🤖 Robot Cam:</span>
+        <div class="hud-robot-chips" id="hud-robot-chips">
+          <button class="hud-robot-chip active" data-robot="AMR-01" title="Switch Cam to Inspector Alpha (Key 1)">🚜 AMR-01</button>
+          <button class="hud-robot-chip" data-robot="AMR-02" title="Switch Cam to Logistics Beta (Key 2)">🚜 AMR-02</button>
+          <button class="hud-robot-chip" data-robot="AMR-03" title="Switch Cam to Courier Gamma (Key 3)">🚜 AMR-03</button>
+          <button class="hud-robot-chip" data-robot="AMR-04" title="Switch Cam to Express Delta (Key 4)">🚜 AMR-04</button>
+          <button class="hud-robot-chip" data-robot="AMR-05" title="Switch Cam to Rover Epsilon (Key 5)">🚜 AMR-05</button>
+          <button class="hud-robot-chip" data-robot="AMR-06" title="Switch Cam to Security Zeta (Key 6)">🚜 AMR-06</button>
+          <button class="hud-robot-chip" data-robot="HUM-01" title="Switch Cam to Unitree G1 Humanoid (Key 7)">🤖 HUM-01</button>
+          <button class="hud-robot-chip" data-robot="UAV-01" title="Switch Cam to SkyWatcher Drone (Key 8)">🚁 UAV-01</button>
+          <button class="hud-robot-chip" data-robot="UAV-02" title="Switch Cam to AeroCourier-2 (Key 9)">🚁 UAV-02</button>
+          <button class="hud-robot-chip" data-robot="UAV-03" title="Switch Cam to PerimeterEye-3 (Key 0)">🚁 UAV-03</button>
+        </div>
+      </div>
+      <div class="hud-quick-nav-group">
+        <span class="hud-switcher-label">🎯 Quick Nav:</span>
+        <button class="hud-nav-chip" data-target="A" title="Dispatch selected robot to Station A">📍 St. A</button>
+        <button class="hud-nav-chip" data-target="B" title="Dispatch selected robot to Station B">📍 St. B</button>
+        <button class="hud-nav-chip" data-target="C" title="Dispatch selected robot to Station C">📍 St. C</button>
+        <button class="hud-nav-chip" data-target="D" title="Dispatch selected robot to Station D">📍 St. D</button>
+        <button class="hud-nav-chip" data-target="E" title="Dispatch selected robot to Station E">📍 St. E</button>
+        <button class="hud-nav-chip" data-target="charger" title="Dispatch selected robot to Inductive Charger Dock">⚡ Dock</button>
+        <button class="hud-nav-chip" data-target="helipad" title="Dispatch selected robot to Helipad">🚁 Helipad</button>
+      </div>
+    </div>
+
+    <!-- Center Tactical Flight Reticle -->
+    <div class="hud-center-reticle">
+      <div class="hud-pitch-line pitch-up"></div>
+      <div class="hud-reticle-crosshair">
+        <div class="reticle-circle"></div>
+        <div class="reticle-dot"></div>
+      </div>
+      <div class="hud-pitch-line pitch-down"></div>
+    </div>
+
+    <!-- Clean Observer / Spectator Mode Dock (View Only) -->
+    <div id="hud-observer-dock" class="hud-observer-dock" style="display: none;">
+      <div class="observer-pill-group">
+        <span class="observer-badge">👁️ OBSERVER CAM &bull; VIEW ONLY</span>
+        <span class="observer-robot-label" id="observer-robot-label">Viewing: AMR-01</span>
+      </div>
+      <div class="observer-nav-controls">
+        <button id="btn-observer-prev" class="observer-ctrl-btn" title="Switch to Previous Robot Cam">◀ Prev Robot</button>
+        <button id="btn-observer-next" class="observer-ctrl-btn" title="Switch to Next Robot Cam">Next Robot ▶</button>
+        <button id="btn-observer-cam-toggle" class="observer-ctrl-btn" title="Toggle Cockpit / Chase Camera (Key C)">🎥 View: Cockpit</button>
+        <button id="btn-observer-pilot" class="observer-ctrl-btn observer-pilot-btn" title="Take Manual Navigation Controls">🎮 Pilot Manually</button>
+        <button id="btn-observer-exit" class="observer-ctrl-btn" style="background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5;" title="Exit Cam View (Esc)">✕ Exit Cam</button>
+      </div>
+    </div>
+
+    <!-- Bottom Flight Control Center (Manual Pilot) -->
+    <div class="hud-bottom-dock">
+      <!-- On-Screen Directional Pad (Move & Rotate) -->
+      <div class="hud-ctrl-group">
+        <span class="hud-ctrl-title" id="hud-dpad-title">🕹️ HORIZONTAL FLIGHT</span>
+        <div class="hud-dpad">
+          <button id="btn-hud-fwd" class="hud-btn hud-btn-fwd" title="Move Forward (W / ↑)">
+            <span class="btn-icon">▲</span>
+            <span class="btn-label" id="lbl-hud-fwd">FWD [W]</span>
+          </button>
+          <div class="hud-dpad-middle">
+            <button id="btn-hud-rot-l" class="hud-btn hud-btn-rot" title="Rotate Left (A / ←)">
+              <span class="btn-icon">↶</span>
+              <span class="btn-label" id="lbl-hud-rot-l">ROT L [A]</span>
+            </button>
+            <button id="btn-hud-hover" class="hud-btn hud-btn-hover" title="Hover / Brake (H / Space)">
+              <span class="btn-icon">🛑</span>
+              <span class="btn-label" id="lbl-hud-hover">HOVER [H]</span>
+            </button>
+            <button id="btn-hud-rot-r" class="hud-btn hud-btn-rot" title="Rotate Right (D / →)">
+              <span class="btn-icon">↷</span>
+              <span class="btn-label" id="lbl-hud-rot-r">ROT R [D]</span>
+            </button>
+          </div>
+          <button id="btn-hud-back" class="hud-btn hud-btn-back" title="Move Backward (S / ↓)">
+            <span class="btn-icon">▼</span>
+            <span class="btn-label" id="lbl-hud-back">REV [S]</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Altitude Control (Elevate Up / Down) -->
+      <div class="hud-ctrl-group" id="hud-elev-group">
+        <span class="hud-ctrl-title">⚡ ELEVATION</span>
+        <div class="hud-altitude-buttons">
+          <button id="btn-hud-up" class="hud-btn hud-btn-alt" title="Climb Up (Space / R)">
+            <span class="btn-icon">▲</span>
+            <span class="btn-label">UP [Space]</span>
+          </button>
+          <button id="btn-hud-down" class="hud-btn hud-btn-alt" title="Descend Down (Shift / F)">
+            <span class="btn-icon">▼</span>
+            <span class="btn-label">DOWN [Shift]</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Commands (Auto Patrol, Land, Cam View Toggle) -->
+      <div class="hud-ctrl-group">
+        <span class="hud-ctrl-title" id="hud-actions-title">🎯 FLIGHT MODE</span>
+        <div class="hud-action-buttons">
+          <button id="btn-hud-observer-toggle" class="hud-btn hud-btn-mode" title="Switch to View-Only Observer Mode (Hide Controls)">
+            <span>👁️ View Only</span>
+          </button>
+          <button id="btn-hud-patrol" class="hud-btn hud-btn-mode" title="Resume Autonomous Waypoint Patrol (P)">
+            <span>▶️ Auto Patrol</span>
+          </button>
+          <button id="btn-hud-land" class="hud-btn hud-btn-mode" title="Land / Dock / Wave">
+            <span id="lbl-hud-land">🛬 Land Now</span>
+          </button>
+          <button id="btn-hud-cam-toggle" class="hud-btn hud-btn-mode" title="Toggle First-Person Cockpit / Chase View (C)">
+            <span id="hud-cam-toggle-label">🎥 View: Cockpit</span>
+          </button>
+          <button id="btn-hud-open-dash" class="hud-btn hud-btn-mode" title="Open Full Robot Telemetry Dashboard">
+            <span>📊 Dashboard</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Keyboard Hints Strip -->
+    <div class="hud-keyboard-strip">
+      <span>⌨️ <b>Flight Controls:</b> <code>W/S</code> or <code>↑/↓</code>: Move Fwd/Back &bull; <code>A/D</code> or <code>←/→</code>: Rotate Left/Right &bull; <code>Space/Shift</code>: Climb/Descend &bull; <code>H</code>: Hover &bull; <code>P</code>: Auto Patrol &bull; <code>Esc</code>: Exit</span>
+    </div>
+  </div>
+
+  <!-- Fleet Manager Modal: Add & Remove Robots from Simulation -->
+  <div id="fleet-manager-modal" class="dashboard-modal" style="display: none;">
+    <div class="dashboard-backdrop" id="fleet-manager-backdrop"></div>
+    <div class="dashboard-window" style="max-width: 680px; width: 92vw; max-height: 85vh;">
+      <div class="dashboard-header" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(15, 23, 42, 0.9)); border-bottom-color: rgba(56, 189, 248, 0.3);">
+        <div class="dashboard-title-group">
+          <div class="dashboard-avatar" style="background: rgba(56, 189, 248, 0.2); border-color: #38bdf8;">🤖</div>
+          <div>
+            <div class="dashboard-title" style="color: #38bdf8;">Fleet Composition &amp; Agent Manager</div>
+            <div class="dashboard-subtitle">Activate or Deactivate Autonomous Agents in Campus Digital Twin Simulation</div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+          <button id="btn-close-fleet-manager" class="modal-close-btn">&times;</button>
+        </div>
+      </div>
+      <div class="dashboard-body" style="padding: 18px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.6); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+          <span style="font-size: 13px; color: #cbd5e1;">Active Fleet: <b id="fm-active-count" style="color: #38bdf8;">10 / 10 Active</b></span>
+          <div style="display: flex; gap: 8px;">
+            <button id="btn-fm-enable-all" class="tool-btn" style="padding: 4px 10px; font-size: 11px; border-color: #4ade80; color: #4ade80;">✅ Activate All</button>
+            <button id="btn-fm-disable-all" class="tool-btn" style="padding: 4px 10px; font-size: 11px; border-color: #f87171; color: #f87171;">⏸ Disable All</button>
+          </div>
+        </div>
+
+        <div id="fleet-manager-list" style="display: flex; flex-direction: column; gap: 8px;">
+          <!-- Dynamically populated 10 robot cards with toggle switches -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI & ML Fleet Optimization & CSP Planner Modal -->
+  <div id="ai-planner-modal" class="dashboard-modal" style="display: none;">
+    <div class="dashboard-backdrop" id="ai-planner-backdrop"></div>
+    <div class="dashboard-window" style="max-width: 1080px; width: 94vw; max-height: 90vh;">
+      <!-- Header -->
+      <div class="dashboard-header" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(15, 23, 42, 0.9)); border-bottom-color: rgba(16, 185, 129, 0.3);">
+        <div class="dashboard-title-group">
+          <div class="dashboard-avatar" style="background: rgba(16, 185, 129, 0.2); border-color: #10b981;">🧠</div>
+          <div>
+            <div class="dashboard-title" style="color: #6ee7b7;">Autonomous Campus Fleet Optimization</div>
+            <div class="dashboard-subtitle">CAI 4505C / CAI 4510C &bull; A* Heuristic Search &bull; CSP MRV/Forward Checking &bull; Supervised Regression (R² = 0.9838)</div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+          <button id="btn-close-ai-planner" class="modal-close-btn">&times;</button>
+        </div>
+      </div>
+
+      <!-- Body: 2 Columns -->
+      <div class="dashboard-body" style="grid-template-columns: 380px 1fr; gap: 20px; padding: 20px; overflow-y: auto;">
+        
+        <!-- Left: Environmental Percepts & ML Prediction -->
+        <div class="ai-config-pane" style="display: flex; flex-direction: column; gap: 16px;">
+          
+          <!-- Environmental Sliders -->
+          <div class="telemetry-card" style="padding: 16px; border-color: rgba(56, 189, 248, 0.3);">
+            <div class="telemetry-section-title" style="margin-bottom: 12px; color: #38bdf8;">🌦️ Dynamic Environmental Percepts</div>
+            
+            <div style="margin-bottom: 14px;">
+              <label style="font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 600; display: block; margin-bottom: 6px;">Weather Friction</label>
+              <div class="weather-selector-group" style="display: flex; gap: 6px;">
+                <button type="button" class="weather-chip-btn active" data-weather="Clear">☀️ Clear (1.0x)</button>
+                <button type="button" class="weather-chip-btn" data-weather="Overcast">⛅ Overcast (+0.45β)</button>
+                <button type="button" class="weather-chip-btn" data-weather="Rain">🌧️ Rain (+2.27β)</button>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 14px;">
+              <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                <span style="color: #94a3b8;">Pedestrian Traffic Index:</span>
+                <span id="ai-traffic-val" style="color: #f59e0b; font-weight: 700;">0.48 (Moderate)</span>
+              </div>
+              <input type="range" id="ai-slider-traffic" min="0.05" max="0.98" step="0.01" value="0.48" style="width: 100%;">
+            </div>
+
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                <span style="color: #94a3b8;">Default Mission Payload:</span>
+                <span id="ai-payload-val" style="color: #a78bfa; font-weight: 700;">4.5 kg</span>
+              </div>
+              <input type="range" id="ai-slider-payload" min="0.5" max="12.5" step="0.5" value="4.5" style="width: 100%;">
+            </div>
+          </div>
+
+          <!-- ML Model Latency Prediction Card -->
+          <div class="telemetry-card" style="padding: 16px; border-color: rgba(16, 185, 129, 0.3); background: rgba(6, 78, 59, 0.15);">
+            <div class="telemetry-section-title" style="margin-bottom: 8px; color: #6ee7b7;">📈 Supervised ML Predictive Latency</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+              <div style="background: rgba(15, 23, 42, 0.6); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                <div style="font-size: 11px; color: #94a3b8;">Predicted Duration</div>
+                <div id="ai-pred-time" style="font-size: 20px; font-weight: 800; color: #38bdf8;">-- min</div>
+                <div id="ai-nominal-compare" style="font-size: 10px; color: #94a3b8;">vs 8.22 min baseline</div>
+              </div>
+              <div style="background: rgba(15, 23, 42, 0.6); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                <div style="font-size: 11px; color: #94a3b8;">Predicted Energy</div>
+                <div id="ai-pred-energy" style="font-size: 20px; font-weight: 800; color: #f59e0b;">-- Wh</div>
+                <div style="font-size: 10px; color: #94a3b8;">LiFePO4 battery drain</div>
+              </div>
+            </div>
+
+            <!-- Explainable AI (XAI) Attribution Breakdown -->
+            <div style="font-size: 11px; color: #cbd5e1; font-weight: 600; margin-bottom: 6px;">🔍 Explainable AI (XAI) Delay Attribution:</div>
+            <div id="ai-xai-breakdown" style="font-size: 11px; display: flex; flex-direction: column; gap: 4px; color: #94a3b8;">
+              <!-- Dynamic XAI bars injected here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Multi-Robot Constraint Satisfaction Schedule (CSP) -->
+        <div class="ai-schedule-pane" style="display: flex; flex-direction: column; gap: 16px;">
+          
+          <!-- CSP Solver Diagnostics Banner -->
+          <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 10px 16px;">
+            <div style="display: flex; gap: 16px; font-size: 12px;">
+              <span><b style="color: #6ee7b7;">Constraint Solver:</b> Backtracking + MRV + FC</span>
+              <span><b style="color: #38bdf8;">Conflicts:</b> <span id="csp-conflicts-val">0</span></span>
+              <span><b style="color: #38bdf8;">Backtracks:</b> <span id="csp-backtracks-val">0</span></span>
+              <span><b style="color: #f59e0b;">Solve Time:</b> <span id="csp-time-val">&lt;0.2 ms</span></span>
+            </div>
+            <button id="btn-recalc-schedule" class="tool-btn" style="background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #6ee7b7; font-weight: 700;">⚡ Recalculate CSP</button>
+          </div>
+
+          <!-- Master Timetable Table -->
+          <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; overflow: hidden; max-height: 280px; overflow-y: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
+              <thead>
+                <tr style="background: rgba(30, 41, 59, 0.8); border-bottom: 1px solid rgba(255,255,255,0.1); color: #94a3b8;">
+                  <th style="padding: 10px;">Time Slot</th>
+                  <th style="padding: 10px;">Job ID &amp; Cargo</th>
+                  <th style="padding: 10px;">Robot</th>
+                  <th style="padding: 10px;">Transit Route</th>
+                  <th style="padding: 10px;">A* Path (Steps/Turns)</th>
+                  <th style="padding: 10px;">ML Latency</th>
+                </tr>
+              </thead>
+              <tbody id="csp-schedule-tbody">
+                <!-- Dynamically populated rows -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Schedule Action Buttons -->
+          <div style="display: flex; gap: 12px; margin-top: auto;">
+            <button id="btn-execute-schedule" class="tool-btn" style="flex: 2; padding: 12px; background: linear-gradient(135deg, #059669, #10b981); border: none; color: #ffffff; font-weight: 800; font-size: 14px; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
+              🚀 Execute Master Schedule in 3D Twin
+            </button>
+            <button id="btn-toggle-astar-ribbons" class="tool-btn active" style="flex: 1; padding: 12px; border-color: #38bdf8; color: #38bdf8; font-weight: 700; border-radius: 8px;">
+              📍 3D A* Ribbons: ON
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Three.js Canvas Container -->
+  <div id="canvas-container"></div>
+
+  <!-- Main Logic Module -->
+  <script type="module" src="app.js?v=131"></script>
+</body>
+</html>

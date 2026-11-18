@@ -270,15 +270,15 @@ HTML_CONTENT = r"""<!DOCTYPE html>
   <div class="subtitle">How Our Two Repositories Work Together, Current Verification Status, and How Every Team Member Can Contribute &amp; Improve It</div>
 
   <div class="meta-banner">
-    <div><strong>Repo 1 (Simulation &amp; AI)</strong><span>mdc_robotics_simulation_twin</span></div>
-    <div><strong>Repo 2 (3D Digital Twin)</strong><span>AI-3D-Robotics-Lab</span></div>
-    <div><strong>Active Services</strong><span>Port 3000 (3D) &amp; Port 8501 (UI)</span></div>
+    <div><strong>Unified Repository</strong><span>mdc-robotics-simulation-twin</span></div>
+    <div><strong>3D Digital Twin Module</strong><span>digital_twin_app/ (Port 3000)</span></div>
+    <div><strong>Analytics Dashboard</strong><span>dashboard/app.py (Port 8501)</span></div>
     <div><strong>Simulation Engine</strong><span>AnyLogic 8 (.alp) + Python Gym</span></div>
   </div>
 
   <h2>1. High-Level Infrastructure Overview</h2>
   <p>
-    Our project is organized across <strong>two interconnected repositories</strong> that combine three core technologies: (1) an <strong>AnyLogic 8 Multi-Method Simulation Engine</strong> (<code>.alp</code>), (2) a <strong>Python Reinforcement Learning &amp; Streamlit Analytics Stack</strong> (<code>mdc_robotics_simulation_twin</code>), and (3) a <strong>Node.js + Three.js 3D WebGL Digital Twin</strong> (<code>AI-3D-Robotics-Lab</code>).
+    Our entire project is now self-contained inside <strong><code>mdc-robotics-simulation-twin</code></strong>, combining three core technologies: (1) an <strong>AnyLogic 8 Multi-Method Simulation Engine</strong> (<code>anylogic_model/</code>), (2) a <strong>Node.js + Three.js 3D WebGL Digital Twin</strong> (<code>digital_twin_app/</code>), and (3) a <strong>Python Reinforcement Learning &amp; Streamlit Analytics Stack</strong> (<code>rl_models/</code> &amp; <code>dashboard/</code>).
   </p>
 
   <div class="arch-box">┌───────────────────────────────────────────────────────────────────────────────────────────┐
@@ -294,7 +294,8 @@ HTML_CONTENT = r"""<!DOCTYPE html>
                             ▼                                           ▼
 ┌───────────────────────────────────────────────────┐   ┌───────────────────────────────────┐
 │       2. 3D WEBGL DIGITAL TWIN (Port 3000)        │   │  3. RL ENGINE &amp; STREAMLIT (8501)  │
-│       Repo: AI-3D-Robotics-Lab/digital_twin_app   │   │  Repo: mdc_robotics_simulation_twin│
+│    Folder: mdc_robotics_simulation_twin/          │   │  Folder: mdc_robotics_simulation_ │
+│            digital_twin_app/                      │   │          twin/                    │
 │  • server.js: Express REST + WebSocket (/ws)      │◄──┼─ • rl_models/robotics_lab_env.py  │
 │  • world_model.js: 6 AMRs, 1 G1, 3 UAV Drones     │   │  • train_ppo.py &amp; train_qlearning │
 │  • public/app.js: Three.js 3D Lab &amp; North Campus  │   │  • ppo_results.json / q_table.npy │
@@ -339,12 +340,12 @@ HTML_CONTENT = r"""<!DOCTYPE html>
           <td>Formal academic report, 9-slide widescreen presentation deck, and Python HTML-to-PDF generator scripts (<code>generate_*.py</code>).</td>
         </tr>
         <tr>
-          <td><code>AI-3D-Robotics-Lab/digital_twin_app/server.js</code> &amp; <code>world_model.js</code></td>
+          <td><code>mdc_robotics_simulation_twin/digital_twin_app/server.js</code> &amp; <code>world_model.js</code></td>
           <td><strong>Jorge Mendoza</strong></td>
           <td>Node.js Express + WebSocket server (Port 3000). Hosts <code>POST /api/anylogic/update</code>, <code>GET /api/robots</code>, A* path planner, and CSP fleet scheduler.</td>
         </tr>
         <tr>
-          <td><code>AI-3D-Robotics-Lab/digital_twin_app/public/app.js</code>, <code>parcels.js</code>, <code>pedestrians.js</code></td>
+          <td><code>mdc_robotics_simulation_twin/digital_twin_app/public/app.js</code>, <code>parcels.js</code>, <code>pedestrians.js</code></td>
           <td><strong>Jorge Mendoza</strong> &amp; <strong>Ricardo Molina</strong></td>
           <td>Three.js 3D scene supporting both the Indoor Robotics Lab (<code>robotics_lab.glb</code>) and MDC North Campus (<code>mdc_north_campus_osm.glb</code>), drone vertical landing, 1,000-pkg depot, and 24 walking students/faculty.</td>
         </tr>
@@ -517,17 +518,16 @@ q_data   = json.loads((rl_dir / "q_learning_results.json").read_text())</pre>
   </div>
 
   <!-- ==================== SECTION 5: QUICK START & GIT WORKFLOW ==================== -->
-  <h2>5. How to Run the Full Stack Locally (3-Terminal Setup)</h2>
-  <p>Every team member can run and test the entire integrated project on their machine in 3 steps:</p>
+  <h2>5. How to Run the Full Stack Locally (All Inside One Repo!)</h2>
+  <p>After cloning or pulling <code>mdc-robotics-simulation-twin</code>, every team member can run and test the entire integrated project in 3 steps:</p>
 
   <pre># TERMINAL 1: Start the 3D WebGL Digital Twin Server (Port 3000)
-cd "d:\Miami Dade College\AI-3D-Robotics-Lab\digital_twin_app"
+cd digital_twin_app
 npm install
 npm start
 # Open http://localhost:3000 in your browser to view the 3D Lab &amp; MDC North Campus!
 
 # TERMINAL 2: Train RL Models &amp; Launch the Streamlit Dashboard (Port 8501)
-cd "d:\Miami Dade College\Simulation For AI\mdc_robotics_simulation_twin"
 pip install -r requirements.txt
 python rl_models/train_qlearning.py
 python rl_models/train_ppo.py
@@ -535,7 +535,7 @@ streamlit run dashboard/app.py
 # Open http://localhost:8501 in your browser to interact with the 5-Tab Analytics Dashboard!
 
 # STEP 3: Open &amp; Run the AnyLogic 8 Model
-# Launch AnyLogic 8 -> Open "mdc_robotics_simulation_twin/anylogic_model/MDC_Robotics_Lab_Simulation.alp"
+# Launch AnyLogic 8 -> Open "anylogic_model/MDC_Robotics_Lab_Simulation.alp"
 # Run any of the 5 configured Simulation Experiments.</pre>
 
   <h2>6. Team Git &amp; Collaboration Workflow</h2>

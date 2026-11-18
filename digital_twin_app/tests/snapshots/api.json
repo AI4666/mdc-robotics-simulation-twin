@@ -1,0 +1,3792 @@
+{
+  "GET /api/robots": {
+    "status": 200,
+    "body": {
+      "robots": [
+        {
+          "id": "AMR-01",
+          "name": "Inspector Alpha",
+          "type": "amr",
+          "x": -1.8,
+          "y": 0.05,
+          "z": -1.3,
+          "heading": 0,
+          "status": "Patrolling",
+          "battery": 94,
+          "speed": 0.7
+        },
+        {
+          "id": "AMR-02",
+          "name": "Logistics Beta",
+          "type": "amr",
+          "x": 1.5,
+          "y": 0.05,
+          "z": 1.2,
+          "heading": 90,
+          "status": "Patrolling",
+          "battery": 80,
+          "speed": 0.7
+        },
+        {
+          "id": "AMR-03",
+          "name": "Courier Gamma",
+          "type": "amr",
+          "x": 2.2,
+          "y": 0.05,
+          "z": 1.2,
+          "heading": 180,
+          "status": "Docked / Charging",
+          "battery": 100,
+          "speed": 0
+        },
+        {
+          "id": "HUM-01",
+          "name": "Unitree G1 Silver",
+          "type": "humanoid",
+          "x": 0,
+          "y": 0.05,
+          "z": 0.8,
+          "heading": 0,
+          "status": "Bipedal Walking",
+          "battery": 95,
+          "speed": 0.85
+        },
+        {
+          "id": "UAV-01",
+          "name": "SkyWatcher Drone",
+          "type": "drone",
+          "x": 0,
+          "y": 1.9,
+          "z": 0,
+          "heading": 0,
+          "status": "In Flight / Surveillance",
+          "battery": 88,
+          "speed": 1.1
+        }
+      ]
+    }
+  },
+  "GET /api/stations": {
+    "status": 200,
+    "body": {
+      "stations": {
+        "inventory": {
+          "name": "Station A: Parts Shelf",
+          "x": -2.3,
+          "y": 0.05,
+          "z": -1.3
+        },
+        "electronics": {
+          "name": "Station B: Electronics Bench",
+          "x": -2.3,
+          "y": 0.05,
+          "z": 1.2
+        },
+        "testing": {
+          "name": "Station C: Testing Table",
+          "x": 2.2,
+          "y": 0.05,
+          "z": -1.3
+        },
+        "charger": {
+          "name": "Station D: AMR Charger Dock",
+          "x": 2.2,
+          "y": 0.05,
+          "z": 1.2
+        },
+        "helipad": {
+          "name": "Station E: Drone Helipad",
+          "x": 0,
+          "y": 0.05,
+          "z": 0
+        }
+      }
+    }
+  },
+  "GET /api/schedule/sample": {
+    "status": 200,
+    "body": {
+      "jobs": [
+        {
+          "id": "JOB-101",
+          "cargo": "Chemistry Lab Reagents",
+          "robot_id": "AMR-01",
+          "start_grid": {
+            "row": 0,
+            "col": 1
+          },
+          "goal_grid": {
+            "row": 10,
+            "col": 10
+          },
+          "start_station": "inventory",
+          "goal_station": "testing",
+          "payload_weight_kg": 2.4,
+          "allowed_start_hour": 8,
+          "allowed_end_hour": 12
+        },
+        {
+          "id": "JOB-102",
+          "cargo": "Bookstore Course Reserves",
+          "robot_id": "AMR-01",
+          "start_grid": {
+            "row": 2,
+            "col": 2
+          },
+          "goal_grid": {
+            "row": 9,
+            "col": 2
+          },
+          "start_station": "electronics",
+          "goal_station": "inventory",
+          "payload_weight_kg": 8.1,
+          "allowed_start_hour": 9,
+          "allowed_end_hour": 13
+        },
+        {
+          "id": "JOB-103",
+          "cargo": "Admin Official Records",
+          "robot_id": "AMR-02",
+          "start_grid": {
+            "row": 8,
+            "col": 1
+          },
+          "goal_grid": {
+            "row": 1,
+            "col": 8
+          },
+          "start_station": "electronics",
+          "goal_station": "testing",
+          "payload_weight_kg": 1.2,
+          "allowed_start_hour": 9,
+          "allowed_end_hour": 14
+        },
+        {
+          "id": "JOB-104",
+          "cargo": "Clinic Diagnostic Supplies",
+          "robot_id": "AMR-02",
+          "start_grid": {
+            "row": 4,
+            "col": 2
+          },
+          "goal_grid": {
+            "row": 8,
+            "col": 8
+          },
+          "start_station": "inventory",
+          "goal_station": "charger",
+          "payload_weight_kg": 3.6,
+          "allowed_start_hour": 10,
+          "allowed_end_hour": 15
+        },
+        {
+          "id": "JOB-105",
+          "cargo": "Robotics Lab Hardware",
+          "robot_id": "AMR-01",
+          "start_grid": {
+            "row": 1,
+            "col": 10
+          },
+          "goal_grid": {
+            "row": 10,
+            "col": 2
+          },
+          "start_station": "testing",
+          "goal_station": "electronics",
+          "payload_weight_kg": 4.8,
+          "allowed_start_hour": 12,
+          "allowed_end_hour": 17
+        }
+      ]
+    }
+  },
+  "POST /api/plan/astar (server defaults)": {
+    "status": 200,
+    "body": {
+      "success": true,
+      "waypoints": [
+        {
+          "x": -2,
+          "y": 0.05,
+          "z": -1
+        },
+        {
+          "x": 2.3500000000000005,
+          "y": 0.05,
+          "z": -0.75
+        },
+        {
+          "x": 2.3500000000000005,
+          "y": 0.05,
+          "z": 0.7500000000000002
+        },
+        {
+          "x": 2,
+          "y": 0.05,
+          "z": 1
+        }
+      ],
+      "path": [
+        {
+          "row": 8,
+          "col": 7
+        },
+        {
+          "row": 8,
+          "col": 8
+        },
+        {
+          "row": 8,
+          "col": 9
+        },
+        {
+          "row": 8,
+          "col": 10
+        },
+        {
+          "row": 8,
+          "col": 11
+        },
+        {
+          "row": 8,
+          "col": 12
+        },
+        {
+          "row": 8,
+          "col": 13
+        },
+        {
+          "row": 8,
+          "col": 14
+        },
+        {
+          "row": 8,
+          "col": 15
+        },
+        {
+          "row": 8,
+          "col": 16
+        },
+        {
+          "row": 8,
+          "col": 17
+        },
+        {
+          "row": 8,
+          "col": 18
+        },
+        {
+          "row": 8,
+          "col": 19
+        },
+        {
+          "row": 8,
+          "col": 20
+        },
+        {
+          "row": 8,
+          "col": 21
+        },
+        {
+          "row": 8,
+          "col": 22
+        },
+        {
+          "row": 8,
+          "col": 23
+        },
+        {
+          "row": 8,
+          "col": 24
+        },
+        {
+          "row": 8,
+          "col": 25
+        },
+        {
+          "row": 8,
+          "col": 26
+        },
+        {
+          "row": 8,
+          "col": 27
+        },
+        {
+          "row": 8,
+          "col": 28
+        },
+        {
+          "row": 8,
+          "col": 29
+        },
+        {
+          "row": 8,
+          "col": 30
+        },
+        {
+          "row": 8,
+          "col": 31
+        },
+        {
+          "row": 8,
+          "col": 32
+        },
+        {
+          "row": 8,
+          "col": 33
+        },
+        {
+          "row": 8,
+          "col": 34
+        },
+        {
+          "row": 8,
+          "col": 35
+        },
+        {
+          "row": 8,
+          "col": 36
+        },
+        {
+          "row": 8,
+          "col": 37
+        },
+        {
+          "row": 8,
+          "col": 38
+        },
+        {
+          "row": 8,
+          "col": 39
+        },
+        {
+          "row": 8,
+          "col": 40
+        },
+        {
+          "row": 8,
+          "col": 41
+        },
+        {
+          "row": 8,
+          "col": 42
+        },
+        {
+          "row": 8,
+          "col": 43
+        },
+        {
+          "row": 8,
+          "col": 44
+        },
+        {
+          "row": 9,
+          "col": 45
+        },
+        {
+          "row": 9,
+          "col": 46
+        },
+        {
+          "row": 9,
+          "col": 47
+        },
+        {
+          "row": 9,
+          "col": 48
+        },
+        {
+          "row": 9,
+          "col": 49
+        },
+        {
+          "row": 9,
+          "col": 50
+        },
+        {
+          "row": 9,
+          "col": 51
+        },
+        {
+          "row": 10,
+          "col": 51
+        },
+        {
+          "row": 11,
+          "col": 51
+        },
+        {
+          "row": 12,
+          "col": 51
+        },
+        {
+          "row": 13,
+          "col": 51
+        },
+        {
+          "row": 14,
+          "col": 51
+        },
+        {
+          "row": 15,
+          "col": 51
+        },
+        {
+          "row": 16,
+          "col": 51
+        },
+        {
+          "row": 17,
+          "col": 51
+        },
+        {
+          "row": 18,
+          "col": 51
+        },
+        {
+          "row": 19,
+          "col": 51
+        },
+        {
+          "row": 20,
+          "col": 51
+        },
+        {
+          "row": 21,
+          "col": 51
+        },
+        {
+          "row": 22,
+          "col": 51
+        },
+        {
+          "row": 23,
+          "col": 51
+        },
+        {
+          "row": 24,
+          "col": 51
+        },
+        {
+          "row": 25,
+          "col": 51
+        },
+        {
+          "row": 26,
+          "col": 50
+        },
+        {
+          "row": 26,
+          "col": 49
+        },
+        {
+          "row": 27,
+          "col": 48
+        },
+        {
+          "row": 27,
+          "col": 47
+        }
+      ],
+      "astar_path_len": 17.96,
+      "path_length_m": 6.287,
+      "manhattan_dist": 17.14,
+      "num_turns": 2,
+      "detour_ratio": 1.406,
+      "nodeExpansions": 444
+    }
+  },
+  "POST /api/plan/astar (missing goal)": {
+    "status": 400,
+    "body": {
+      "error": "Start and goal coordinates required."
+    }
+  },
+  "POST /api/ml/predict-transit": {
+    "status": 200,
+    "body": {
+      "predicted_delivery_time_min": 9.36,
+      "predicted_energy_wh": 31.31,
+      "recommended_buffer_min": 10.2,
+      "feature_contributions": {
+        "base_nominal_min": 8.22,
+        "path_length_delta_min": 1.28,
+        "weather_delta_min": 0,
+        "pedestrian_traffic_delta_min": -0.11,
+        "payload_weight_delta_min": 0,
+        "turns_cornering_delta_min": -0.12,
+        "vehicle_efficiency_delta_min": 0
+      },
+      "model_metadata": {
+        "architecture": "Ordinary Least Squares (OLS) Multiple Linear Regression",
+        "r2_score": 0.9838,
+        "mae_min": 0.3412,
+        "rmse_min": 0.4276
+      }
+    }
+  },
+  "POST /api/schedule/jobs (empty body)": {
+    "status": 200,
+    "body": {
+      "success": true,
+      "masterSchedule": [
+        {
+          "job_id": "JOB-101",
+          "cargo": "Chemistry Lab Reagents",
+          "robot_id": "AMR-01",
+          "time_slot": "08:00",
+          "time_slot_hour": 8,
+          "end_time_slot": "09:00",
+          "payload_weight_kg": 2.4,
+          "start_station": "inventory",
+          "goal_station": "testing",
+          "allowed_window": "08:00 - 12:00",
+          "ml_prediction": {
+            "predicted_delivery_time_min": 5.63,
+            "predicted_energy_wh": 24.78,
+            "recommended_buffer_min": 6.47,
+            "feature_contributions": {
+              "base_nominal_min": 8.22,
+              "path_length_delta_min": -0.26,
+              "weather_delta_min": 0,
+              "pedestrian_traffic_delta_min": -0.11,
+              "payload_weight_delta_min": -1.04,
+              "turns_cornering_delta_min": -1.27,
+              "vehicle_efficiency_delta_min": 0
+            },
+            "model_metadata": {
+              "architecture": "Ordinary Least Squares (OLS) Multiple Linear Regression",
+              "r2_score": 0.9838,
+              "mae_min": 0.3412,
+              "rmse_min": 0.4276
+            }
+          },
+          "route_status": "ok"
+        },
+        {
+          "job_id": "JOB-102",
+          "cargo": "Bookstore Course Reserves",
+          "robot_id": "AMR-01",
+          "time_slot": "09:00",
+          "time_slot_hour": 9,
+          "end_time_slot": "10:00",
+          "payload_weight_kg": 8.1,
+          "start_station": "electronics",
+          "goal_station": "inventory",
+          "allowed_window": "09:00 - 13:00",
+          "ml_prediction": {
+            "predicted_delivery_time_min": 1.79,
+            "predicted_energy_wh": 21.6,
+            "recommended_buffer_min": 2.63,
+            "feature_contributions": {
+              "base_nominal_min": 8.22,
+              "path_length_delta_min": -7.68,
+              "weather_delta_min": 0,
+              "pedestrian_traffic_delta_min": -0.11,
+              "payload_weight_delta_min": 1.78,
+              "turns_cornering_delta_min": -0.51,
+              "vehicle_efficiency_delta_min": 0
+            },
+            "model_metadata": {
+              "architecture": "Ordinary Least Squares (OLS) Multiple Linear Regression",
+              "r2_score": 0.9838,
+              "mae_min": 0.3412,
+              "rmse_min": 0.4276
+            }
+          },
+          "route_status": "ok"
+        },
+        {
+          "job_id": "JOB-103",
+          "cargo": "Admin Official Records",
+          "robot_id": "AMR-02",
+          "time_slot": "09:00",
+          "time_slot_hour": 9,
+          "end_time_slot": "10:00",
+          "payload_weight_kg": 1.2,
+          "start_station": "electronics",
+          "goal_station": "testing",
+          "allowed_window": "09:00 - 14:00",
+          "ml_prediction": {
+            "predicted_delivery_time_min": 9.68,
+            "predicted_energy_wh": 33.45,
+            "recommended_buffer_min": 10.52,
+            "feature_contributions": {
+              "base_nominal_min": 8.22,
+              "path_length_delta_min": 5.29,
+              "weather_delta_min": 0,
+              "pedestrian_traffic_delta_min": -0.11,
+              "payload_weight_delta_min": -1.63,
+              "turns_cornering_delta_min": -0.12,
+              "vehicle_efficiency_delta_min": -2.06
+            },
+            "model_metadata": {
+              "architecture": "Ordinary Least Squares (OLS) Multiple Linear Regression",
+              "r2_score": 0.9838,
+              "mae_min": 0.3412,
+              "rmse_min": 0.4276
+            }
+          },
+          "route_status": "ok"
+        },
+        {
+          "job_id": "JOB-104",
+          "cargo": "Clinic Diagnostic Supplies",
+          "robot_id": "AMR-02",
+          "time_slot": "10:00",
+          "time_slot_hour": 10,
+          "end_time_slot": "11:00",
+          "payload_weight_kg": 3.6,
+          "start_station": "inventory",
+          "goal_station": "charger",
+          "allowed_window": "10:00 - 15:00",
+          "ml_prediction": {
+            "predicted_delivery_time_min": 13.74,
+            "predicted_energy_wh": 40.36,
+            "recommended_buffer_min": 14.58,
+            "feature_contributions": {
+              "base_nominal_min": 8.22,
+              "path_length_delta_min": 8.55,
+              "weather_delta_min": 0,
+              "pedestrian_traffic_delta_min": -0.11,
+              "payload_weight_delta_min": -0.44,
+              "turns_cornering_delta_min": -0.51,
+              "vehicle_efficiency_delta_min": -2.06
+            },
+            "model_metadata": {
+              "architecture": "Ordinary Least Squares (OLS) Multiple Linear Regression",
+              "r2_score": 0.9838,
+              "mae_min": 0.3412,
+              "rmse_min": 0.4276
+            }
+          },
+          "route_status": "ok"
+        },
+        {
+          "job_id": "JOB-105",
+          "cargo": "Robotics Lab Hardware",
+          "robot_id": "AMR-01",
+          "time_slot": "12:00",
+          "time_slot_hour": 12,
+          "end_time_slot": "13:00",
+          "payload_weight_kg": 4.8,
+          "start_station": "testing",
+          "goal_station": "electronics",
+          "allowed_window": "12:00 - 17:00",
+          "ml_prediction": {
+            "predicted_delivery_time_min": 13.95,
+            "predicted_energy_wh": 38.19,
+            "recommended_buffer_min": 14.79,
+            "feature_contributions": {
+              "base_nominal_min": 8.22,
+              "path_length_delta_min": 5.73,
+              "weather_delta_min": 0,
+              "pedestrian_traffic_delta_min": -0.11,
+              "payload_weight_delta_min": 0.15,
+              "turns_cornering_delta_min": -0.12,
+              "vehicle_efficiency_delta_min": 0
+            },
+            "model_metadata": {
+              "architecture": "Ordinary Least Squares (OLS) Multiple Linear Regression",
+              "r2_score": 0.9838,
+              "mae_min": 0.3412,
+              "rmse_min": 0.4276
+            }
+          },
+          "route_status": "ok"
+        }
+      ],
+      "stats": {
+        "totalJobs": 5,
+        "assignmentAttempts": 5,
+        "backtracks": 0,
+        "solveTimeMs": "<timing>"
+      },
+      "jobRoutes": {
+        "JOB-101": {
+          "success": true,
+          "waypoints": [
+            {
+              "x": -2.3,
+              "y": 0.05,
+              "z": -1.3
+            },
+            {
+              "x": 2.2,
+              "y": 0.05,
+              "z": -1.3
+            }
+          ],
+          "path": [
+            {
+              "row": 5,
+              "col": 5
+            },
+            {
+              "row": 5,
+              "col": 6
+            },
+            {
+              "row": 5,
+              "col": 7
+            },
+            {
+              "row": 5,
+              "col": 8
+            },
+            {
+              "row": 5,
+              "col": 9
+            },
+            {
+              "row": 5,
+              "col": 10
+            },
+            {
+              "row": 5,
+              "col": 11
+            },
+            {
+              "row": 5,
+              "col": 12
+            },
+            {
+              "row": 5,
+              "col": 13
+            },
+            {
+              "row": 5,
+              "col": 14
+            },
+            {
+              "row": 5,
+              "col": 15
+            },
+            {
+              "row": 5,
+              "col": 16
+            },
+            {
+              "row": 5,
+              "col": 17
+            },
+            {
+              "row": 5,
+              "col": 18
+            },
+            {
+              "row": 5,
+              "col": 19
+            },
+            {
+              "row": 5,
+              "col": 20
+            },
+            {
+              "row": 5,
+              "col": 21
+            },
+            {
+              "row": 5,
+              "col": 22
+            },
+            {
+              "row": 5,
+              "col": 23
+            },
+            {
+              "row": 5,
+              "col": 24
+            },
+            {
+              "row": 5,
+              "col": 25
+            },
+            {
+              "row": 5,
+              "col": 26
+            },
+            {
+              "row": 5,
+              "col": 27
+            },
+            {
+              "row": 5,
+              "col": 28
+            },
+            {
+              "row": 5,
+              "col": 29
+            },
+            {
+              "row": 5,
+              "col": 30
+            },
+            {
+              "row": 5,
+              "col": 31
+            },
+            {
+              "row": 5,
+              "col": 32
+            },
+            {
+              "row": 5,
+              "col": 33
+            },
+            {
+              "row": 5,
+              "col": 34
+            },
+            {
+              "row": 5,
+              "col": 35
+            },
+            {
+              "row": 5,
+              "col": 36
+            },
+            {
+              "row": 5,
+              "col": 37
+            },
+            {
+              "row": 5,
+              "col": 38
+            },
+            {
+              "row": 5,
+              "col": 39
+            },
+            {
+              "row": 5,
+              "col": 40
+            },
+            {
+              "row": 5,
+              "col": 41
+            },
+            {
+              "row": 5,
+              "col": 42
+            },
+            {
+              "row": 5,
+              "col": 43
+            },
+            {
+              "row": 5,
+              "col": 44
+            },
+            {
+              "row": 5,
+              "col": 45
+            },
+            {
+              "row": 5,
+              "col": 46
+            },
+            {
+              "row": 5,
+              "col": 47
+            },
+            {
+              "row": 5,
+              "col": 48
+            },
+            {
+              "row": 5,
+              "col": 49
+            },
+            {
+              "row": 5,
+              "col": 50
+            }
+          ],
+          "astar_path_len": 12.86,
+          "path_length_m": 4.5,
+          "manhattan_dist": 12.86,
+          "num_turns": 0,
+          "detour_ratio": 1,
+          "nodeExpansions": 46
+        },
+        "JOB-102": {
+          "success": true,
+          "waypoints": [
+            {
+              "x": -2.3,
+              "y": 0.05,
+              "z": 1.2
+            },
+            {
+              "x": -2.55,
+              "y": 0.05,
+              "z": 0.2500000000000002
+            },
+            {
+              "x": -2.4499999999999997,
+              "y": 0.05,
+              "z": -1.05
+            },
+            {
+              "x": -2.3,
+              "y": 0.05,
+              "z": -1.3
+            }
+          ],
+          "path": [
+            {
+              "row": 30,
+              "col": 5
+            },
+            {
+              "row": 29,
+              "col": 5
+            },
+            {
+              "row": 28,
+              "col": 5
+            },
+            {
+              "row": 27,
+              "col": 5
+            },
+            {
+              "row": 26,
+              "col": 4
+            },
+            {
+              "row": 25,
+              "col": 3
+            },
+            {
+              "row": 24,
+              "col": 2
+            },
+            {
+              "row": 23,
+              "col": 2
+            },
+            {
+              "row": 22,
+              "col": 2
+            },
+            {
+              "row": 21,
+              "col": 2
+            },
+            {
+              "row": 20,
+              "col": 2
+            },
+            {
+              "row": 19,
+              "col": 2
+            },
+            {
+              "row": 18,
+              "col": 2
+            },
+            {
+              "row": 17,
+              "col": 2
+            },
+            {
+              "row": 16,
+              "col": 2
+            },
+            {
+              "row": 15,
+              "col": 2
+            },
+            {
+              "row": 14,
+              "col": 2
+            },
+            {
+              "row": 13,
+              "col": 2
+            },
+            {
+              "row": 12,
+              "col": 2
+            },
+            {
+              "row": 11,
+              "col": 2
+            },
+            {
+              "row": 10,
+              "col": 2
+            },
+            {
+              "row": 9,
+              "col": 2
+            },
+            {
+              "row": 8,
+              "col": 2
+            },
+            {
+              "row": 7,
+              "col": 3
+            },
+            {
+              "row": 6,
+              "col": 4
+            },
+            {
+              "row": 5,
+              "col": 5
+            }
+          ],
+          "astar_path_len": 7.36,
+          "path_length_m": 2.578,
+          "manhattan_dist": 7.14,
+          "num_turns": 2,
+          "detour_ratio": 1.031,
+          "nodeExpansions": 58
+        },
+        "JOB-103": {
+          "success": true,
+          "waypoints": [
+            {
+              "x": -2.3,
+              "y": 0.05,
+              "z": 1.2
+            },
+            {
+              "x": -1.4499999999999997,
+              "y": 0.05,
+              "z": 0.6500000000000001
+            },
+            {
+              "x": -0.14999999999999947,
+              "y": 0.05,
+              "z": 0.6500000000000001
+            },
+            {
+              "x": 0.15000000000000036,
+              "y": 0.05,
+              "z": -0.85
+            },
+            {
+              "x": 2.2,
+              "y": 0.05,
+              "z": -1.3
+            }
+          ],
+          "path": [
+            {
+              "row": 30,
+              "col": 5
+            },
+            {
+              "row": 29,
+              "col": 6
+            },
+            {
+              "row": 28,
+              "col": 7
+            },
+            {
+              "row": 27,
+              "col": 8
+            },
+            {
+              "row": 26,
+              "col": 9
+            },
+            {
+              "row": 25,
+              "col": 10
+            },
+            {
+              "row": 24,
+              "col": 11
+            },
+            {
+              "row": 24,
+              "col": 12
+            },
+            {
+              "row": 24,
+              "col": 13
+            },
+            {
+              "row": 24,
+              "col": 14
+            },
+            {
+              "row": 24,
+              "col": 15
+            },
+            {
+              "row": 24,
+              "col": 16
+            },
+            {
+              "row": 24,
+              "col": 17
+            },
+            {
+              "row": 24,
+              "col": 18
+            },
+            {
+              "row": 24,
+              "col": 19
+            },
+            {
+              "row": 24,
+              "col": 20
+            },
+            {
+              "row": 24,
+              "col": 21
+            },
+            {
+              "row": 24,
+              "col": 22
+            },
+            {
+              "row": 24,
+              "col": 23
+            },
+            {
+              "row": 24,
+              "col": 24
+            },
+            {
+              "row": 24,
+              "col": 25
+            },
+            {
+              "row": 24,
+              "col": 26
+            },
+            {
+              "row": 23,
+              "col": 27
+            },
+            {
+              "row": 22,
+              "col": 27
+            },
+            {
+              "row": 21,
+              "col": 27
+            },
+            {
+              "row": 20,
+              "col": 27
+            },
+            {
+              "row": 19,
+              "col": 27
+            },
+            {
+              "row": 18,
+              "col": 27
+            },
+            {
+              "row": 17,
+              "col": 27
+            },
+            {
+              "row": 16,
+              "col": 27
+            },
+            {
+              "row": 15,
+              "col": 27
+            },
+            {
+              "row": 14,
+              "col": 27
+            },
+            {
+              "row": 13,
+              "col": 27
+            },
+            {
+              "row": 12,
+              "col": 27
+            },
+            {
+              "row": 11,
+              "col": 28
+            },
+            {
+              "row": 10,
+              "col": 28
+            },
+            {
+              "row": 9,
+              "col": 28
+            },
+            {
+              "row": 9,
+              "col": 29
+            },
+            {
+              "row": 9,
+              "col": 30
+            },
+            {
+              "row": 9,
+              "col": 31
+            },
+            {
+              "row": 9,
+              "col": 32
+            },
+            {
+              "row": 9,
+              "col": 33
+            },
+            {
+              "row": 9,
+              "col": 34
+            },
+            {
+              "row": 9,
+              "col": 35
+            },
+            {
+              "row": 9,
+              "col": 36
+            },
+            {
+              "row": 9,
+              "col": 37
+            },
+            {
+              "row": 9,
+              "col": 38
+            },
+            {
+              "row": 9,
+              "col": 39
+            },
+            {
+              "row": 9,
+              "col": 40
+            },
+            {
+              "row": 9,
+              "col": 41
+            },
+            {
+              "row": 8,
+              "col": 42
+            },
+            {
+              "row": 8,
+              "col": 43
+            },
+            {
+              "row": 8,
+              "col": 44
+            },
+            {
+              "row": 7,
+              "col": 45
+            },
+            {
+              "row": 7,
+              "col": 46
+            },
+            {
+              "row": 6,
+              "col": 47
+            },
+            {
+              "row": 6,
+              "col": 48
+            },
+            {
+              "row": 5,
+              "col": 49
+            },
+            {
+              "row": 5,
+              "col": 50
+            }
+          ],
+          "astar_path_len": 16.97,
+          "path_length_m": 5.941,
+          "manhattan_dist": 20,
+          "num_turns": 3,
+          "detour_ratio": 1.154,
+          "nodeExpansions": 243
+        },
+        "JOB-104": {
+          "success": true,
+          "waypoints": [
+            {
+              "x": -2.3,
+              "y": 0.05,
+              "z": -1.3
+            },
+            {
+              "x": 2.3500000000000005,
+              "y": 0.05,
+              "z": -0.85
+            },
+            {
+              "x": 2.3500000000000005,
+              "y": 0.05,
+              "z": 1.05
+            },
+            {
+              "x": 2.2,
+              "y": 0.05,
+              "z": 1.2
+            }
+          ],
+          "path": [
+            {
+              "row": 5,
+              "col": 5
+            },
+            {
+              "row": 6,
+              "col": 6
+            },
+            {
+              "row": 7,
+              "col": 7
+            },
+            {
+              "row": 8,
+              "col": 8
+            },
+            {
+              "row": 8,
+              "col": 9
+            },
+            {
+              "row": 8,
+              "col": 10
+            },
+            {
+              "row": 8,
+              "col": 11
+            },
+            {
+              "row": 8,
+              "col": 12
+            },
+            {
+              "row": 8,
+              "col": 13
+            },
+            {
+              "row": 8,
+              "col": 14
+            },
+            {
+              "row": 8,
+              "col": 15
+            },
+            {
+              "row": 8,
+              "col": 16
+            },
+            {
+              "row": 8,
+              "col": 17
+            },
+            {
+              "row": 8,
+              "col": 18
+            },
+            {
+              "row": 8,
+              "col": 19
+            },
+            {
+              "row": 8,
+              "col": 20
+            },
+            {
+              "row": 8,
+              "col": 21
+            },
+            {
+              "row": 8,
+              "col": 22
+            },
+            {
+              "row": 8,
+              "col": 23
+            },
+            {
+              "row": 8,
+              "col": 24
+            },
+            {
+              "row": 8,
+              "col": 25
+            },
+            {
+              "row": 8,
+              "col": 26
+            },
+            {
+              "row": 9,
+              "col": 27
+            },
+            {
+              "row": 9,
+              "col": 28
+            },
+            {
+              "row": 9,
+              "col": 29
+            },
+            {
+              "row": 9,
+              "col": 30
+            },
+            {
+              "row": 9,
+              "col": 31
+            },
+            {
+              "row": 9,
+              "col": 32
+            },
+            {
+              "row": 9,
+              "col": 33
+            },
+            {
+              "row": 9,
+              "col": 34
+            },
+            {
+              "row": 9,
+              "col": 35
+            },
+            {
+              "row": 9,
+              "col": 36
+            },
+            {
+              "row": 9,
+              "col": 37
+            },
+            {
+              "row": 9,
+              "col": 38
+            },
+            {
+              "row": 9,
+              "col": 39
+            },
+            {
+              "row": 9,
+              "col": 40
+            },
+            {
+              "row": 9,
+              "col": 41
+            },
+            {
+              "row": 9,
+              "col": 42
+            },
+            {
+              "row": 9,
+              "col": 43
+            },
+            {
+              "row": 9,
+              "col": 44
+            },
+            {
+              "row": 9,
+              "col": 45
+            },
+            {
+              "row": 9,
+              "col": 46
+            },
+            {
+              "row": 9,
+              "col": 47
+            },
+            {
+              "row": 9,
+              "col": 48
+            },
+            {
+              "row": 9,
+              "col": 49
+            },
+            {
+              "row": 9,
+              "col": 50
+            },
+            {
+              "row": 9,
+              "col": 51
+            },
+            {
+              "row": 10,
+              "col": 51
+            },
+            {
+              "row": 11,
+              "col": 51
+            },
+            {
+              "row": 12,
+              "col": 51
+            },
+            {
+              "row": 13,
+              "col": 51
+            },
+            {
+              "row": 14,
+              "col": 51
+            },
+            {
+              "row": 15,
+              "col": 51
+            },
+            {
+              "row": 16,
+              "col": 51
+            },
+            {
+              "row": 17,
+              "col": 51
+            },
+            {
+              "row": 18,
+              "col": 51
+            },
+            {
+              "row": 19,
+              "col": 51
+            },
+            {
+              "row": 20,
+              "col": 51
+            },
+            {
+              "row": 21,
+              "col": 51
+            },
+            {
+              "row": 22,
+              "col": 51
+            },
+            {
+              "row": 23,
+              "col": 51
+            },
+            {
+              "row": 24,
+              "col": 51
+            },
+            {
+              "row": 25,
+              "col": 51
+            },
+            {
+              "row": 26,
+              "col": 51
+            },
+            {
+              "row": 27,
+              "col": 51
+            },
+            {
+              "row": 28,
+              "col": 51
+            },
+            {
+              "row": 29,
+              "col": 50
+            },
+            {
+              "row": 30,
+              "col": 50
+            }
+          ],
+          "astar_path_len": 19.38,
+          "path_length_m": 6.784,
+          "manhattan_dist": 20,
+          "num_turns": 2,
+          "detour_ratio": 1.318,
+          "nodeExpansions": 431
+        },
+        "JOB-105": {
+          "success": true,
+          "waypoints": [
+            {
+              "x": 2.2,
+              "y": 0.05,
+              "z": -1.3
+            },
+            {
+              "x": -0.04999999999999982,
+              "y": 0.05,
+              "z": -0.75
+            },
+            {
+              "x": -0.14999999999999947,
+              "y": 0.05,
+              "z": 0.6500000000000001
+            },
+            {
+              "x": -1.5499999999999998,
+              "y": 0.05,
+              "z": 0.6500000000000001
+            },
+            {
+              "x": -2.3,
+              "y": 0.05,
+              "z": 1.2
+            }
+          ],
+          "path": [
+            {
+              "row": 5,
+              "col": 50
+            },
+            {
+              "row": 6,
+              "col": 49
+            },
+            {
+              "row": 7,
+              "col": 48
+            },
+            {
+              "row": 8,
+              "col": 47
+            },
+            {
+              "row": 9,
+              "col": 46
+            },
+            {
+              "row": 9,
+              "col": 45
+            },
+            {
+              "row": 9,
+              "col": 44
+            },
+            {
+              "row": 9,
+              "col": 43
+            },
+            {
+              "row": 9,
+              "col": 42
+            },
+            {
+              "row": 9,
+              "col": 41
+            },
+            {
+              "row": 9,
+              "col": 40
+            },
+            {
+              "row": 9,
+              "col": 39
+            },
+            {
+              "row": 9,
+              "col": 38
+            },
+            {
+              "row": 9,
+              "col": 37
+            },
+            {
+              "row": 9,
+              "col": 36
+            },
+            {
+              "row": 9,
+              "col": 35
+            },
+            {
+              "row": 9,
+              "col": 34
+            },
+            {
+              "row": 9,
+              "col": 33
+            },
+            {
+              "row": 9,
+              "col": 32
+            },
+            {
+              "row": 9,
+              "col": 31
+            },
+            {
+              "row": 9,
+              "col": 30
+            },
+            {
+              "row": 9,
+              "col": 29
+            },
+            {
+              "row": 9,
+              "col": 28
+            },
+            {
+              "row": 10,
+              "col": 27
+            },
+            {
+              "row": 11,
+              "col": 27
+            },
+            {
+              "row": 12,
+              "col": 27
+            },
+            {
+              "row": 13,
+              "col": 27
+            },
+            {
+              "row": 14,
+              "col": 27
+            },
+            {
+              "row": 15,
+              "col": 27
+            },
+            {
+              "row": 16,
+              "col": 27
+            },
+            {
+              "row": 17,
+              "col": 27
+            },
+            {
+              "row": 18,
+              "col": 27
+            },
+            {
+              "row": 19,
+              "col": 27
+            },
+            {
+              "row": 20,
+              "col": 27
+            },
+            {
+              "row": 21,
+              "col": 27
+            },
+            {
+              "row": 22,
+              "col": 26
+            },
+            {
+              "row": 23,
+              "col": 26
+            },
+            {
+              "row": 24,
+              "col": 26
+            },
+            {
+              "row": 24,
+              "col": 25
+            },
+            {
+              "row": 24,
+              "col": 24
+            },
+            {
+              "row": 24,
+              "col": 23
+            },
+            {
+              "row": 24,
+              "col": 22
+            },
+            {
+              "row": 24,
+              "col": 21
+            },
+            {
+              "row": 24,
+              "col": 20
+            },
+            {
+              "row": 24,
+              "col": 19
+            },
+            {
+              "row": 24,
+              "col": 18
+            },
+            {
+              "row": 24,
+              "col": 17
+            },
+            {
+              "row": 24,
+              "col": 16
+            },
+            {
+              "row": 24,
+              "col": 15
+            },
+            {
+              "row": 24,
+              "col": 14
+            },
+            {
+              "row": 24,
+              "col": 13
+            },
+            {
+              "row": 24,
+              "col": 12
+            },
+            {
+              "row": 25,
+              "col": 11
+            },
+            {
+              "row": 26,
+              "col": 10
+            },
+            {
+              "row": 27,
+              "col": 9
+            },
+            {
+              "row": 28,
+              "col": 8
+            },
+            {
+              "row": 29,
+              "col": 7
+            },
+            {
+              "row": 30,
+              "col": 6
+            },
+            {
+              "row": 30,
+              "col": 5
+            }
+          ],
+          "astar_path_len": 17.29,
+          "path_length_m": 6.05,
+          "manhattan_dist": 20,
+          "num_turns": 3,
+          "detour_ratio": 1.175,
+          "nodeExpansions": 356
+        }
+      },
+      "weather": "Clear",
+      "pedestrian_traffic_index": 0.48
+    }
+  },
+  "POST /api/schedule/jobs (browser default body)": {
+    "status": 200,
+    "body": {
+      "success": true,
+      "masterSchedule": [
+        {
+          "job_id": "JOB-101",
+          "cargo": "Chemistry Lab Reagents",
+          "robot_id": "AMR-01",
+          "time_slot": "08:00",
+          "time_slot_hour": 8,
+          "end_time_slot": "09:00",
+          "payload_weight_kg": 2.4,
+          "start_station": "inventory",
+          "goal_station": "testing",
+          "allowed_window": "08:00 - 12:00",
+          "ml_prediction": {
+            "predicted_delivery_time_min": 5.63,
+            "predicted_energy_wh": 24.78,
+            "recommended_buffer_min": 6.47,
+            "feature_contributions": {
+              "base_nominal_min": 8.22,
+              "path_length_delta_min": -0.26,
+              "weather_delta_min": 0,
+              "pedestrian_traffic_delta_min": -0.11,
+              "payload_weight_delta_min": -1.04,
+              "turns_cornering_delta_min": -1.27,
+              "vehicle_efficiency_delta_min": 0
+            },
+            "model_metadata": {
+              "architecture": "Ordinary Least Squares (OLS) Multiple Linear Regression",
+              "r2_score": 0.9838,
+              "mae_min": 0.3412,
+              "rmse_min": 0.4276
+            }
+          },
+          "route_status": "ok"
+        },
+        {
+          "job_id": "JOB-102",
+          "cargo": "Bookstore Course Reserves",
+          "robot_id": "AMR-01",
+          "time_slot": "09:00",
+          "time_slot_hour": 9,
+          "end_time_slot": "10:00",
+          "payload_weight_kg": 8.1,
+          "start_station": "electronics",
+          "goal_station": "inventory",
+          "allowed_window": "09:00 - 13:00",
+          "ml_prediction": {
+            "predicted_delivery_time_min": 1.79,
+            "predicted_energy_wh": 21.6,
+            "recommended_buffer_min": 2.63,
+            "feature_contributions": {
+              "base_nominal_min": 8.22,
+              "path_length_delta_min": -7.68,
+              "weather_delta_min": 0,
+              "pedestrian_traffic_delta_min": -0.11,
+              "payload_weight_delta_min": 1.78,
+              "turns_cornering_delta_min": -0.51,
+              "vehicle_efficiency_delta_min": 0
+            },
+            "model_metadata": {
+              "architecture": "Ordinary Least Squares (OLS) Multiple Linear Regression",
+              "r2_score": 0.9838,
+              "mae_min": 0.3412,
+              "rmse_min": 0.4276
+            }
+          },
+          "route_status": "ok"
+        },
+        {
+          "job_id": "JOB-103",
+          "cargo": "Admin Official Records",
+          "robot_id": "AMR-02",
+          "time_slot": "09:00",
+          "time_slot_hour": 9,
+          "end_time_slot": "10:00",
+          "payload_weight_kg": 1.2,
+          "start_station": "electronics",
+          "goal_station": "testing",
+          "allowed_window": "09:00 - 14:00",
+          "ml_prediction": {
+            "predicted_delivery_time_min": 9.68,
+            "predicted_energy_wh": 33.45,
+            "recommended_buffer_min": 10.52,
+            "feature_contributions": {
+              "base_nominal_min": 8.22,
+              "path_length_delta_min": 5.29,
+              "weather_delta_min": 0,
+              "pedestrian_traffic_delta_min": -0.11,
+              "payload_weight_delta_min": -1.63,
+              "turns_cornering_delta_min": -0.12,
+              "vehicle_efficiency_delta_min": -2.06
+            },
+            "model_metadata": {
+              "architecture": "Ordinary Least Squares (OLS) Multiple Linear Regression",
+              "r2_score": 0.9838,
+              "mae_min": 0.3412,
+              "rmse_min": 0.4276
+            }
+          },
+          "route_status": "ok"
+        },
+        {
+          "job_id": "JOB-104",
+          "cargo": "Clinic Diagnostic Supplies",
+          "robot_id": "AMR-02",
+          "time_slot": "10:00",
+          "time_slot_hour": 10,
+          "end_time_slot": "11:00",
+          "payload_weight_kg": 3.6,
+          "start_station": "inventory",
+          "goal_station": "charger",
+          "allowed_window": "10:00 - 15:00",
+          "ml_prediction": {
+            "predicted_delivery_time_min": 13.74,
+            "predicted_energy_wh": 40.36,
+            "recommended_buffer_min": 14.58,
+            "feature_contributions": {
+              "base_nominal_min": 8.22,
+              "path_length_delta_min": 8.55,
+              "weather_delta_min": 0,
+              "pedestrian_traffic_delta_min": -0.11,
+              "payload_weight_delta_min": -0.44,
+              "turns_cornering_delta_min": -0.51,
+              "vehicle_efficiency_delta_min": -2.06
+            },
+            "model_metadata": {
+              "architecture": "Ordinary Least Squares (OLS) Multiple Linear Regression",
+              "r2_score": 0.9838,
+              "mae_min": 0.3412,
+              "rmse_min": 0.4276
+            }
+          },
+          "route_status": "ok"
+        },
+        {
+          "job_id": "JOB-105",
+          "cargo": "Robotics Lab Hardware",
+          "robot_id": "AMR-01",
+          "time_slot": "12:00",
+          "time_slot_hour": 12,
+          "end_time_slot": "13:00",
+          "payload_weight_kg": 4.8,
+          "start_station": "testing",
+          "goal_station": "electronics",
+          "allowed_window": "12:00 - 17:00",
+          "ml_prediction": {
+            "predicted_delivery_time_min": 13.95,
+            "predicted_energy_wh": 38.19,
+            "recommended_buffer_min": 14.79,
+            "feature_contributions": {
+              "base_nominal_min": 8.22,
+              "path_length_delta_min": 5.73,
+              "weather_delta_min": 0,
+              "pedestrian_traffic_delta_min": -0.11,
+              "payload_weight_delta_min": 0.15,
+              "turns_cornering_delta_min": -0.12,
+              "vehicle_efficiency_delta_min": 0
+            },
+            "model_metadata": {
+              "architecture": "Ordinary Least Squares (OLS) Multiple Linear Regression",
+              "r2_score": 0.9838,
+              "mae_min": 0.3412,
+              "rmse_min": 0.4276
+            }
+          },
+          "route_status": "ok"
+        }
+      ],
+      "stats": {
+        "totalJobs": 5,
+        "assignmentAttempts": 5,
+        "backtracks": 0,
+        "solveTimeMs": "<timing>"
+      },
+      "jobRoutes": {
+        "JOB-101": {
+          "success": true,
+          "waypoints": [
+            {
+              "x": -2.3,
+              "y": 0.05,
+              "z": -1.3
+            },
+            {
+              "x": 2.2,
+              "y": 0.05,
+              "z": -1.3
+            }
+          ],
+          "path": [
+            {
+              "row": 5,
+              "col": 5
+            },
+            {
+              "row": 5,
+              "col": 6
+            },
+            {
+              "row": 5,
+              "col": 7
+            },
+            {
+              "row": 5,
+              "col": 8
+            },
+            {
+              "row": 5,
+              "col": 9
+            },
+            {
+              "row": 5,
+              "col": 10
+            },
+            {
+              "row": 5,
+              "col": 11
+            },
+            {
+              "row": 5,
+              "col": 12
+            },
+            {
+              "row": 5,
+              "col": 13
+            },
+            {
+              "row": 5,
+              "col": 14
+            },
+            {
+              "row": 5,
+              "col": 15
+            },
+            {
+              "row": 5,
+              "col": 16
+            },
+            {
+              "row": 5,
+              "col": 17
+            },
+            {
+              "row": 5,
+              "col": 18
+            },
+            {
+              "row": 5,
+              "col": 19
+            },
+            {
+              "row": 5,
+              "col": 20
+            },
+            {
+              "row": 5,
+              "col": 21
+            },
+            {
+              "row": 5,
+              "col": 22
+            },
+            {
+              "row": 5,
+              "col": 23
+            },
+            {
+              "row": 5,
+              "col": 24
+            },
+            {
+              "row": 5,
+              "col": 25
+            },
+            {
+              "row": 5,
+              "col": 26
+            },
+            {
+              "row": 5,
+              "col": 27
+            },
+            {
+              "row": 5,
+              "col": 28
+            },
+            {
+              "row": 5,
+              "col": 29
+            },
+            {
+              "row": 5,
+              "col": 30
+            },
+            {
+              "row": 5,
+              "col": 31
+            },
+            {
+              "row": 5,
+              "col": 32
+            },
+            {
+              "row": 5,
+              "col": 33
+            },
+            {
+              "row": 5,
+              "col": 34
+            },
+            {
+              "row": 5,
+              "col": 35
+            },
+            {
+              "row": 5,
+              "col": 36
+            },
+            {
+              "row": 5,
+              "col": 37
+            },
+            {
+              "row": 5,
+              "col": 38
+            },
+            {
+              "row": 5,
+              "col": 39
+            },
+            {
+              "row": 5,
+              "col": 40
+            },
+            {
+              "row": 5,
+              "col": 41
+            },
+            {
+              "row": 5,
+              "col": 42
+            },
+            {
+              "row": 5,
+              "col": 43
+            },
+            {
+              "row": 5,
+              "col": 44
+            },
+            {
+              "row": 5,
+              "col": 45
+            },
+            {
+              "row": 5,
+              "col": 46
+            },
+            {
+              "row": 5,
+              "col": 47
+            },
+            {
+              "row": 5,
+              "col": 48
+            },
+            {
+              "row": 5,
+              "col": 49
+            },
+            {
+              "row": 5,
+              "col": 50
+            }
+          ],
+          "astar_path_len": 12.86,
+          "path_length_m": 4.5,
+          "manhattan_dist": 12.86,
+          "num_turns": 0,
+          "detour_ratio": 1,
+          "nodeExpansions": 46
+        },
+        "JOB-102": {
+          "success": true,
+          "waypoints": [
+            {
+              "x": -2.3,
+              "y": 0.05,
+              "z": 1.2
+            },
+            {
+              "x": -2.55,
+              "y": 0.05,
+              "z": 0.2500000000000002
+            },
+            {
+              "x": -2.4499999999999997,
+              "y": 0.05,
+              "z": -1.05
+            },
+            {
+              "x": -2.3,
+              "y": 0.05,
+              "z": -1.3
+            }
+          ],
+          "path": [
+            {
+              "row": 30,
+              "col": 5
+            },
+            {
+              "row": 29,
+              "col": 5
+            },
+            {
+              "row": 28,
+              "col": 5
+            },
+            {
+              "row": 27,
+              "col": 5
+            },
+            {
+              "row": 26,
+              "col": 4
+            },
+            {
+              "row": 25,
+              "col": 3
+            },
+            {
+              "row": 24,
+              "col": 2
+            },
+            {
+              "row": 23,
+              "col": 2
+            },
+            {
+              "row": 22,
+              "col": 2
+            },
+            {
+              "row": 21,
+              "col": 2
+            },
+            {
+              "row": 20,
+              "col": 2
+            },
+            {
+              "row": 19,
+              "col": 2
+            },
+            {
+              "row": 18,
+              "col": 2
+            },
+            {
+              "row": 17,
+              "col": 2
+            },
+            {
+              "row": 16,
+              "col": 2
+            },
+            {
+              "row": 15,
+              "col": 2
+            },
+            {
+              "row": 14,
+              "col": 2
+            },
+            {
+              "row": 13,
+              "col": 2
+            },
+            {
+              "row": 12,
+              "col": 2
+            },
+            {
+              "row": 11,
+              "col": 2
+            },
+            {
+              "row": 10,
+              "col": 2
+            },
+            {
+              "row": 9,
+              "col": 2
+            },
+            {
+              "row": 8,
+              "col": 2
+            },
+            {
+              "row": 7,
+              "col": 3
+            },
+            {
+              "row": 6,
+              "col": 4
+            },
+            {
+              "row": 5,
+              "col": 5
+            }
+          ],
+          "astar_path_len": 7.36,
+          "path_length_m": 2.578,
+          "manhattan_dist": 7.14,
+          "num_turns": 2,
+          "detour_ratio": 1.031,
+          "nodeExpansions": 58
+        },
+        "JOB-103": {
+          "success": true,
+          "waypoints": [
+            {
+              "x": -2.3,
+              "y": 0.05,
+              "z": 1.2
+            },
+            {
+              "x": -1.4499999999999997,
+              "y": 0.05,
+              "z": 0.6500000000000001
+            },
+            {
+              "x": -0.14999999999999947,
+              "y": 0.05,
+              "z": 0.6500000000000001
+            },
+            {
+              "x": 0.15000000000000036,
+              "y": 0.05,
+              "z": -0.85
+            },
+            {
+              "x": 2.2,
+              "y": 0.05,
+              "z": -1.3
+            }
+          ],
+          "path": [
+            {
+              "row": 30,
+              "col": 5
+            },
+            {
+              "row": 29,
+              "col": 6
+            },
+            {
+              "row": 28,
+              "col": 7
+            },
+            {
+              "row": 27,
+              "col": 8
+            },
+            {
+              "row": 26,
+              "col": 9
+            },
+            {
+              "row": 25,
+              "col": 10
+            },
+            {
+              "row": 24,
+              "col": 11
+            },
+            {
+              "row": 24,
+              "col": 12
+            },
+            {
+              "row": 24,
+              "col": 13
+            },
+            {
+              "row": 24,
+              "col": 14
+            },
+            {
+              "row": 24,
+              "col": 15
+            },
+            {
+              "row": 24,
+              "col": 16
+            },
+            {
+              "row": 24,
+              "col": 17
+            },
+            {
+              "row": 24,
+              "col": 18
+            },
+            {
+              "row": 24,
+              "col": 19
+            },
+            {
+              "row": 24,
+              "col": 20
+            },
+            {
+              "row": 24,
+              "col": 21
+            },
+            {
+              "row": 24,
+              "col": 22
+            },
+            {
+              "row": 24,
+              "col": 23
+            },
+            {
+              "row": 24,
+              "col": 24
+            },
+            {
+              "row": 24,
+              "col": 25
+            },
+            {
+              "row": 24,
+              "col": 26
+            },
+            {
+              "row": 23,
+              "col": 27
+            },
+            {
+              "row": 22,
+              "col": 27
+            },
+            {
+              "row": 21,
+              "col": 27
+            },
+            {
+              "row": 20,
+              "col": 27
+            },
+            {
+              "row": 19,
+              "col": 27
+            },
+            {
+              "row": 18,
+              "col": 27
+            },
+            {
+              "row": 17,
+              "col": 27
+            },
+            {
+              "row": 16,
+              "col": 27
+            },
+            {
+              "row": 15,
+              "col": 27
+            },
+            {
+              "row": 14,
+              "col": 27
+            },
+            {
+              "row": 13,
+              "col": 27
+            },
+            {
+              "row": 12,
+              "col": 27
+            },
+            {
+              "row": 11,
+              "col": 28
+            },
+            {
+              "row": 10,
+              "col": 28
+            },
+            {
+              "row": 9,
+              "col": 28
+            },
+            {
+              "row": 9,
+              "col": 29
+            },
+            {
+              "row": 9,
+              "col": 30
+            },
+            {
+              "row": 9,
+              "col": 31
+            },
+            {
+              "row": 9,
+              "col": 32
+            },
+            {
+              "row": 9,
+              "col": 33
+            },
+            {
+              "row": 9,
+              "col": 34
+            },
+            {
+              "row": 9,
+              "col": 35
+            },
+            {
+              "row": 9,
+              "col": 36
+            },
+            {
+              "row": 9,
+              "col": 37
+            },
+            {
+              "row": 9,
+              "col": 38
+            },
+            {
+              "row": 9,
+              "col": 39
+            },
+            {
+              "row": 9,
+              "col": 40
+            },
+            {
+              "row": 9,
+              "col": 41
+            },
+            {
+              "row": 8,
+              "col": 42
+            },
+            {
+              "row": 8,
+              "col": 43
+            },
+            {
+              "row": 8,
+              "col": 44
+            },
+            {
+              "row": 7,
+              "col": 45
+            },
+            {
+              "row": 7,
+              "col": 46
+            },
+            {
+              "row": 6,
+              "col": 47
+            },
+            {
+              "row": 6,
+              "col": 48
+            },
+            {
+              "row": 5,
+              "col": 49
+            },
+            {
+              "row": 5,
+              "col": 50
+            }
+          ],
+          "astar_path_len": 16.97,
+          "path_length_m": 5.941,
+          "manhattan_dist": 20,
+          "num_turns": 3,
+          "detour_ratio": 1.154,
+          "nodeExpansions": 243
+        },
+        "JOB-104": {
+          "success": true,
+          "waypoints": [
+            {
+              "x": -2.3,
+              "y": 0.05,
+              "z": -1.3
+            },
+            {
+              "x": 2.3500000000000005,
+              "y": 0.05,
+              "z": -0.85
+            },
+            {
+              "x": 2.3500000000000005,
+              "y": 0.05,
+              "z": 1.05
+            },
+            {
+              "x": 2.2,
+              "y": 0.05,
+              "z": 1.2
+            }
+          ],
+          "path": [
+            {
+              "row": 5,
+              "col": 5
+            },
+            {
+              "row": 6,
+              "col": 6
+            },
+            {
+              "row": 7,
+              "col": 7
+            },
+            {
+              "row": 8,
+              "col": 8
+            },
+            {
+              "row": 8,
+              "col": 9
+            },
+            {
+              "row": 8,
+              "col": 10
+            },
+            {
+              "row": 8,
+              "col": 11
+            },
+            {
+              "row": 8,
+              "col": 12
+            },
+            {
+              "row": 8,
+              "col": 13
+            },
+            {
+              "row": 8,
+              "col": 14
+            },
+            {
+              "row": 8,
+              "col": 15
+            },
+            {
+              "row": 8,
+              "col": 16
+            },
+            {
+              "row": 8,
+              "col": 17
+            },
+            {
+              "row": 8,
+              "col": 18
+            },
+            {
+              "row": 8,
+              "col": 19
+            },
+            {
+              "row": 8,
+              "col": 20
+            },
+            {
+              "row": 8,
+              "col": 21
+            },
+            {
+              "row": 8,
+              "col": 22
+            },
+            {
+              "row": 8,
+              "col": 23
+            },
+            {
+              "row": 8,
+              "col": 24
+            },
+            {
+              "row": 8,
+              "col": 25
+            },
+            {
+              "row": 8,
+              "col": 26
+            },
+            {
+              "row": 9,
+              "col": 27
+            },
+            {
+              "row": 9,
+              "col": 28
+            },
+            {
+              "row": 9,
+              "col": 29
+            },
+            {
+              "row": 9,
+              "col": 30
+            },
+            {
+              "row": 9,
+              "col": 31
+            },
+            {
+              "row": 9,
+              "col": 32
+            },
+            {
+              "row": 9,
+              "col": 33
+            },
+            {
+              "row": 9,
+              "col": 34
+            },
+            {
+              "row": 9,
+              "col": 35
+            },
+            {
+              "row": 9,
+              "col": 36
+            },
+            {
+              "row": 9,
+              "col": 37
+            },
+            {
+              "row": 9,
+              "col": 38
+            },
+            {
+              "row": 9,
+              "col": 39
+            },
+            {
+              "row": 9,
+              "col": 40
+            },
+            {
+              "row": 9,
+              "col": 41
+            },
+            {
+              "row": 9,
+              "col": 42
+            },
+            {
+              "row": 9,
+              "col": 43
+            },
+            {
+              "row": 9,
+              "col": 44
+            },
+            {
+              "row": 9,
+              "col": 45
+            },
+            {
+              "row": 9,
+              "col": 46
+            },
+            {
+              "row": 9,
+              "col": 47
+            },
+            {
+              "row": 9,
+              "col": 48
+            },
+            {
+              "row": 9,
+              "col": 49
+            },
+            {
+              "row": 9,
+              "col": 50
+            },
+            {
+              "row": 9,
+              "col": 51
+            },
+            {
+              "row": 10,
+              "col": 51
+            },
+            {
+              "row": 11,
+              "col": 51
+            },
+            {
+              "row": 12,
+              "col": 51
+            },
+            {
+              "row": 13,
+              "col": 51
+            },
+            {
+              "row": 14,
+              "col": 51
+            },
+            {
+              "row": 15,
+              "col": 51
+            },
+            {
+              "row": 16,
+              "col": 51
+            },
+            {
+              "row": 17,
+              "col": 51
+            },
+            {
+              "row": 18,
+              "col": 51
+            },
+            {
+              "row": 19,
+              "col": 51
+            },
+            {
+              "row": 20,
+              "col": 51
+            },
+            {
+              "row": 21,
+              "col": 51
+            },
+            {
+              "row": 22,
+              "col": 51
+            },
+            {
+              "row": 23,
+              "col": 51
+            },
+            {
+              "row": 24,
+              "col": 51
+            },
+            {
+              "row": 25,
+              "col": 51
+            },
+            {
+              "row": 26,
+              "col": 51
+            },
+            {
+              "row": 27,
+              "col": 51
+            },
+            {
+              "row": 28,
+              "col": 51
+            },
+            {
+              "row": 29,
+              "col": 50
+            },
+            {
+              "row": 30,
+              "col": 50
+            }
+          ],
+          "astar_path_len": 19.38,
+          "path_length_m": 6.784,
+          "manhattan_dist": 20,
+          "num_turns": 2,
+          "detour_ratio": 1.318,
+          "nodeExpansions": 431
+        },
+        "JOB-105": {
+          "success": true,
+          "waypoints": [
+            {
+              "x": 2.2,
+              "y": 0.05,
+              "z": -1.3
+            },
+            {
+              "x": -0.04999999999999982,
+              "y": 0.05,
+              "z": -0.75
+            },
+            {
+              "x": -0.14999999999999947,
+              "y": 0.05,
+              "z": 0.6500000000000001
+            },
+            {
+              "x": -1.5499999999999998,
+              "y": 0.05,
+              "z": 0.6500000000000001
+            },
+            {
+              "x": -2.3,
+              "y": 0.05,
+              "z": 1.2
+            }
+          ],
+          "path": [
+            {
+              "row": 5,
+              "col": 50
+            },
+            {
+              "row": 6,
+              "col": 49
+            },
+            {
+              "row": 7,
+              "col": 48
+            },
+            {
+              "row": 8,
+              "col": 47
+            },
+            {
+              "row": 9,
+              "col": 46
+            },
+            {
+              "row": 9,
+              "col": 45
+            },
+            {
+              "row": 9,
+              "col": 44
+            },
+            {
+              "row": 9,
+              "col": 43
+            },
+            {
+              "row": 9,
+              "col": 42
+            },
+            {
+              "row": 9,
+              "col": 41
+            },
+            {
+              "row": 9,
+              "col": 40
+            },
+            {
+              "row": 9,
+              "col": 39
+            },
+            {
+              "row": 9,
+              "col": 38
+            },
+            {
+              "row": 9,
+              "col": 37
+            },
+            {
+              "row": 9,
+              "col": 36
+            },
+            {
+              "row": 9,
+              "col": 35
+            },
+            {
+              "row": 9,
+              "col": 34
+            },
+            {
+              "row": 9,
+              "col": 33
+            },
+            {
+              "row": 9,
+              "col": 32
+            },
+            {
+              "row": 9,
+              "col": 31
+            },
+            {
+              "row": 9,
+              "col": 30
+            },
+            {
+              "row": 9,
+              "col": 29
+            },
+            {
+              "row": 9,
+              "col": 28
+            },
+            {
+              "row": 10,
+              "col": 27
+            },
+            {
+              "row": 11,
+              "col": 27
+            },
+            {
+              "row": 12,
+              "col": 27
+            },
+            {
+              "row": 13,
+              "col": 27
+            },
+            {
+              "row": 14,
+              "col": 27
+            },
+            {
+              "row": 15,
+              "col": 27
+            },
+            {
+              "row": 16,
+              "col": 27
+            },
+            {
+              "row": 17,
+              "col": 27
+            },
+            {
+              "row": 18,
+              "col": 27
+            },
+            {
+              "row": 19,
+              "col": 27
+            },
+            {
+              "row": 20,
+              "col": 27
+            },
+            {
+              "row": 21,
+              "col": 27
+            },
+            {
+              "row": 22,
+              "col": 26
+            },
+            {
+              "row": 23,
+              "col": 26
+            },
+            {
+              "row": 24,
+              "col": 26
+            },
+            {
+              "row": 24,
+              "col": 25
+            },
+            {
+              "row": 24,
+              "col": 24
+            },
+            {
+              "row": 24,
+              "col": 23
+            },
+            {
+              "row": 24,
+              "col": 22
+            },
+            {
+              "row": 24,
+              "col": 21
+            },
+            {
+              "row": 24,
+              "col": 20
+            },
+            {
+              "row": 24,
+              "col": 19
+            },
+            {
+              "row": 24,
+              "col": 18
+            },
+            {
+              "row": 24,
+              "col": 17
+            },
+            {
+              "row": 24,
+              "col": 16
+            },
+            {
+              "row": 24,
+              "col": 15
+            },
+            {
+              "row": 24,
+              "col": 14
+            },
+            {
+              "row": 24,
+              "col": 13
+            },
+            {
+              "row": 24,
+              "col": 12
+            },
+            {
+              "row": 25,
+              "col": 11
+            },
+            {
+              "row": 26,
+              "col": 10
+            },
+            {
+              "row": 27,
+              "col": 9
+            },
+            {
+              "row": 28,
+              "col": 8
+            },
+            {
+              "row": 29,
+              "col": 7
+            },
+            {
+              "row": 30,
+              "col": 6
+            },
+            {
+              "row": 30,
+              "col": 5
+            }
+          ],
+          "astar_path_len": 17.29,
+          "path_length_m": 6.05,
+          "manhattan_dist": 20,
+          "num_turns": 3,
+          "detour_ratio": 1.175,
+          "nodeExpansions": 356
+        }
+      },
+      "weather": "Clear",
+      "pedestrian_traffic_index": 0.48
+    }
+  },
+  "POST /api/plan/astar (browser bounds + obstacles)": {
+    "status": 200,
+    "body": {
+      "success": true,
+      "waypoints": [
+        {
+          "x": -2,
+          "y": 0.05,
+          "z": -1.2
+        },
+        {
+          "x": 2.3500000000000005,
+          "y": 0.05,
+          "z": -0.75
+        },
+        {
+          "x": 2.3500000000000005,
+          "y": 0.05,
+          "z": 0.7500000000000002
+        },
+        {
+          "x": 2,
+          "y": 0.05,
+          "z": 1.5
+        }
+      ],
+      "path": [
+        {
+          "row": 6,
+          "col": 7
+        },
+        {
+          "row": 7,
+          "col": 8
+        },
+        {
+          "row": 8,
+          "col": 9
+        },
+        {
+          "row": 8,
+          "col": 10
+        },
+        {
+          "row": 8,
+          "col": 11
+        },
+        {
+          "row": 8,
+          "col": 12
+        },
+        {
+          "row": 8,
+          "col": 13
+        },
+        {
+          "row": 8,
+          "col": 14
+        },
+        {
+          "row": 8,
+          "col": 15
+        },
+        {
+          "row": 8,
+          "col": 16
+        },
+        {
+          "row": 8,
+          "col": 17
+        },
+        {
+          "row": 8,
+          "col": 18
+        },
+        {
+          "row": 8,
+          "col": 19
+        },
+        {
+          "row": 8,
+          "col": 20
+        },
+        {
+          "row": 8,
+          "col": 21
+        },
+        {
+          "row": 8,
+          "col": 22
+        },
+        {
+          "row": 8,
+          "col": 23
+        },
+        {
+          "row": 8,
+          "col": 24
+        },
+        {
+          "row": 8,
+          "col": 25
+        },
+        {
+          "row": 8,
+          "col": 26
+        },
+        {
+          "row": 8,
+          "col": 27
+        },
+        {
+          "row": 8,
+          "col": 28
+        },
+        {
+          "row": 8,
+          "col": 29
+        },
+        {
+          "row": 8,
+          "col": 30
+        },
+        {
+          "row": 8,
+          "col": 31
+        },
+        {
+          "row": 8,
+          "col": 32
+        },
+        {
+          "row": 8,
+          "col": 33
+        },
+        {
+          "row": 8,
+          "col": 34
+        },
+        {
+          "row": 8,
+          "col": 35
+        },
+        {
+          "row": 8,
+          "col": 36
+        },
+        {
+          "row": 8,
+          "col": 37
+        },
+        {
+          "row": 8,
+          "col": 38
+        },
+        {
+          "row": 8,
+          "col": 39
+        },
+        {
+          "row": 8,
+          "col": 40
+        },
+        {
+          "row": 8,
+          "col": 41
+        },
+        {
+          "row": 8,
+          "col": 42
+        },
+        {
+          "row": 8,
+          "col": 43
+        },
+        {
+          "row": 8,
+          "col": 44
+        },
+        {
+          "row": 8,
+          "col": 45
+        },
+        {
+          "row": 8,
+          "col": 46
+        },
+        {
+          "row": 8,
+          "col": 47
+        },
+        {
+          "row": 8,
+          "col": 48
+        },
+        {
+          "row": 8,
+          "col": 49
+        },
+        {
+          "row": 9,
+          "col": 50
+        },
+        {
+          "row": 9,
+          "col": 51
+        },
+        {
+          "row": 10,
+          "col": 51
+        },
+        {
+          "row": 11,
+          "col": 51
+        },
+        {
+          "row": 12,
+          "col": 51
+        },
+        {
+          "row": 13,
+          "col": 51
+        },
+        {
+          "row": 14,
+          "col": 51
+        },
+        {
+          "row": 15,
+          "col": 51
+        },
+        {
+          "row": 16,
+          "col": 51
+        },
+        {
+          "row": 17,
+          "col": 51
+        },
+        {
+          "row": 18,
+          "col": 51
+        },
+        {
+          "row": 19,
+          "col": 51
+        },
+        {
+          "row": 20,
+          "col": 51
+        },
+        {
+          "row": 21,
+          "col": 51
+        },
+        {
+          "row": 22,
+          "col": 51
+        },
+        {
+          "row": 23,
+          "col": 51
+        },
+        {
+          "row": 24,
+          "col": 51
+        },
+        {
+          "row": 25,
+          "col": 51
+        },
+        {
+          "row": 26,
+          "col": 50
+        },
+        {
+          "row": 27,
+          "col": 49
+        },
+        {
+          "row": 28,
+          "col": 49
+        },
+        {
+          "row": 29,
+          "col": 48
+        },
+        {
+          "row": 30,
+          "col": 48
+        },
+        {
+          "row": 31,
+          "col": 47
+        },
+        {
+          "row": 32,
+          "col": 47
+        }
+      ],
+      "astar_path_len": 19.15,
+      "path_length_m": 6.701,
+      "manhattan_dist": 19.14,
+      "num_turns": 2,
+      "detour_ratio": 1.388,
+      "nodeExpansions": 470
+    }
+  },
+  "POST /api/anylogic/update": {
+    "status": 200,
+    "body": {
+      "success": true,
+      "count": 6
+    }
+  },
+  "GET /api/robots (after AnyLogic update)": {
+    "status": 200,
+    "body": {
+      "robots": [
+        {
+          "id": "AMR-01",
+          "name": "Inspector Alpha",
+          "type": "amr",
+          "x": 1,
+          "y": 0.05,
+          "z": -0.5,
+          "heading": 0,
+          "status": "Test Move",
+          "battery": 94,
+          "speed": 0.7
+        },
+        {
+          "id": "AMR-02",
+          "name": "Logistics Beta",
+          "type": "amr",
+          "x": 1.5,
+          "y": 0.05,
+          "z": 1.2,
+          "heading": 90,
+          "status": "Patrolling",
+          "battery": 80,
+          "speed": 0.7
+        },
+        {
+          "id": "AMR-03",
+          "name": "Courier Gamma",
+          "type": "amr",
+          "x": 2.2,
+          "y": 0.05,
+          "z": 1.2,
+          "heading": 180,
+          "status": "Docked / Charging",
+          "battery": 100,
+          "speed": 0
+        },
+        {
+          "id": "HUM-01",
+          "name": "Unitree G1 Silver",
+          "type": "humanoid",
+          "x": 0,
+          "y": 0.05,
+          "z": 0.8,
+          "heading": 0,
+          "status": "Bipedal Walking",
+          "battery": 95,
+          "speed": 0.85
+        },
+        {
+          "id": "UAV-01",
+          "name": "SkyWatcher Drone",
+          "type": "drone",
+          "x": 0,
+          "y": 1.9,
+          "z": 0,
+          "heading": 0,
+          "status": "In Flight / Surveillance",
+          "battery": 88,
+          "speed": 1.1
+        },
+        {
+          "id": "NEW-99",
+          "name": "Added by AnyLogic",
+          "x": 0,
+          "z": 0
+        }
+      ]
+    }
+  },
+  "WebSocket INIT_FLEET then UPDATE_STATIONS": [
+    {
+      "type": "INIT_FLEET",
+      "id": "<id>",
+      "t": "<t>",
+      "data": {
+        "robots": [
+          {
+            "id": "AMR-01",
+            "name": "Inspector Alpha",
+            "type": "amr",
+            "x": 1,
+            "y": 0.05,
+            "z": -0.5,
+            "heading": 0,
+            "status": "Test Move",
+            "battery": 94,
+            "speed": 0.7
+          },
+          {
+            "id": "AMR-02",
+            "name": "Logistics Beta",
+            "type": "amr",
+            "x": 1.5,
+            "y": 0.05,
+            "z": 1.2,
+            "heading": 90,
+            "status": "Patrolling",
+            "battery": 80,
+            "speed": 0.7
+          },
+          {
+            "id": "AMR-03",
+            "name": "Courier Gamma",
+            "type": "amr",
+            "x": 2.2,
+            "y": 0.05,
+            "z": 1.2,
+            "heading": 180,
+            "status": "Docked / Charging",
+            "battery": 100,
+            "speed": 0
+          },
+          {
+            "id": "HUM-01",
+            "name": "Unitree G1 Silver",
+            "type": "humanoid",
+            "x": 0,
+            "y": 0.05,
+            "z": 0.8,
+            "heading": 0,
+            "status": "Bipedal Walking",
+            "battery": 95,
+            "speed": 0.85
+          },
+          {
+            "id": "UAV-01",
+            "name": "SkyWatcher Drone",
+            "type": "drone",
+            "x": 0,
+            "y": 1.9,
+            "z": 0,
+            "heading": 0,
+            "status": "In Flight / Surveillance",
+            "battery": 88,
+            "speed": 1.1
+          },
+          {
+            "id": "NEW-99",
+            "name": "Added by AnyLogic",
+            "x": 0,
+            "z": 0
+          }
+        ]
+      }
+    },
+    {
+      "type": "STATIONS_UPDATE",
+      "id": "<id>",
+      "t": "<t>",
+      "data": {
+        "stations": {
+          "inventory": {
+            "name": "Station A: Parts Shelf",
+            "x": -2,
+            "y": 0.05,
+            "z": -1
+          },
+          "electronics": {
+            "name": "Station B: Electronics Bench",
+            "x": -2.3,
+            "y": 0.05,
+            "z": 1.2
+          },
+          "testing": {
+            "name": "Station C: Testing Table",
+            "x": 2.2,
+            "y": 0.05,
+            "z": -1.3
+          },
+          "charger": {
+            "name": "Station D: AMR Charger Dock",
+            "x": 2.2,
+            "y": 0.05,
+            "z": 1.2
+          },
+          "helipad": {
+            "name": "Station E: Drone Helipad",
+            "x": 0,
+            "y": 0.05,
+            "z": 0
+          }
+        }
+      }
+    }
+  ]
+}
