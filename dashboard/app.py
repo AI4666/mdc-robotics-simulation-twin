@@ -48,7 +48,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ----------------- Sidebar Controls -----------------
-st.sidebar.image("https://img.icons8.com/isometric/100/robot-2.png", width=70)
+st.sidebar.markdown("## 🤖")
 st.sidebar.title("Lab Simulation Controls")
 st.sidebar.markdown("**Miami Dade College AI Lab**")
 
@@ -153,7 +153,7 @@ with tab1:
             labels={"value": "Pending Student Requests", "variable": "Workstation"},
             color_discrete_map={"Station A (Parts Shelf)": "#0284c7", "Station B (Soldering Bench)": "#10b981", "Station C (QA Testing)": "#8b5cf6"}
         )
-        st.plotly_chart(fig_q, use_container_width=True)
+        st.plotly_chart(fig_q, width="stretch")
 
     with col_b:
         df_states = pd.DataFrame({
@@ -166,7 +166,7 @@ with tab1:
             color_discrete_sequence=["#38bdf8", "#0284c7", "#f59e0b", "#94a3b8"],
             hole=0.4
         )
-        st.plotly_chart(fig_pie, use_container_width=True)
+        st.plotly_chart(fig_pie, width="stretch")
 
 # ==================== TAB 2: RL POLICY COMPARISON ====================
 with tab2:
@@ -191,7 +191,7 @@ with tab2:
             labels={"value": "Cumulative Episode Reward", "variable": "Algorithm"},
             color_discrete_map={"PPO": "#0284c7", "Q-Learning": "#f59e0b"}
         )
-        st.plotly_chart(fig_train, use_container_width=True)
+        st.plotly_chart(fig_train, width="stretch")
 
     with col_rl2:
         # Comparison metrics table
@@ -207,7 +207,7 @@ with tab2:
             "Q-Learning": ["4.5 min", "89.1%", "0 incidents", "2.1 min", "0.04 ms"],
             "PPO (Best Performer)": ["3.2 min", "96.5%", "0 incidents", "0.8 min", "0.15 ms"],
         })
-        st.dataframe(df_comp, use_container_width=True, hide_index=True)
+        st.dataframe(df_comp, width="stretch", hide_index=True)
 
         st.success("""
         **Key RL Takeaway:** PPO outperforms Q-Learning by **28.8%** in queue clearance efficiency because it learns a continuous 
@@ -230,14 +230,14 @@ with tab3:
         fig_opt = go.Figure()
         fig_opt.add_trace(go.Bar(x=fleet_counts, y=wait_times_opt, name="Wait Time (min)", marker_color="#0284c7"))
         fig_opt.update_layout(title="Optimization: Finding the Pareto Optimal Fleet Size", xaxis_title="Number of AMRs", yaxis_title="Avg Wait Time (min)")
-        st.plotly_chart(fig_opt, use_container_width=True)
+        st.plotly_chart(fig_opt, width="stretch")
         st.caption("Optimal Point: **3 AMRs** yields 82% wait reduction before experiencing diminishing economic returns.")
 
     with exp_col2:
         st.markdown("#### 2. Monte Carlo Experiment (100 Stochastic Runs)")
         mc_data = np.random.normal(3.2, 0.45, 100)
         fig_mc = px.histogram(mc_data, nbins=20, title="Monte Carlo Wait Time 95% Confidence Interval", labels={"value": "Simulated Wait Time (min)"}, color_discrete_sequence=["#10b981"])
-        st.plotly_chart(fig_mc, use_container_width=True)
+        st.plotly_chart(fig_mc, width="stretch")
         st.caption("Mean: **3.21 min** | 95% Confidence Interval: **[2.35 min, 4.08 min]** across 100 random replications.")
 
     st.divider()
@@ -260,7 +260,7 @@ with tab3:
             title="Sensitivity: System Resilience Under Battery Aging & Demand Surges",
             markers=True
         )
-        st.plotly_chart(fig_sens, use_container_width=True)
+        st.plotly_chart(fig_sens, width="stretch")
 
     with exp_col4:
         st.markdown("#### 4. Model Calibration (Empirical Lab Data vs AnyLogic)")
@@ -274,7 +274,7 @@ with tab3:
             barmode="group", title="Model Calibration (R² = 0.992)",
             color_discrete_map={"Observed MDC Lab Timing (sec)": "#64748b", "AnyLogic Calibrated (sec)": "#0284c7"}
         )
-        st.plotly_chart(fig_cal, use_container_width=True)
+        st.plotly_chart(fig_cal, width="stretch")
 
 # ==================== TAB 4: 3D DIGITAL TWIN STATUS ====================
 with tab4:
