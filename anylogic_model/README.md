@@ -11,9 +11,15 @@
 ## 📌 Folder Overview
 This directory holds the primary **AnyLogic 8 simulation project file (`.alp`)** and associated 2D/3D assets.
 
+> **⚠️ IMPORTANT — Do Not Overwrite `.alp`:**
+> `MDC_Robotics_Lab_Simulation.alp` is edited directly in **AnyLogic 8 IDE** (and optionally via `anylogic-cli` for Issue `#1`).
+> Do **not** run `generate_alp.py --force-overwrite` unless you intentionally want to reset the model back to the baseline scaffold—doing so will overwrite IDE edits.
+>
+> For the exact `POST /api/anylogic/update` JSON payload, valid fleet IDs (`AMR-01`..`AMR-06`, `HUM-01`, `UAV-01`..`UAV-03`), and 3D coordinates, see [`../docs/API_CONTRACT.md`](../docs/API_CONTRACT.md).
+
 ### File Structure:
-* `MDC_Robotics_Lab_Simulation.alp` *(Ready to open & run in AnyLogic 8)*
-* `generate_alp.py` *(Python generator script for model recreation & validation)*
+* `MDC_Robotics_Lab_Simulation.alp` *(Actively maintained in AnyLogic 8 IDE / `anylogic-cli`)*
+* `generate_alp.py` *(Baseline bootstrap script — guarded against accidental overwrites)*
 * `assets/robotics_lab_floorplan.png` *(High-resolution scale floorplan of the Miami Dade College lab room)*
 
 ---

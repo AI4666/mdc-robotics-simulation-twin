@@ -44,6 +44,7 @@ mdc_robotics_simulation_twin/
 │   └── public/                   # Three.js 3D WebGL App (mdc_north_campus_osm.glb, parcels.js, pedestrians.js)
 │
 └── docs/                         # Reports, Guides & Presentation (Ricardo)
+    ├── API_CONTRACT.md                   # Exact REST/JSON contracts for all 3 live bridges
     ├── ANYLOGIC_EXPERIMENTS_GUIDE.md     # Step-by-step for the 5 AnyLogic experiments
     ├── FINAL_PROJECT_REPORT_TEMPLATE.md  # 2-3 page written summary paper
     ├── PRESENTATION_SLIDES_OUTLINE.md    # 10-12 minute presentation script
@@ -77,6 +78,7 @@ npm install
 npm start
 # Opens at http://localhost:3000 (Receives live AnyLogic updates at POST /api/anylogic/update)
 ```
+See [`docs/API_CONTRACT.md`](docs/API_CONTRACT.md) for the exact REST endpoints, valid robot IDs, 3D coordinates, and RL JSON schema.
 
 ### 4. Running AnyLogic Simulation Experiments (Jorge & Ricardo)
 1. Open AnyLogic 8.
