@@ -1314,6 +1314,7 @@ function init() {
   setupSmoothZoom();
   connect({ onOpen: syncStationsToServer, onMessage: handleServerMessage });
   setInterval(sendTelemetry, TELEMETRY_INTERVAL_MS);
+  updateSpeedControl();   // speed buttons (bottom-right)
   updateFleetCards();
   updateCustomCountUI();
   updateZoneChipsUI();
@@ -3468,10 +3469,14 @@ function handleServerMessage(msg) {
   } else if (msg.type === 'E_STOP') {
     emergencyStop(msg.data || {});
   } else if (msg.type === 'ROBOT_UPDATE') {
+    if (msg.data.source === 'AnyLogic' && Array.isArray(msg.data.anylogicIds)) {
+      applyAnyLogicUpdate(msg.data);
+      return;
+    }
     const updatedList = msg.data.robots;
     updatedList.forEach(up => {
       const r = robotDefs.find(item => item.id === up.id);
-      if (r) {
+      if (r && !(anylogicLive && r.anylogic)) {   // robots AnyLogic drives follow AnyLogic only
         r.position.x = up.x;
         r.position.z = up.z;
         if (up.heading !== undefined) r.heading = up.heading;
@@ -3482,6 +3487,183 @@ function handleServerMessage(msg) {
     });
     updateFleetCards();
   }
+}
+
+// ============================================================================
+// ANYLOGIC MODE - the 3D twin shows the AnyLogic simulation (MDC_Campus_Courier.alp)
+// ============================================================================
+// AnyLogic POSTs its robots (AMR-01...) and walking students to /api/anylogic/update; the server relays
+// them as ROBOT_UPDATE with source 'AnyLogic' and anylogicIds. While updates keep coming, those robots
+// stop running their own simulation here and glide to AnyLogic's positions, the browser's own parcel
+// dispatcher pauses, and the students are AnyLogic's. ANYLOGIC_TIMEOUT_MS after the last update
+// (AnyLogic paused or closed) everything returns to the normal browser simulation.
+let anylogicLive = false;
+let anylogicLastAt = 0;
+let anylogicClock = '';
+let anylogicScanSwitched = false;
+const ANYLOGIC_TIMEOUT_MS = 5000;
+
+function applyAnyLogicUpdate(data) {
+  const ids = new Set(data.anylogicIds);
+  anylogicLastAt = performance.now();
+  if (!anylogicLive) {
+    anylogicLive = true;
+    console.log('[AnyLogic Mode] ON - following the AnyLogic model for', [...ids].join(', '));
+    // The AnyLogic map is MDC North Campus: show that scan once if another one is open
+    if (!isCampusScan(activeScan) && !anylogicScanSwitched) {
+      anylogicScanSwitched = true;
+      switchEnvironment('mdc_north_campus_osm.glb');
+    }
+  }
+  anylogicClock = data.clock || '';
+  // measured AnyLogic speed: model seconds per real second, smoothed
+  const nowMs = performance.now();
+  if (Number.isFinite(data.simTime)) {
+    if (anylogicPrevSim !== null && data.simTime > anylogicPrevSim && nowMs > anylogicPrevMs) {
+      const rate = (data.simTime - anylogicPrevSim) / ((nowMs - anylogicPrevMs) / 1000);
+      anylogicMeasuredSpeed = anylogicMeasuredSpeed ? anylogicMeasuredSpeed * 0.8 + rate * 0.2 : rate;
+    }
+    anylogicPrevSim = data.simTime;
+    anylogicPrevMs = nowMs;
+  }
+  // at high AnyLogic speeds the robots glide faster so they keep up with the simulation
+  anylogicFollowRate = Math.min(40, 10 + (anylogicMeasuredSpeed || 0) / 20);
+  updateSpeedControl();
+  (data.robots || []).forEach(up => {
+    if (!ids.has(up.id)) return;
+    const r = robotDefs.find(item => item.id === up.id);
+    if (!r || !Number.isFinite(up.x) || !Number.isFinite(up.z)) return;
+    if (!r.anylogic) {
+      // take the robot over: drop its own mission and appear where AnyLogic has it
+      r.anylogic = true;
+      r.isDetouring = false;
+      r.detourWaypoints = null;
+      r.isCustomMission = false;
+      r.isReturningToCharge = false;
+      r.currentOrder = null;
+      r.position.set(up.x, r.position.y, up.z);
+    }
+    r.alTarget = { x: up.x, z: up.z };
+    if (Number.isFinite(up.heading)) r.alHeading = up.heading;
+    if (Number.isFinite(up.battery)) r.battery = up.battery;
+    if (Number.isFinite(up.speed)) r.speed = up.speed;
+    const load = Number.isFinite(up.slots) ? ` (${up.cargo || 0} items, ${up.slots}/5 slots)` : '';
+    r.status = `🛰 AnyLogic: ${up.status || 'Idle'}${load}`;
+  });
+  if (pedestrianSwarm) pedestrianSwarm.setExternalTargets(data.pedestrians || []);
+  updateAnyLogicBanner();
+}
+
+// One frame of a robot driven by AnyLogic: glide toward the latest AnyLogic position and heading
+function followAnyLogic(r, delta) {
+  const t = r.alTarget;
+  if (t) {
+    const dx = t.x - r.position.x, dz = t.z - r.position.z, dist = Math.hypot(dx, dz);
+    if (dist > 2.0) {
+      r.position.x = t.x; r.position.z = t.z;           // far behind (paused tab, big jump): snap
+    } else {
+      const k = 1 - Math.exp(-anylogicFollowRate * delta);
+      r.position.x += dx * k; r.position.z += dz * k;
+      if (r.wheels && dist > 0.002) r.wheels.forEach(w => { w.rotation.x += dist * k * 40; });
+    }
+  }
+  if (Number.isFinite(r.alHeading)) {
+    let d = r.alHeading - r.heading;
+    d = Math.atan2(Math.sin(d), Math.cos(d));            // shortest turn
+    r.heading += d * (1 - Math.exp(-8 * delta));
+  }
+  r.target.copy(r.position);
+  if (r.mesh) {
+    r.mesh.position.copy(r.position);
+    r.mesh.rotation.y = r.heading;
+  }
+}
+
+function checkAnyLogicTimeout() {
+  if (!anylogicLive || performance.now() - anylogicLastAt < ANYLOGIC_TIMEOUT_MS) return;
+  anylogicLive = false;
+  robotDefs.forEach(r => {
+    if (!r.anylogic) return;
+    r.anylogic = false;
+    r.alTarget = null;
+    r.status = 'Standby (AnyLogic stopped)';
+  });
+  if (pedestrianSwarm) pedestrianSwarm.clearExternal();
+  anylogicPrevSim = null;
+  anylogicMeasuredSpeed = 0;
+  console.log('[AnyLogic Mode] OFF - no AnyLogic update for', ANYLOGIC_TIMEOUT_MS / 1000, 's');
+  updateAnyLogicBanner();
+  updateSpeedControl();
+}
+
+// ============================================================================
+// SPEED CONTROL (like AnyLogic's): bottom-right buttons
+//   normal mode  -> fast-forward the browser's own simulation (x1 ... x20)
+//   AnyLogic mode -> ask AnyLogic to run at that speed (POST /api/anylogic/speed; the model
+//                    reads it from the bridge reply and calls setRealTimeScale)
+// ============================================================================
+let anylogicPrevSim = null, anylogicPrevMs = 0, anylogicMeasuredSpeed = 0, anylogicFollowRate = 10;
+let anylogicChosenSpeed = null;
+const LOCAL_SPEEDS = [1, 2, 5, 10, 20];
+const ANYLOGIC_SPEEDS = [10, 30, 60, 120, 300, 600];
+let simSpeed = (() => {
+  try { const v = parseInt(localStorage.getItem('sim_speed'), 10); return LOCAL_SPEEDS.includes(v) ? v : 1; } catch (e) { return 1; }
+})();
+
+function setSimSpeed(value) {
+  if (anylogicLive) {
+    anylogicChosenSpeed = value;
+    fetch('/api/anylogic/speed', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ scale: value }) })
+      .catch(err => console.warn('[Speed] could not send speed to AnyLogic:', err));
+  } else {
+    simSpeed = value;
+    try { localStorage.setItem('sim_speed', String(value)); } catch (e) { /* private window */ }
+  }
+  updateSpeedControl();
+}
+
+function updateSpeedControl() {
+  let el = document.getElementById('sim-speed-control');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'sim-speed-control';
+    el.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:9999;display:flex;align-items:center;gap:4px;'
+      + 'background:rgba(15,23,42,0.9);color:#e2e8f0;padding:6px 8px;border-radius:10px;'
+      + 'font:600 12px system-ui,sans-serif;box-shadow:0 2px 10px rgba(0,0,0,0.35);';
+    el.addEventListener('click', e => {
+      const v = e.target && e.target.dataset ? parseInt(e.target.dataset.speed, 10) : NaN;
+      if (Number.isFinite(v)) setSimSpeed(v);
+    });
+    document.body.appendChild(el);
+  }
+  const speeds = anylogicLive ? ANYLOGIC_SPEEDS : LOCAL_SPEEDS;
+  const current = anylogicLive ? anylogicChosenSpeed : simSpeed;
+  const label = anylogicLive ? '⏩ AnyLogic speed' : '⏩ Speed';
+  const key = (anylogicLive ? 'A' : 'L') + current;
+  if (el.dataset.key !== key) {
+    el.dataset.key = key;
+    el.innerHTML = `<span style="margin-right:4px">${label}</span>` + speeds.map(s =>
+      `<button data-speed="${s}" style="cursor:pointer;border:0;border-radius:6px;padding:3px 7px;font:inherit;`
+      + `background:${s === current ? '#22c55e' : '#334155'};color:${s === current ? '#052e16' : '#e2e8f0'}">×${s}</button>`).join('');
+  }
+}
+
+function updateAnyLogicBanner() {
+  let el = document.getElementById('anylogic-live-banner');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'anylogic-live-banner';
+    el.style.cssText = 'position:fixed;top:64px;left:50%;transform:translateX(-50%);z-index:9999;'
+      + 'background:rgba(6,95,70,0.92);color:#ecfdf5;padding:6px 14px;border-radius:8px;'
+      + 'font:600 13px system-ui,sans-serif;box-shadow:0 2px 10px rgba(0,0,0,0.35);pointer-events:none;';
+    document.body.appendChild(el);
+  }
+  if (!anylogicLive) { el.style.display = 'none'; return; }
+  const robots = robotDefs.filter(r => r.anylogic).length;
+  const students = pedestrianSwarm && pedestrianSwarm.externalSlots ? pedestrianSwarm.externalSlots.size : 0;
+  const speed = anylogicMeasuredSpeed ? `  |  ×${Math.round(anylogicMeasuredSpeed)}` : '';
+  el.textContent = `🛰 AnyLogic LIVE  ${anylogicClock}${speed}  |  ${robots} robots, ${students} students from the simulation`;
+  el.style.display = 'block';
 }
 
 // E_STOP from any console, relayed by the server: puts the robot (or every robot when no
@@ -3518,6 +3700,7 @@ const TELEMETRY_INTERVAL_MS = 200;
 function sendTelemetry() {
   if (!isOpen()) return; // don't queue stale positions while disconnected
   robotDefs.forEach(r => {
+    if (anylogicLive && r.anylogic) return;   // AnyLogic is the source for this robot, not the browser
     send('ROBOT_TELEMETRY', {
       robotId: r.id,
       source: 'sim',
@@ -4098,6 +4281,12 @@ function updateSimulation(delta) {
       return;
     }
     if (r.mesh && !r.mesh.visible) r.mesh.visible = true;
+
+    // AnyLogic mode: this robot follows the AnyLogic simulation instead of its own logic
+    if (anylogicLive && r.anylogic) {
+      followAnyLogic(r, delta);
+      return;
+    }
 
     if (r.lidar) {
       if (r.lidarActive !== false) {
@@ -8229,9 +8418,16 @@ function animate() {
   // simulation catches up slowly instead of moving robots in one big jump, past the gaps they keep
   // from each other and from walls.
   const delta = Math.min(clock.getDelta(), 0.1);
-  updateSimulation(delta);
-  if (pedestrianSwarm) pedestrianSwarm.update(delta);
-  if (logisticsDispatcher) logisticsDispatcher.update(delta);
+  checkAnyLogicTimeout();
+  // Speed control: the browser's own simulation runs simSpeed steps of at most 0.1 s per frame.
+  // In AnyLogic mode the speed belongs to AnyLogic (the control sends it there), so one step.
+  const steps = anylogicLive ? 1 : simSpeed;
+  for (let step = 0; step < steps; step++) {
+    updateSimulation(delta);
+    if (pedestrianSwarm) pedestrianSwarm.update(delta);
+    // AnyLogic mode: AnyLogic decides the deliveries, so the browser's own parcel dispatcher pauses
+    if (logisticsDispatcher && !anylogicLive) logisticsDispatcher.update(delta);
+  }
   updateLidarVisualizerAndAI(delta);
 
   // Smooth camera glide animation towards focused stations/waypoints

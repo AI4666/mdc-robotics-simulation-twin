@@ -55,15 +55,37 @@ app.get('/api/stations', (req, res) => {
   res.json({ stations: world.getStations(req.query.scan), scan: req.query.scan || world.getActiveScan() });
 });
 
-// AnyLogic can POST agent coordinates here directly
+// AnyLogic can POST agent coordinates here directly. Besides the merged robot list, the browsers get
+// which robots AnyLogic drives (anylogicIds), its walking students and its clock, so the 3D view can
+// follow the simulation (AnyLogic mode in public/app.js).
 app.post('/api/anylogic/update', (req, res) => {
-  const { robots, source } = req.body;
+  const { robots, source, pedestrians, clock, simTime } = req.body;
   if (Array.isArray(robots)) {
     world.mergeRobots(robots);
-    broadcast('ROBOT_UPDATE', { robots: world.getRobots(), source: source || 'AnyLogic' });
+    broadcast('ROBOT_UPDATE', {
+      robots: world.getRobots(),
+      source: source || 'AnyLogic',
+      anylogicIds: robots.map(r => r && r.id).filter(Boolean),
+      pedestrians: Array.isArray(pedestrians) ? pedestrians : [],
+      clock: typeof clock === 'string' ? clock : null,
+      simTime: Number.isFinite(simTime) ? simTime : null
+    });
     aggregator.tick();
   }
-  res.json({ success: true, count: world.getRobots().length });
+  // requestedScale: the speed chosen in the 3D view; the AnyLogic model applies it (setRealTimeScale)
+  res.json({ success: true, count: world.getRobots().length, requestedScale: anylogicRequestedScale });
+});
+
+// Speed control in the 3D view while AnyLogic is driving it: the browser POSTs { scale } here and the
+// next /api/anylogic/update reply hands it to AnyLogic. null = leave AnyLogic's own speed alone.
+let anylogicRequestedScale = null;
+app.post('/api/anylogic/speed', (req, res) => {
+  const scale = Number(req.body && req.body.scale);
+  anylogicRequestedScale = Number.isFinite(scale) && scale > 0 && scale <= 10000 ? scale : null;
+  res.json({ requestedScale: anylogicRequestedScale });
+});
+app.get('/api/anylogic/speed', (req, res) => {
+  res.json({ requestedScale: anylogicRequestedScale });
 });
 
 // Sample jobs from benchmark dataset (JOB-101 to JOB-105)
