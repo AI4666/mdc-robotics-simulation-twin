@@ -5448,9 +5448,19 @@ export const MDC_NORTH_CAMPUS_DESTINATIONS = Object.freeze([
     id: 'bldg-a',
     code: 'A',
     name: 'Building A North Campus',
-    type: 'Public Safety & Facilities',
+    type: 'Science',
     center: Object.freeze({ x: -4.95, y: 1.30, z: 0.50 }),
     dropoff: Object.freeze({ x: -4.10, y: 0.05, z: 0.50 }),
+    color: 0x0047ba,
+    badgeColor: '#0047ba'
+  },
+  {
+    id: 'bldg-j',
+    code: 'J',
+    name: 'Building J North Campus',
+    type: 'School of Justice',
+    center: Object.freeze({ x: -3.05, y: 1.10, z: -2.95 }),
+    dropoff: Object.freeze({ x: -3.05, y: 0.05, z: -2.55 }),
     color: 0x0047ba,
     badgeColor: '#0047ba'
   },

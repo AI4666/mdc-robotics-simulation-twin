@@ -7,37 +7,79 @@
           "id": "AMR-01",
           "name": "Inspector Alpha",
           "type": "amr",
-          "x": -1.8,
+          "x": -1.5,
           "y": 0.05,
-          "z": -1.3,
+          "z": -1.35,
           "heading": 0,
-          "status": "Patrolling",
-          "battery": 94,
-          "speed": 0.7
+          "status": "Docked at Bay 1 (Standby)",
+          "battery": 100,
+          "speed": 0,
+          "homeDockKey": "dock1"
         },
         {
           "id": "AMR-02",
           "name": "Logistics Beta",
           "type": "amr",
-          "x": 1.5,
+          "x": -0.9,
           "y": 0.05,
-          "z": 1.2,
-          "heading": 90,
-          "status": "Patrolling",
-          "battery": 80,
-          "speed": 0.7
+          "z": -1.35,
+          "heading": 0,
+          "status": "Docked at Bay 2 (Standby)",
+          "battery": 100,
+          "speed": 0,
+          "homeDockKey": "dock2"
         },
         {
           "id": "AMR-03",
           "name": "Courier Gamma",
           "type": "amr",
+          "x": 0.9,
+          "y": 0.05,
+          "z": -1.35,
+          "heading": 0,
+          "status": "Docked at Bay 3 (Standby)",
+          "battery": 100,
+          "speed": 0,
+          "homeDockKey": "dock3"
+        },
+        {
+          "id": "AMR-04",
+          "name": "Express Delta",
+          "type": "amr",
+          "x": 1.5,
+          "y": 0.05,
+          "z": -1.35,
+          "heading": 0,
+          "status": "Docked at Bay 4 (Standby)",
+          "battery": 100,
+          "speed": 0,
+          "homeDockKey": "dock4"
+        },
+        {
+          "id": "AMR-05",
+          "name": "Rover Epsilon",
+          "type": "amr",
+          "x": 1.4,
+          "y": 0.05,
+          "z": 1.25,
+          "heading": 180,
+          "status": "Docked at Bay 5 (Standby)",
+          "battery": 100,
+          "speed": 0,
+          "homeDockKey": "dock5"
+        },
+        {
+          "id": "AMR-06",
+          "name": "Security Zeta",
+          "type": "amr",
           "x": 2.2,
           "y": 0.05,
-          "z": 1.2,
+          "z": 1.25,
           "heading": 180,
-          "status": "Docked / Charging",
+          "status": "Docked at Bay 6 (Standby)",
           "battery": 100,
-          "speed": 0
+          "speed": 0,
+          "homeDockKey": "dock6"
         },
         {
           "id": "HUM-01",
@@ -62,6 +104,30 @@
           "status": "In Flight / Surveillance",
           "battery": 88,
           "speed": 1.1
+        },
+        {
+          "id": "UAV-02",
+          "name": "AeroCourier-2",
+          "type": "drone",
+          "x": -2.55,
+          "y": 2.7,
+          "z": 1.32,
+          "heading": 45,
+          "status": "In Flight / Surveillance",
+          "battery": 95,
+          "speed": 1.2
+        },
+        {
+          "id": "UAV-03",
+          "name": "PerimeterEye-3",
+          "type": "drone",
+          "x": 2.2,
+          "y": 3.1,
+          "z": -0.05,
+          "heading": 300,
+          "status": "In Flight / Surveillance",
+          "battery": 92,
+          "speed": 1.15
         }
       ]
     }
@@ -72,35 +138,90 @@
       "stations": {
         "inventory": {
           "name": "Station A: Parts Shelf",
-          "x": -2.3,
+          "x": -0.2,
           "y": 0.05,
           "z": -1.3
         },
         "electronics": {
           "name": "Station B: Electronics Bench",
-          "x": -2.3,
+          "x": -3.5,
           "y": 0.05,
-          "z": 1.2
+          "z": 0.4
         },
         "testing": {
           "name": "Station C: Testing Table",
           "x": 2.2,
           "y": 0.05,
-          "z": -1.3
+          "z": -0.05
         },
         "charger": {
           "name": "Station D: AMR Charger Dock",
-          "x": 2.2,
+          "x": 0.8,
           "y": 0.05,
-          "z": 1.2
+          "z": 1.32
         },
         "helipad": {
           "name": "Station E: Drone Helipad",
-          "x": 0,
+          "x": -2.55,
           "y": 0.05,
-          "z": 0
+          "z": 1.32
+        },
+        "dock1": {
+          "name": "Bay 1: AMR-01 Dock",
+          "x": 0.3,
+          "y": 0.05,
+          "z": 1.3,
+          "isDock": true,
+          "assignedRobotId": "AMR-01",
+          "bayNumber": 1
+        },
+        "dock2": {
+          "name": "Bay 2: AMR-02 Dock",
+          "x": 0.6,
+          "y": 0.05,
+          "z": 1.3,
+          "isDock": true,
+          "assignedRobotId": "AMR-02",
+          "bayNumber": 2
+        },
+        "dock3": {
+          "name": "Bay 3: AMR-03 Dock",
+          "x": 0.9,
+          "y": 0.05,
+          "z": 1.3,
+          "isDock": true,
+          "assignedRobotId": "AMR-03",
+          "bayNumber": 3
+        },
+        "dock4": {
+          "name": "Bay 4: AMR-04 Dock",
+          "x": 1.2,
+          "y": 0.05,
+          "z": 1.3,
+          "isDock": true,
+          "assignedRobotId": "AMR-04",
+          "bayNumber": 4
+        },
+        "dock5": {
+          "name": "Bay 5: AMR-05 Dock",
+          "x": 1.5,
+          "y": 0.05,
+          "z": 1.3,
+          "isDock": true,
+          "assignedRobotId": "AMR-05",
+          "bayNumber": 5
+        },
+        "dock6": {
+          "name": "Bay 6: AMR-06 Dock",
+          "x": 1.8,
+          "y": 0.05,
+          "z": 1.3,
+          "isDock": true,
+          "assignedRobotId": "AMR-06",
+          "bayNumber": 6
         }
-      }
+      },
+      "scan": "mdc_north_campus_osm.glb"
     }
   },
   "GET /api/schedule/sample": {
@@ -3597,7 +3718,8 @@
     "status": 200,
     "body": {
       "success": true,
-      "count": 6
+      "count": 11,
+      "requestedScale": null
     }
   },
   "GET /api/robots (after AnyLogic update)": {
@@ -3613,32 +3735,74 @@
           "z": -0.5,
           "heading": 0,
           "status": "Test Move",
-          "battery": 94,
-          "speed": 0.7
+          "battery": 100,
+          "speed": 0,
+          "homeDockKey": "dock1"
         },
         {
           "id": "AMR-02",
           "name": "Logistics Beta",
           "type": "amr",
-          "x": 1.5,
+          "x": -0.9,
           "y": 0.05,
-          "z": 1.2,
-          "heading": 90,
-          "status": "Patrolling",
-          "battery": 80,
-          "speed": 0.7
+          "z": -1.35,
+          "heading": 0,
+          "status": "Docked at Bay 2 (Standby)",
+          "battery": 100,
+          "speed": 0,
+          "homeDockKey": "dock2"
         },
         {
           "id": "AMR-03",
           "name": "Courier Gamma",
           "type": "amr",
+          "x": 0.9,
+          "y": 0.05,
+          "z": -1.35,
+          "heading": 0,
+          "status": "Docked at Bay 3 (Standby)",
+          "battery": 100,
+          "speed": 0,
+          "homeDockKey": "dock3"
+        },
+        {
+          "id": "AMR-04",
+          "name": "Express Delta",
+          "type": "amr",
+          "x": 1.5,
+          "y": 0.05,
+          "z": -1.35,
+          "heading": 0,
+          "status": "Docked at Bay 4 (Standby)",
+          "battery": 100,
+          "speed": 0,
+          "homeDockKey": "dock4"
+        },
+        {
+          "id": "AMR-05",
+          "name": "Rover Epsilon",
+          "type": "amr",
+          "x": 1.4,
+          "y": 0.05,
+          "z": 1.25,
+          "heading": 180,
+          "status": "Docked at Bay 5 (Standby)",
+          "battery": 100,
+          "speed": 0,
+          "homeDockKey": "dock5"
+        },
+        {
+          "id": "AMR-06",
+          "name": "Security Zeta",
+          "type": "amr",
           "x": 2.2,
           "y": 0.05,
-          "z": 1.2,
+          "z": 1.25,
           "heading": 180,
-          "status": "Docked / Charging",
+          "status": "Docked at Bay 6 (Standby)",
           "battery": 100,
-          "speed": 0
+          "speed": 0,
+          "homeDockKey": "dock6"
         },
         {
           "id": "HUM-01",
@@ -3665,6 +3829,30 @@
           "speed": 1.1
         },
         {
+          "id": "UAV-02",
+          "name": "AeroCourier-2",
+          "type": "drone",
+          "x": -2.55,
+          "y": 2.7,
+          "z": 1.32,
+          "heading": 45,
+          "status": "In Flight / Surveillance",
+          "battery": 95,
+          "speed": 1.2
+        },
+        {
+          "id": "UAV-03",
+          "name": "PerimeterEye-3",
+          "type": "drone",
+          "x": 2.2,
+          "y": 3.1,
+          "z": -0.05,
+          "heading": 300,
+          "status": "In Flight / Surveillance",
+          "battery": 92,
+          "speed": 1.15
+        },
+        {
           "id": "NEW-99",
           "name": "Added by AnyLogic",
           "x": 0,
@@ -3689,32 +3877,74 @@
             "z": -0.5,
             "heading": 0,
             "status": "Test Move",
-            "battery": 94,
-            "speed": 0.7
+            "battery": 100,
+            "speed": 0,
+            "homeDockKey": "dock1"
           },
           {
             "id": "AMR-02",
             "name": "Logistics Beta",
             "type": "amr",
-            "x": 1.5,
+            "x": -0.9,
             "y": 0.05,
-            "z": 1.2,
-            "heading": 90,
-            "status": "Patrolling",
-            "battery": 80,
-            "speed": 0.7
+            "z": -1.35,
+            "heading": 0,
+            "status": "Docked at Bay 2 (Standby)",
+            "battery": 100,
+            "speed": 0,
+            "homeDockKey": "dock2"
           },
           {
             "id": "AMR-03",
             "name": "Courier Gamma",
             "type": "amr",
+            "x": 0.9,
+            "y": 0.05,
+            "z": -1.35,
+            "heading": 0,
+            "status": "Docked at Bay 3 (Standby)",
+            "battery": 100,
+            "speed": 0,
+            "homeDockKey": "dock3"
+          },
+          {
+            "id": "AMR-04",
+            "name": "Express Delta",
+            "type": "amr",
+            "x": 1.5,
+            "y": 0.05,
+            "z": -1.35,
+            "heading": 0,
+            "status": "Docked at Bay 4 (Standby)",
+            "battery": 100,
+            "speed": 0,
+            "homeDockKey": "dock4"
+          },
+          {
+            "id": "AMR-05",
+            "name": "Rover Epsilon",
+            "type": "amr",
+            "x": 1.4,
+            "y": 0.05,
+            "z": 1.25,
+            "heading": 180,
+            "status": "Docked at Bay 5 (Standby)",
+            "battery": 100,
+            "speed": 0,
+            "homeDockKey": "dock5"
+          },
+          {
+            "id": "AMR-06",
+            "name": "Security Zeta",
+            "type": "amr",
             "x": 2.2,
             "y": 0.05,
-            "z": 1.2,
+            "z": 1.25,
             "heading": 180,
-            "status": "Docked / Charging",
+            "status": "Docked at Bay 6 (Standby)",
             "battery": 100,
-            "speed": 0
+            "speed": 0,
+            "homeDockKey": "dock6"
           },
           {
             "id": "HUM-01",
@@ -3741,6 +3971,30 @@
             "speed": 1.1
           },
           {
+            "id": "UAV-02",
+            "name": "AeroCourier-2",
+            "type": "drone",
+            "x": -2.55,
+            "y": 2.7,
+            "z": 1.32,
+            "heading": 45,
+            "status": "In Flight / Surveillance",
+            "battery": 95,
+            "speed": 1.2
+          },
+          {
+            "id": "UAV-03",
+            "name": "PerimeterEye-3",
+            "type": "drone",
+            "x": 2.2,
+            "y": 3.1,
+            "z": -0.05,
+            "heading": 300,
+            "status": "In Flight / Surveillance",
+            "battery": 92,
+            "speed": 1.15
+          },
+          {
             "id": "NEW-99",
             "name": "Added by AnyLogic",
             "x": 0,
@@ -3763,29 +4017,84 @@
           },
           "electronics": {
             "name": "Station B: Electronics Bench",
-            "x": -2.3,
+            "x": -3.5,
             "y": 0.05,
-            "z": 1.2
+            "z": 0.4
           },
           "testing": {
             "name": "Station C: Testing Table",
             "x": 2.2,
             "y": 0.05,
-            "z": -1.3
+            "z": -0.05
           },
           "charger": {
             "name": "Station D: AMR Charger Dock",
-            "x": 2.2,
+            "x": 0.8,
             "y": 0.05,
-            "z": 1.2
+            "z": 1.32
           },
           "helipad": {
             "name": "Station E: Drone Helipad",
-            "x": 0,
+            "x": -2.55,
             "y": 0.05,
-            "z": 0
+            "z": 1.32
+          },
+          "dock1": {
+            "name": "Bay 1: AMR-01 Dock",
+            "x": 0.3,
+            "y": 0.05,
+            "z": 1.3,
+            "isDock": true,
+            "assignedRobotId": "AMR-01",
+            "bayNumber": 1
+          },
+          "dock2": {
+            "name": "Bay 2: AMR-02 Dock",
+            "x": 0.6,
+            "y": 0.05,
+            "z": 1.3,
+            "isDock": true,
+            "assignedRobotId": "AMR-02",
+            "bayNumber": 2
+          },
+          "dock3": {
+            "name": "Bay 3: AMR-03 Dock",
+            "x": 0.9,
+            "y": 0.05,
+            "z": 1.3,
+            "isDock": true,
+            "assignedRobotId": "AMR-03",
+            "bayNumber": 3
+          },
+          "dock4": {
+            "name": "Bay 4: AMR-04 Dock",
+            "x": 1.2,
+            "y": 0.05,
+            "z": 1.3,
+            "isDock": true,
+            "assignedRobotId": "AMR-04",
+            "bayNumber": 4
+          },
+          "dock5": {
+            "name": "Bay 5: AMR-05 Dock",
+            "x": 1.5,
+            "y": 0.05,
+            "z": 1.3,
+            "isDock": true,
+            "assignedRobotId": "AMR-05",
+            "bayNumber": 5
+          },
+          "dock6": {
+            "name": "Bay 6: AMR-06 Dock",
+            "x": 1.8,
+            "y": 0.05,
+            "z": 1.3,
+            "isDock": true,
+            "assignedRobotId": "AMR-06",
+            "bayNumber": 6
           }
-        }
+        },
+        "scan": "mdc_north_campus_osm.glb"
       }
     }
   ]

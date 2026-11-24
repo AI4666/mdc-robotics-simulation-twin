@@ -19,6 +19,7 @@ export const CAMPUS_SIDEWALK_NODES = {
   'b8': { id: 'b8', name: 'Building 8 Entrance', x: -3.60, z: -1.60, neighbors: ['w_lake_junction', 'lake_rd_north'] },
   'b9': { id: 'b9', name: 'Building 9 Entrance', x: -4.10, z: -2.70, neighbors: ['lake_rd_north', 'west_crosswalk'] },
   'ba': { id: 'ba', name: 'Building A Entrance', x: -4.10, z: 0.50, neighbors: ['west_crosswalk', 'lake_rd_south'] },
+  'bj': { id: 'bj', name: 'Building J Entrance', x: -3.05, z: -2.55, neighbors: ['lake_rd_north', 'w_lake_junction'] },
 
   // Central Lake Loop & Plaza Connectors
   'e_lake': { id: 'e_lake', name: 'East Lake Promenade', x: 2.25, z: 0.00, neighbors: ['b1', 'ne_lake', 'se_lake'] },
@@ -33,8 +34,8 @@ export const CAMPUS_SIDEWALK_NODES = {
 
   // West Campus & Lake Road Crosswalks
   'rotunda_junction': { id: 'rotunda_junction', name: 'Rotunda Crosswalk', x: 2.30, z: -1.80, neighbors: ['b4', 'b6', 'ne_lake'] },
-  'w_lake_junction': { id: 'w_lake_junction', name: 'West Walkway Hub', x: -2.80, z: -1.25, neighbors: ['nw_lake', 'w_lake', 'b7', 'b8', 'lake_rd_north'] },
-  'lake_rd_north': { id: 'lake_rd_north', name: 'Lake Rd North Crosswalk', x: -3.50, z: -1.80, neighbors: ['b8', 'w_lake_junction', 'b9', 'west_crosswalk'] },
+  'w_lake_junction': { id: 'w_lake_junction', name: 'West Walkway Hub', x: -2.80, z: -1.25, neighbors: ['nw_lake', 'w_lake', 'b7', 'b8', 'lake_rd_north', 'bj'] },
+  'lake_rd_north': { id: 'lake_rd_north', name: 'Lake Rd North Crosswalk', x: -3.50, z: -1.80, neighbors: ['b8', 'w_lake_junction', 'b9', 'west_crosswalk', 'bj'] },
   'lake_rd_south': { id: 'lake_rd_south', name: 'Lake Rd South Crosswalk', x: -3.30, z: 0.60, neighbors: ['sw_lake', 'west_crosswalk', 'ba', 'depot_access'] },
   'west_crosswalk': { id: 'west_crosswalk', name: 'West Campus Promenade', x: -4.00, z: -1.00, neighbors: ['lake_rd_north', 'lake_rd_south', 'b9', 'ba'] },
   'depot_access': { id: 'depot_access', name: 'Depot Sidewalk Access', x: -4.10, z: 1.50, neighbors: ['ba', 'lake_rd_south', 'depot_bay'] },
@@ -244,7 +245,7 @@ export class CampusPedestrianSwarm {
     this.yieldCount = 0;
     this.activeCampusScan = false;
 
-    this.buildingPortalKeys = ['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9', 'ba'];
+    this.buildingPortalKeys = ['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9', 'ba', 'bj'];
     this.initPool();
   }
 

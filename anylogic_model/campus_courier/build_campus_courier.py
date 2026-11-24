@@ -52,7 +52,8 @@ def read_campus_graph():
                      r"\s*neighbors:\s*\[([^\]]*)\]")
     nodes = [(k, n, float(x), float(z), re.findall(r"'(\w+)'", nb)) for k, n, x, z, nb in pat.findall(src)]
     assert len(nodes) >= 20, f"walkway graph not found in {PEDESTRIANS_JS}"
-    nodes += [(k, n, x, z, list(nb)) for k, n, x, z, nb in EXTRA_NODES]
+    existing = {n[0] for n in nodes}
+    nodes += [(k, n, x, z, list(nb)) for k, n, x, z, nb in EXTRA_NODES if k not in existing]
     idx = {k: i for i, (k, *_r) in enumerate(nodes)}
     edges = set()
     for k, _n, _x, _z, nbs in nodes:

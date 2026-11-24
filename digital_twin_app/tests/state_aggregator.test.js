@@ -143,7 +143,7 @@ test('deltas alone rebuild the same state as a fresh snapshot', () => {
 test('every message stays under 8 KB with 60 robots, and the state still arrives in full', () => {
   const { clock, world, aggregator, addClient } = setup();
   const longText = 'Very long status text for size testing '.repeat(4); // 160 characters
-  world.mergeRobots(Array.from({ length: 55 }, (_, i) => ({ id: `BULK-${String(i).padStart(2, '0')}`, name: `Bulk robot number ${i} ${longText}`.slice(0, 120), type: 'amr', y: 0.05 })));
+  world.mergeRobots(Array.from({ length: 50 }, (_, i) => ({ id: `BULK-${String(i).padStart(2, '0')}`, name: `Bulk robot number ${i} ${longText}`.slice(0, 120), type: 'amr', y: 0.05 })));
   const moveAll = () => world.getRobots().forEach((r, i) => telemetry(world, clock, r.id, { x: Math.sin(clock.t / 1000 + i) * 2, z: Math.cos(clock.t / 1000 + i), heading: (clock.t / 500 + i) % 6, speed: 1.234, battery: 77.7, status: `${longText}${clock.t}` }));
   moveAll();
   const client = addClient();

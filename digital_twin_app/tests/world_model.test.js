@@ -3,14 +3,17 @@ const test = require('node:test');
 const assert = require('node:assert');
 const { WorldModel } = require('../world_model.js');
 
-test('starts with the 10-robot fleet and 5 stations', () => {
+test('starts with the 10-robot fleet and 11 stations/docks', () => {
   const world = new WorldModel();
   assert.strictEqual(world.getRobots().length, 10);
   assert.deepStrictEqual(world.getRobots().map(r => r.id), [
     'AMR-01', 'AMR-02', 'AMR-03', 'AMR-04', 'AMR-05', 'AMR-06',
     'HUM-01', 'UAV-01', 'UAV-02', 'UAV-03'
   ]);
-  assert.deepStrictEqual(Object.keys(world.getStations()), ['inventory', 'electronics', 'testing', 'charger', 'helipad']);
+  assert.deepStrictEqual(Object.keys(world.getStations()), [
+    'inventory', 'electronics', 'testing', 'charger', 'helipad',
+    'dock1', 'dock2', 'dock3', 'dock4', 'dock5', 'dock6'
+  ]);
 });
 
 test('separate instances do not share state', () => {
@@ -18,8 +21,8 @@ test('separate instances do not share state', () => {
   const b = new WorldModel();
   a.updateRobot({ id: 'AMR-01', x: 9 });
   a.updateStations({ helipad: { x: 9 } });
-  assert.strictEqual(b.getRobots()[0].x, -1.8);
-  assert.strictEqual(b.getStation('helipad').x, 0.0);
+  assert.strictEqual(b.getRobots()[0].x, -1.5);
+  assert.strictEqual(b.getStation('helipad').x, -2.55);
 });
 
 test('mergeRobots updates known robots and adds unknown ones', () => {
@@ -55,7 +58,7 @@ test('applyTelemetry ignores unknown robots and non-numeric values', () => {
   assert.strictEqual(world.applyTelemetry(null, 1), false);
   world.applyTelemetry({ robotId: 'AMR-01', x: 'far', z: NaN, speed: null, status: 42 }, 2);
   const amr = world.getRobots()[0];
-  assert.deepStrictEqual([amr.x, amr.z, amr.speed, amr.status], [-1.8, -1.3, 0.7, 'Patrolling']);
+  assert.deepStrictEqual([amr.x, amr.z, amr.speed, amr.status], [-1.5, -1.35, 0.0, 'Docked at Bay 1 (Standby)']);
   assert.strictEqual(world.getRobots().length, 10);
 });
 
@@ -66,7 +69,7 @@ test('updateStations ignores unknown stations and non-numeric coordinates', () =
     nowhere: { x: 1, y: 1, z: 1 },
     charger: null
   });
-  assert.deepStrictEqual(world.getStation('testing'), { name: 'Station C: Testing Table', x: 1.5, y: 0.05, z: -1.3 });
+  assert.deepStrictEqual(world.getStation('testing'), { name: 'Station C: Testing Table', x: 1.5, y: 0.05, z: -0.05 });
   assert.strictEqual(world.getStation('nowhere'), undefined);
-  assert.deepStrictEqual(world.getStation('charger'), { name: 'Station D: AMR Charger Dock', x: 2.2, y: 0.05, z: 1.2 });
+  assert.deepStrictEqual(world.getStation('charger'), { name: 'Station D: AMR Charger Dock', x: 0.8, y: 0.05, z: 1.32 });
 });

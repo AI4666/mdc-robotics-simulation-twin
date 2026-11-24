@@ -433,7 +433,7 @@ test('E_STOP overtakes queued traffic to a slow client', async t => {
   const server = await startServer(port);
   t.after(() => server.stop());
   const FLOOD = 2000;
-  const blob = 'x'.repeat(2000);
+  const blob = 'x'.repeat(8000);
 
   const slow = await connectClient(port);
   const sender = await connectClient(port);

@@ -127,6 +127,7 @@ app.post('/api/schedule/jobs', (req, res) => {
 
   astarPlanner.setBounds(bounds || LAB_BOUNDS);
   astarPlanner.safetyMargin = clampClearance(clearance);
+  const planScan = scan || 'robotics_lab.glb';
   const obstacles = planningObstacles(scan, dynamicObstacles, furniture);
 
   // Calculate A* path and ML predictions for each job
@@ -134,8 +135,8 @@ app.post('/api/schedule/jobs', (req, res) => {
   const jobRoutes = {};
 
   missionJobs.forEach(job => {
-    const startCoord = world.getStation(job.start_station) || { x: -2.0, z: -1.0 };
-    const goalCoord = world.getStation(job.goal_station) || { x: 2.0, z: 1.0 };
+    const startCoord = world.getStation(job.start_station, planScan) || { x: -2.0, z: -1.0 };
+    const goalCoord = world.getStation(job.goal_station, planScan) || { x: 2.0, z: 1.0 };
     
     const route = astarPlanner.findPath(startCoord, goalCoord, obstacles);
     jobRoutes[job.id] = route;
