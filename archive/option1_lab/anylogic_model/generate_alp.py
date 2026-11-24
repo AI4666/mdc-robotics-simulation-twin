@@ -8,8 +8,17 @@ Team Members:
   - Jordan Gonzalez (Reinforcement Learning Engineer)
   - Illia Shybanov (Dashboard & Integration Specialist)
   - Ricardo Molina Gonzalez (Simulation Experiments & Documentation Lead)
+
+WARNING:
+  MDC_Robotics_Lab_Simulation.alp is now actively maintained directly in
+  AnyLogic 8 IDE / anylogic-cli (Issue #1). This script is kept only as a
+  baseline bootstrap reference. Running it when MDC_Robotics_Lab_Simulation.alp
+  already exists requires passing --force-overwrite so team edits are never
+  overwritten accidentally.
 """
 
+import argparse
+import sys
 from pathlib import Path
 
 ALP_TEMPLATE = r"""<?xml version="1.0" encoding="UTF-8"?>
@@ -2595,9 +2604,30 @@ batteryLevel = 1.0;]]></EntryAction>
 
 
 def main():
-    dest_dir = Path(r"d:\Miami Dade College\Simulation For AI\mdc_robotics_simulation_twin\anylogic_model")
+    parser = argparse.ArgumentParser(
+        description="Bootstrap baseline MDC_Robotics_Lab_Simulation.alp"
+    )
+    parser.add_argument(
+        "--force-overwrite",
+        action="store_true",
+        help="Required to overwrite an existing MDC_Robotics_Lab_Simulation.alp",
+    )
+    args = parser.parse_args()
+
+    dest_dir = Path(__file__).resolve().parent
     dest_dir.mkdir(parents=True, exist_ok=True)
     alp_path = dest_dir / "MDC_Robotics_Lab_Simulation.alp"
+
+    if alp_path.exists() and not args.force_overwrite:
+        print(
+            "WARNING: MDC_Robotics_Lab_Simulation.alp already exists and is actively "
+            "maintained directly in AnyLogic 8 IDE / anylogic-cli (Issue #1).\n"
+            "Re-generating would overwrite the team's simulation model changes.\n"
+            "Refusing to overwrite. Pass --force-overwrite ONLY if you intentionally "
+            "want to reset the file to the baseline scaffold.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     print(f"Generating AnyLogic Project File at: {alp_path}")
     with open(alp_path, "w", encoding="utf-8") as f:

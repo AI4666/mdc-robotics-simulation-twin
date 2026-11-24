@@ -42,6 +42,7 @@ mdc-robotics-simulation-twin/
 ├── digital_twin_app/                  # 3D digital twin, Node.js + Three.js, port 3000 (Jorge; AnyLogic mode by Ricardo)
 ├── rl_models/                         # RL training (Jordan): still the Option 1 env, to be rebuilt for Option 2
 ├── dashboard/                         # Streamlit dashboard (Illia): still Option 1 content, to be rebuilt
+├── docs/API_CONTRACT.md               # Jorge's REST/JSON contract for the 3 live bridges
 ├── docs/                              # problem statements + Option 2 expanded proposal; final report & slides (to rewrite for Option 2, Issue #4)
 ├── archive/option1_lab/               # old Option 1 lab model and documents (not used)
 ├── HANDOFF.md                         # team handoff: tasks, data contracts, how to run everything
@@ -66,6 +67,7 @@ npm start          # http://localhost:3000
 ```
 In AnyLogic, tick **enableTwinBridge** in the Simulation experiment and run it. The 3D view shows a green
 **"AnyLogic LIVE"** banner, the robots and students follow the model, and the **⏩ speed bar** (bottom right) changes AnyLogic's run speed.
+See [`docs/API_CONTRACT.md`](docs/API_CONTRACT.md) for the exact REST endpoints, valid robot IDs, 3D coordinates, and RL JSON schema.
 
 ### 3. RL training and dashboard
 See [`HANDOFF.md`](HANDOFF.md). Both are being rebuilt for Option 2.
