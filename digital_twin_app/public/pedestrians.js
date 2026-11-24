@@ -338,9 +338,72 @@ export class CampusPedestrianSwarm {
     ped.isWaiting = false;
   }
 
+  // ==========================================================================
+  // AnyLogic mode: the walking students come from the AnyLogic model (POST /api/anylogic/update).
+  // Each AnyLogic walker id keeps one figure from the pool (up to PEDESTRIAN_ROSTER.length); the figure
+  // walks smoothly toward the latest position instead of following its own random routes.
+  // ==========================================================================
+  setExternalTargets(list) {
+    this.external = true;
+    this.externalTargets = Array.isArray(list) ? list : [];
+    if (!this.externalSlots) this.externalSlots = new Map();   // AnyLogic id -> pool index
+    const seen = new Set();
+    this.externalTargets.forEach(t => {
+      if (!t || t.id === undefined) return;
+      seen.add(t.id);
+      if (this.externalSlots.has(t.id)) return;
+      const used = new Set(this.externalSlots.values());
+      const free = this.pedestrians.findIndex((_p, i) => !used.has(i));
+      if (free < 0) return;                       // more walkers than figures: show the first ones
+      this.externalSlots.set(t.id, free);
+      const ped = this.pedestrians[free];
+      ped.x = t.x; ped.z = t.z;                    // new walker: appear where AnyLogic put it
+    });
+    for (const id of [...this.externalSlots.keys()]) if (!seen.has(id)) this.externalSlots.delete(id);
+  }
+
+  clearExternal() {
+    this.external = false;
+    this.externalTargets = [];
+    if (this.externalSlots) this.externalSlots.clear();
+    this.updateVisibility();
+  }
+
+  updateExternal(dt) {
+    const byIndex = new Map();
+    this.externalTargets.forEach(t => {
+      const i = this.externalSlots.get(t && t.id);
+      if (i !== undefined) byIndex.set(i, t);
+    });
+    this.pedestrians.forEach((ped, i) => {
+      const t = byIndex.get(i);
+      ped.enabled = !!t;
+      ped.meshObj.group.visible = !!t;
+      if (!t) return;
+      const dx = t.x - ped.x, dz = t.z - ped.z, dist = Math.hypot(dx, dz);
+      const step = Math.min(dist, Math.max(ped.speed, dist * 3) * dt);
+      if (dist > 1e-4) {
+        ped.x += dx / dist * step;
+        ped.z += dz / dist * step;
+        ped.heading = Math.atan2(dx, dz);
+      }
+      const moving = dist > 0.01;
+      ped.walkCycle += moving ? dt * (ped.speed * 18) : 0;
+      const swing = moving ? Math.sin(ped.walkCycle) * 0.42 : 0;
+      ped.meshObj.leftLegGroup.rotation.x = swing;
+      ped.meshObj.rightLegGroup.rotation.x = -swing;
+      ped.meshObj.leftArmGroup.rotation.x = -swing * 0.75;
+      ped.meshObj.rightArmGroup.rotation.x = swing * 0.75;
+      ped.meshObj.humanGroup.position.y = 0.01 + (moving ? Math.abs(Math.sin(ped.walkCycle * 2)) * 0.012 : 0);
+      ped.meshObj.group.position.set(ped.x, 0.02, ped.z);
+      ped.meshObj.group.rotation.y = ped.heading;
+    });
+  }
+
   update(delta) {
     if (!this.active || !this.activeCampusScan) return;
     const dt = Math.min(delta, 0.1);
+    if (this.external) { this.updateExternal(dt); return; }
 
     this.pedestrians.forEach(ped => {
       if (!ped.enabled) return;

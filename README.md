@@ -1,106 +1,89 @@
-# 🤖 MDC AI & Robotics Lab Simulation — Multi-Method Digital Twin
+# MDC North Campus Mail Robots: Multi-Method Digital Twin (Option 2)
 
 [![Course](https://img.shields.io/badge/Course-Simulation_for_Applied_AI-blue)](https://www.mdc.edu)
-[![AnyLogic](https://img.shields.io/badge/AnyLogic-8.8+-orange)](https://www.anylogic.com)
+[![AnyLogic](https://img.shields.io/badge/AnyLogic-8.9-orange)](https://www.anylogic.com)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-green)](https://www.python.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-red)](https://streamlit.io)
 
-Academic group project developing a Multi-Method simulation (Discrete-Event Modeling + Agent-Based Modeling) with Reinforcement Learning (Q-Learning vs. PPO) for the **Miami Dade College AI & Robotics Lab**.
+Group project for **CAI 4830C Simulation for Applied AI**. It's a multi-method simulation (DES + ABM in AnyLogic) with
+reinforcement learning (Q-learning vs. PPO), a 3D digital twin and a Streamlit dashboard, for the
+**Miami Dade College North Campus mail service**. Autonomous courier robots carry vendor mail
+(USPS, Amazon, UPS, FedEx, newspapers…) from the **Duplicating & Mail Center (Building 3, Room 3103)** to
+lockers at every building.
+
+> The professor approved **Option 2 (campus courier robots)**. Everything about the old Option 1 (indoor
+> Robotics Lab) is in [`archive/option1_lab/`](archive/option1_lab/README.md) for reference only.
+
+**Start here:** [`HANDOFF.md`](HANDOFF.md) (what each team member does next) and
+[`RICARDO_README.md`](RICARDO_README.md) (what is finished).
 
 ---
 
-## 👥 Project Team & Work Breakdown Structure
+## Team
 
-| Member | Primary Role | Core Folder / Deliverables |
-| :--- | :--- | :--- |
-| **Jorge A Mendoza** | **Project Manager & AnyLogic Model Architect** | `/anylogic_model` — DES process flows, ABM robot statecharts, 3D setup |
-| **Jordan Gonzalez** | **Reinforcement Learning Engineer** | `/rl_models` — Custom Gymnasium environment, Q-Learning & PPO training |
-| **Illia Shybanov** | **Dashboard & Integration Specialist** | `/dashboard` — Streamlit interactive application, KPI charts, sliders |
-| **Ricardo Molina Gonzalez** | **Simulation Experiments & Documentation Lead** | `/docs` — 5 AnyLogic experiments, 2–3 page technical report, presentation deck |
+| Member | Role | Main folder |
+|---|---|---|
+| **Jorge A Mendoza** | Project manager, 3D digital twin | `digital_twin_app/` |
+| **Jordan Gonzalez** | Reinforcement learning (Q-learning vs. PPO) | `rl_models/` |
+| **Illia Shybanov** | Streamlit dashboard | `dashboard/` |
+| **Ricardo Molina Gonzalez** | AnyLogic model, 5 experiments, calibration, AnyLogic ↔ 3D bridge, documentation | `anylogic_model/campus_courier/` |
 
 ---
 
-## 📁 Repository Directory Structure
+## Repository structure
 
 ```text
-mdc_robotics_simulation_twin/
-│
-├── anylogic_model/               # AnyLogic simulation source files
-│   └── (AnyLogic .alp project files, 3D CAD assets)
-│
-├── rl_models/                    # Reinforcement Learning codebase (Jordan)
-│   ├── robotics_lab_env.py       # Custom Gymnasium environment
-│   ├── train_qlearning.py        # Tabular / Discretized Q-Learning training
-│   ├── train_ppo.py              # Proximal Policy Optimization (PPO) training
-│   └── requirements.txt          # Python dependencies for RL
-│
-├── dashboard/                    # Interactive Streamlit Web App (Illia)
-│   ├── app.py                    # 5-Tab Streamlit Dashboard
-│   └── requirements.txt          # Web app dependencies (streamlit, plotly, pandas)
-│
-├── digital_twin_app/             # 3D WebGL Digital Twin & AnyLogic Live Bridge (Jorge & Ricardo)
-│   ├── server.js                 # Node.js Express + WebSocket Server (Port 3000, /api/anylogic/update)
-│   ├── world_model.js            # 10-Robot Heterogeneous Fleet & Campus/Lab Stations
-│   └── public/                   # Three.js 3D WebGL App (mdc_north_campus_osm.glb, parcels.js, pedestrians.js)
-│
-└── docs/                         # Reports, Guides & Presentation (Ricardo)
-    ├── ANYLOGIC_EXPERIMENTS_GUIDE.md     # Step-by-step for the 5 AnyLogic experiments
-    ├── FINAL_PROJECT_REPORT_TEMPLATE.md  # 2-3 page written summary paper
-    ├── PRESENTATION_SLIDES_OUTLINE.md    # 10-12 minute presentation script
-    ├── MDC_Robotics_Lab_Project_Proposal.pdf # Master proposal with conceptual diagrams
-    └── MDC_Robotics_Lab_Project_Proposal.html
+mdc-robotics-simulation-twin/
+├── anylogic_model/campus_courier/     # AnyLogic model (Ricardo)
+│   ├── MDC_Campus_Courier.alp         #   the model: DES mailroom + ABM robots and students + Q-learning + 5 experiments
+│   ├── README.md                      #   how the model works, real data used, calibration result
+│   └── build_campus_courier.py, alp_xml.py, alp_draw.py, pml_templates.xml   # one-time scaffold scripts
+├── anylogic_model/exports/            # experiment CSV exports for the dashboard (docs/API_CONTRACT.md §4)
+├── digital_twin_app/                  # 3D digital twin, Node.js + Three.js, port 3000 (Jorge; AnyLogic mode by Ricardo)
+├── rl_models/                         # RL training (Jordan): still the Option 1 env, to be rebuilt for Option 2
+├── dashboard/                         # Streamlit dashboard (Illia): still Option 1 content, to be rebuilt
+├── docs/                              # problem statements + Option 2 expanded proposal; final report & slides (to rewrite for Option 2, Issue #4)
+├── archive/option1_lab/               # old Option 1 lab model and documents (not used)
+├── HANDOFF.md                         # team handoff: tasks, data contracts, how to run everything
+└── RICARDO_README.md                  # Ricardo's completed work and future work
 ```
 
 ---
 
-## 🚀 Quick Start Guide
+## Quick start
 
-### 1. Running the Reinforcement Learning Training (Jordan)
-```bash
-cd rl_models
-pip install -r requirements.txt
-python train_qlearning.py
-python train_ppo.py
-```
+### 1. AnyLogic model
+1. Open `anylogic_model/campus_courier/MDC_Campus_Courier.alp` in AnyLogic 8.9 (the Personal Learning Edition works).
+2. **Simulation** → Run (30 working days). Or run one of the 5 experiments: `Optimization_FleetSize`,
+   `CompareRuns_Policies`, `MonteCarlo_Month`, `Sensitivity_AmazonVolume`, `Calibration_TravelTime`.
+3. Results are written to `anylogic_model/campus_courier/output/*.csv`.
 
-### 2. Running the Interactive Streamlit Dashboard (Illia)
-```bash
-cd dashboard
-pip install -r requirements.txt
-streamlit run app.py
-```
-
-### 3. Running the 3D WebGL Digital Twin Server (Jorge & Ricardo)
+### 2. 3D digital twin, live with AnyLogic
 ```bash
 cd digital_twin_app
 npm install
-npm start
-# Opens at http://localhost:3000 (Receives live AnyLogic updates at POST /api/anylogic/update)
+npm start          # http://localhost:3000
 ```
+In AnyLogic, tick **enableTwinBridge** in the Simulation experiment and run it. The 3D view shows a green
+**"AnyLogic LIVE"** banner, the robots and students follow the model, and the **⏩ speed bar** (bottom right) changes AnyLogic's run speed.
 
-### 4. Running AnyLogic Simulation Experiments (Jorge & Ricardo)
-1. Open AnyLogic 8.
-2. Load the `.alp` file inside `/anylogic_model`.
-3. Follow `docs/ANYLOGIC_EXPERIMENTS_GUIDE.md` to run the 5 experiments (Optimization, Compare Runs, Monte Carlo, Sensitivity, Calibration).
-
----
-
-## 📋 Professor Accountability & Submission Checklist
-* [x] 1 Week After Start: Evidence of work started submitted.
-* [x] 1 Week Before Due: Evidence of work finished submitted & peer grading forms completed.
-* [x] Individual Module 4 Lesson 1 (Stages 1–3) zip files gathered for each member:
-  * Jorge A Mendoza
-  * Jordan Gonzalez
-  * Illia Shybanov
-  * Ricardo Molina Gonzalez
-* [x] Final unified `.zip` file package assembled for Canvas: `MDC_Robotics_Lab_Group_Final_Submission.zip` (2.9 MB).
+### 3. RL training and dashboard
+See [`HANDOFF.md`](HANDOFF.md). Both are being rebuilt for Option 2.
 
 ---
 
-## 🏆 Final Academic Deliverables Summary
-* **AnyLogic Model:** `anylogic_model/MDC_Robotics_Lab_Simulation.alp` (DES & ABM multi-method simulation with 5 experiments).
-* **Final Written Technical Report:** `docs/Final_Project_Report_MDC.pdf` & `.html` (IEEE/MDC styled 4-page paper).
-* **10–12 Minute Oral Presentation Deck:** `docs/Presentation_Slides_MDC.pdf` & `.html` (16:9 widescreen HD slide deck with speaker notes).
-* **Interactive Analytics Dashboard:** `dashboard/app.py` (Streamlit web application running at `http://localhost:8501`).
-* **Supervisory Reinforcement Learning:** `rl_models/` (Custom Gymnasium environment with Q-Learning and PPO trained models).
-* **3D Digital Twin Integration:** Live REST/WebSocket bridge (`/api/anylogic/update`) connecting AnyLogic with WebGL 3D campus twin.
+## Course requirements and where they are covered
+
+| Requirement | Where |
+|---|---|
+| Multi-method DES + ABM in AnyLogic | Mailroom flowchart (Source → Service with 3 clerks → Sink) + `Rover` and `Walker` agents |
+| 5 experiments | Optimization, Compare Runs, Monte Carlo, Sensitivity, Calibration (all in the `.alp`, with charts) |
+| RL: Q-learning vs. PPO | Q-learning inside the model (`dispatchPolicy = 2`); PPO: Jordan (`dispatchPolicy = 3` hook) |
+| 3D animation | `digital_twin_app/` following AnyLogic live |
+| Streamlit dashboard | `dashboard/` (Illia) reading the CSV outputs |
+
+## Submission checklist
+* [x] Evidence of work started submitted.
+* [ ] Evidence of work finished + peer grading forms.
+* [ ] Individual Module 4 Lesson 1 (Stages 1–3) zips from each member.
+* [ ] Final Canvas zip: `.alp` model, slides, 2–3 page report, dashboard + RL training files, member zips, AI use statement.
