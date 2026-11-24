@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Issue #2: RL Lead Visual Guide — MDC Campus Courier Simulation Twin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-light: #eff6ff;
+    --accent: #8b5cf6;
+    --accent-light: #f5f3ff;
+    --success: #10b981;
+    --success-light: #ecfdf5;
+    --warning: #f59e0b;
+    --warning-light: #fffbeb;
+    --danger: #ef4444;
+    --danger-light: #fef2f2;
+    --slate-900: #0f172a;
+    --slate-800: #1e293b;
+    --slate-700: #334155;
+    --slate-600: #475569;
+    --slate-500: #64748b;
+    --slate-400: #94a3b8;
+    --slate-200: #e2e8f0;
+    --slate-100: #f1f5f9;
+    --slate-50: #f8fafc;
+    --radius-lg: 16px;
+    --radius-md: 10px;
+    --radius-sm: 6px;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f8fafc;
+    color: var(--slate-800);
+    line-height: 1.55;
+    padding: 0;
+  }
+
+  /* Sticky Top Bar */
+  .top-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--slate-200);
+    padding: 12px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: var(--slate-900);
+  }
+  .nav-brand-badge {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+  .nav-links a {
+    color: var(--slate-600);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover {
+    color: var(--primary);
+  }
+
+  /* Main Container */
+  .container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 32px 24px 80px 24px;
+  }
+
+  /* Hero Section */
+  .hero-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--slate-200);
+    padding: 36px 40px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #2563eb, #8b5cf6, #10b981);
+  }
+  .hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  .badge-primary { background: var(--primary-light); color: var(--primary); border: 1px solid #bfdbfe; }
+  .badge-accent { background: var(--accent-light); color: var(--accent); border: 1px solid #ddd6fe; }
+  .badge-success { background: var(--success-light); color: var(--success); border: 1px solid #a7f3d0; }
+  .badge-warning { background: var(--warning-light); color: #b45309; border: 1px solid #fde68a; }
+
+  h1 {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: var(--slate-900);
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .hero-desc {
+    font-size: 1.05rem;
+    color: var(--slate-600);
+    max-width: 900px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .hero-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    background: var(--slate-50);
+    border: 1px solid var(--slate-200);
+    padding: 16px 20px;
+    border-radius: var(--radius-md);
+  }
+  .meta-item { display: flex; flex-direction: column; }
+  .meta-label { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--slate-500); letter-spacing: 0.5px; }
+  .meta-val { font-size: 0.95rem; font-weight: 700; color: var(--slate-800); margin-top: 2px; }
+
+  /* Section Title */
+  .section-header {
+    margin: 44px 0 20px 0;
+  }
+  .section-tag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .section-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--slate-900);
+    letter-spacing: -0.015em;
+  }
+  .section-subtitle {
+    font-size: 0.95rem;
+    color: var(--slate-600);
+    margin-top: 4px;
+  }
+
+  /* Grid Layouts */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 960px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  }
+
+  /* Cards */
+  .card {
+    background: white;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .card:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+  }
+  .icon-blue { background: var(--primary-light); color: var(--primary); }
+  .icon-purple { background: var(--accent-light); color: var(--accent); }
+  .icon-green { background: var(--success-light); color: var(--success); }
+  .icon-amber { background: var(--warning-light); color: var(--warning); }
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--slate-900);
+  }
+
+  /* Comparison Banner */
+  .diff-box {
+    border-radius: var(--radius-md);
+    padding: 20px;
+    border: 1px solid;
+  }
+  .diff-old { background: #fff1f2; border-color: #fecdd3; }
+  .diff-new { background: #f0fdf4; border-color: #bbf7d0; }
+  .diff-title { font-size: 0.9rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .diff-old .diff-title { color: #e11d48; }
+  .diff-new .diff-title { color: #16a34a; }
+
+  /* Flow Diagram Container */
+  .flow-diagram {
+    background: white;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-md);
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+  }
+  .flow-step-bar {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .flow-node {
+    flex: 1;
+    min-width: 170px;
+    background: var(--slate-50);
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .flow-node.active-node {
+    background: #f0f9ff;
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+  }
+  .flow-node-num {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--slate-400);
+    text-transform: uppercase;
+  }
+  .flow-node-title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--slate-900);
+    margin: 4px 0 6px 0;
+  }
+  .flow-node-desc {
+    font-size: 0.78rem;
+    color: var(--slate-600);
+    line-height: 1.4;
+  }
+
+  /* Table styling */
+  .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    margin-top: 12px;
+  }
+  .custom-table th {
+    background: var(--slate-100);
+    color: var(--slate-700);
+    font-weight: 700;
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 2px solid var(--slate-200);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .custom-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--slate-200);
+    color: var(--slate-700);
+  }
+  .custom-table tr:hover td {
+    background: var(--slate-50);
+  }
+
+  /* Math equation card */
+  .equation-box {
+    background: #0f172a;
+    color: #e2e8f0;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 20px 24px;
+    border-radius: var(--radius-md);
+    margin: 16px 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    border-left: 4px solid var(--accent);
+  }
+  .eq-highlight { color: #38bdf8; font-weight: 700; }
+  .eq-accent { color: #c084fc; font-weight: 700; }
+  .eq-comment { color: #64748b; font-style: italic; }
+
+  /* Action Card */
+  .action-pill {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px;
+    background: var(--slate-50);
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-sm);
+    margin-bottom: 10px;
+  }
+  .action-key {
+    background: var(--slate-800);
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .action-name { font-weight: 700; font-size: 0.92rem; color: var(--slate-900); }
+  .action-desc { font-size: 0.82rem; color: var(--slate-600); margin-top: 2px; }
+
+  /* Roadmap Checklist */
+  .checklist {
+    list-style: none;
+    margin-top: 12px;
+  }
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 20px;
+    background: white;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+  }
+  .check-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--slate-100);
+    border: 2px solid var(--slate-300);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--slate-500);
+    flex-shrink: 0;
+  }
+  .step-done .check-icon {
+    background: var(--success);
+    border-color: var(--success);
+    color: white;
+  }
+  .step-active .check-icon {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+  }
+  .step-content { flex: 1; }
+  .step-title { font-weight: 700; font-size: 0.98rem; color: var(--slate-900); }
+  .step-desc { font-size: 0.85rem; color: var(--slate-600); margin-top: 4px; }
+  .step-file { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; background: var(--slate-100); padding: 2px 6px; border-radius: 4px; color: var(--slate-700); }
+
+  /* Code Block */
+  .code-block {
+    background: #0f172a;
+    color: #f1f5f9;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    padding: 16px 20px;
+    border-radius: var(--radius-sm);
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+
+  footer {
+    text-align: center;
+    padding: 30px;
+    font-size: 0.85rem;
+    color: var(--slate-500);
+    border-top: 1px solid var(--slate-200);
+    margin-top: 60px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="top-nav">
+  <div class="nav-brand">
+    <span class="nav-brand-badge">ISSUE #2</span>
+    <span>MDC Simulation Twin &bull; RL Lead Guide</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#changes">What Changed</a></li>
+    <li><a href="#anylogic">AnyLogic Architecture</a></li>
+    <li><a href="#rl-formulation">RL Formulation</a></li>
+    <li><a href="#roadmap">Action Plan</a></li>
+    <li><a href="#contract">Data Contract</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+  <!-- Hero Section -->
+  <header class="hero-card" id="overview">
+    <div class="hero-badges">
+      <span class="badge badge-primary">Role: Reinforcement Learning Lead</span>
+      <span class="badge badge-accent">Owner: Jordan Gonzalez</span>
+      <span class="badge badge-success">Issue Status: Open</span>
+      <span class="badge badge-warning">Model: Option 2 Campus Courier</span>
+    </div>
+    <h1>MDC North Campus Courier &bull; Supervisory RL Optimization</h1>
+    <p class="hero-desc">
+      Welcome Jordan! This visual guide breaks down everything you need to understand regarding Ricardo's AnyLogic overhaul (PR #5), how the simulation works under the hood, and how to build, train, and evaluate your PPO and Q-Learning supervisory dispatch policies.
+    </p>
+
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Primary GitHub Issue</span>
+        <span class="meta-val"><a href="https://github.com/AI4666/mdc-robotics-simulation-twin/issues/2" target="_blank" style="color:var(--primary); text-decoration:none;">Issue #2 (Open)</a></span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Active Simulation Model</span>
+        <span class="meta-val">MDC_Campus_Courier.alp (v2)</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Key RL Algorithms</span>
+        <span class="meta-val">PPO (SB3) &amp; Tabular Q-Learning</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Python Environment</span>
+        <span class="meta-val">Python 3.12 + PyTorch (CUDA)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Section 1: What Changed (Option 1 vs Option 2) -->
+  <section id="changes">
+    <div class="section-header">
+      <div class="section-tag">Repository Evolution</div>
+      <h2 class="section-title">What Ricardo Changed in PR #5</h2>
+      <p class="section-subtitle">Understanding why your previous Option 1 files were archived and what Option 2 represents.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="diff-box diff-old">
+        <div class="diff-title">&cross; Option 1: Indoor Robotics Lab (Archived)</div>
+        <p style="font-size: 0.88rem; color: #475569; margin-bottom: 12px;">
+          Moved to <code>archive/option1_lab/</code>. Retained for reference, no longer active.
+        </p>
+        <ul style="font-size: 0.84rem; color: #334155; line-height: 1.6; padding-left: 20px;">
+          <li><b>Scope:</b> Single classroom robotics lab.</li>
+          <li><b>Targets:</b> Workbenches A (Parts), B (Electronics), C (Testing).</li>
+          <li><b>State Space:</b> 8 values (3 queues, 3 batteries, docks, demand phase).</li>
+          <li><b>Actions:</b> 5 discrete actions dispatching to individual benches.</li>
+          <li><b>PPO Status:</b> Used a mocked fallback rule without true neural training.</li>
+        </ul>
+      </div>
+
+      <div class="diff-box diff-new">
+        <div class="diff-title">&check; Option 2: MDC North Campus Courier (Current Active)</div>
+        <p style="font-size: 0.88rem; color: #475569; margin-bottom: 12px;">
+          Active path: <code>anylogic_model/campus_courier/MDC_Campus_Courier.alp</code>.
+        </p>
+        <ul style="font-size: 0.84rem; color: #334155; line-height: 1.6; padding-left: 20px;">
+          <li><b>Scope:</b> Entire MDC North Campus outdoor delivery network (9 buildings).</li>
+          <li><b>Depot &amp; Mailroom:</b> Building 3, Room 3103 (Duplicating &amp; Mail Center).</li>
+          <li><b>Multi-Method:</b> DES mail sorting (3 clerks) + ABM rovers &amp; walking crowds.</li>
+          <li><b>Fleet:</b> AMRs with 5 package slots (25 letters = 1 slot) &amp; battery drain.</li>
+          <li><b>Pedestrian Dynamics:</b> Walking students crowd walkways during class changes.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: How AnyLogic Works -->
+  <section id="anylogic">
+    <div class="section-header">
+      <div class="section-tag">Simulation Mechanics</div>
+      <h2 class="section-title">How the AnyLogic Model Operates</h2>
+      <p class="section-subtitle">Multi-method architecture: Discrete Event Simulation + Agent-Based Modeling + RL Supervisory Control.</p>
+    </div>
+
+    <!-- Visual Architecture Diagram -->
+    <div class="flow-diagram">
+      <h3 style="font-size:1.05rem; font-weight:700; margin-bottom:16px;">Daily Campus Operations Lifecycle (07:00 &ndash; 17:30)</h3>
+      <div class="flow-step-bar">
+        <div class="flow-node">
+          <div class="flow-node-num">Step 1</div>
+          <div class="flow-node-title">Inbound Vendors</div>
+          <div class="flow-node-desc">USPS (~10am), Amazon (2-3x), UPS, FedEx, Newspapers drop mail at Bldg 3.</div>
+        </div>
+        <div class="flow-node">
+          <div class="flow-node-num">Step 2</div>
+          <div class="flow-node-title">Mailroom DES</div>
+          <div class="flow-node-desc">3 clerks sort mail into building bins. Sorting cut-off at 16:00 (late drops roll over).</div>
+        </div>
+        <div class="flow-node active-node">
+          <div class="flow-node-num">Step 3 &bull; RL FOCUS</div>
+          <div class="flow-node-title">Supervisory Dispatch</div>
+          <div class="flow-node-desc">Evaluates state every 5 minutes. Decides whether to wait, batch, dispatch, or recharge.</div>
+        </div>
+        <div class="flow-node">
+          <div class="flow-node-num">Step 4</div>
+          <div class="flow-node-title">Walkway Transit</div>
+          <div class="flow-node-desc">Rovers travel along path graph. Crowds during 10-min class changes slow rovers by up to 70%.</div>
+        </div>
+        <div class="flow-node">
+          <div class="flow-node-num">Step 5</div>
+          <div class="flow-node-title">Lockers &amp; Chargers</div>
+          <div class="flow-node-desc">Staff collect from lockers. Low rovers charge at 2 mailroom pads (+0.8%/min).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Campus Building Directory & Calibration -->
+    <div class="card" style="margin-top: 24px;">
+      <div class="card-header">
+        <div class="card-icon icon-blue">&#127979;</div>
+        <div>
+          <div class="card-title">MDC North Campus Building Distribution &amp; Walking Calibration</div>
+          <div style="font-size:0.82rem; color:var(--slate-500);">Calibrated from Ricardo's empirical walk tests (4 min quiet vs. 7 min class change)</div>
+        </div>
+      </div>
+
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Building Name</th>
+            <th>Node Key</th>
+            <th>Offices</th>
+            <th>Mail Share</th>
+            <th>Distance (m)</th>
+            <th>Quiet Trip (min)</th>
+            <th>Rush Trip (min)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#f0fdf4; font-weight:600;">
+            <td>Building 1 (Administration &amp; Testing)</td>
+            <td><code>b1</code></td>
+            <td>25</td>
+            <td>52%</td>
+            <td>198 m</td>
+            <td>2.8 min</td>
+            <td>~4.9 min</td>
+          </tr>
+          <tr>
+            <td>Building 2 (Library)</td>
+            <td><code>b2</code></td>
+            <td>9</td>
+            <td>19%</td>
+            <td>330 m</td>
+            <td>4.6 min</td>
+            <td>~8.1 min</td>
+          </tr>
+          <tr>
+            <td>Building 3 (Mailroom / Depot)</td>
+            <td><code>b3</code></td>
+            <td>2</td>
+            <td>4%</td>
+            <td>0 m (Inside)</td>
+            <td>Instant</td>
+            <td>Instant</td>
+          </tr>
+          <tr>
+            <td>Building 4 (Student Life)</td>
+            <td><code>b4</code></td>
+            <td>4</td>
+            <td>8%</td>
+            <td>187 m</td>
+            <td>2.6 min</td>
+            <td>~4.6 min</td>
+          </tr>
+          <tr>
+            <td>Building 7 (English / Math)</td>
+            <td><code>b7</code></td>
+            <td>3</td>
+            <td>6%</td>
+            <td>128 m</td>
+            <td>1.8 min</td>
+            <td>~3.2 min</td>
+          </tr>
+          <tr>
+            <td>Building A (Science)</td>
+            <td><code>ba</code></td>
+            <td>2</td>
+            <td>4%</td>
+            <td>292 m</td>
+            <td>4.1 min</td>
+            <td>~7.2 min</td>
+          </tr>
+          <tr>
+            <td>Building J (Justice)</td>
+            <td><code>bj</code></td>
+            <td>1</td>
+            <td>2%</td>
+            <td>193 m</td>
+            <td>2.7 min</td>
+            <td>~4.7 min</td>
+          </tr>
+          <tr>
+            <td>Buildings 5 &amp; 6 (Arts &amp; ACCESS)</td>
+            <td><code>b5</code>, <code>b6</code></td>
+            <td>2 total</td>
+            <td>4%</td>
+            <td>158&ndash;255 m</td>
+            <td>2.2&ndash;3.5 min</td>
+            <td>~3.9&ndash;6.1 min</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Section 3: The 4 Policies & RL Formulation -->
+  <section id="rl-formulation">
+    <div class="section-header">
+      <div class="section-tag">Mathematical Formulation</div>
+      <h2 class="section-title">The Reinforcement Learning Problem</h2>
+      <p class="section-subtitle">Grounding your Gymnasium environment and policy training directly into AnyLogic's decision loop.</p>
+    </div>
+
+    <!-- The 4 Policies -->
+    <div class="grid-4" style="margin-bottom:24px;">
+      <div class="card" style="border-top: 4px solid var(--slate-400);">
+        <div style="font-size:0.75rem; font-weight:800; color:var(--slate-500); text-transform:uppercase;">Policy 0</div>
+        <div style="font-weight:700; font-size:1.05rem; margin:4px 0;">Baseline FIFO</div>
+        <div style="font-size:0.8rem; color:var(--slate-600);">Dispatches immediately to 1 building per trip. Causes frequent half-empty trips and rapid battery drain.</div>
+      </div>
+      <div class="card" style="border-top: 4px solid var(--warning);">
+        <div style="font-size:0.75rem; font-weight:800; color:var(--warning); text-transform:uppercase;">Policy 1</div>
+        <div style="font-weight:700; font-size:1.05rem; margin:4px 0;">Batching Heuristic</div>
+        <div style="font-size:0.8rem; color:var(--slate-600);">Dispatches only if rover &ge; 60% full, item wait &ge; 45 min, or end of day approach.</div>
+      </div>
+      <div class="card" style="border-top: 4px solid var(--primary);">
+        <div style="font-size:0.75rem; font-weight:800; color:var(--primary); text-transform:uppercase;">Policy 2</div>
+        <div style="font-weight:700; font-size:1.05rem; margin:4px 0;">Tabular Q-Learning</div>
+        <div style="font-size:0.8rem; color:var(--slate-600);">288 discrete states &times; 4 actions. Built into AnyLogic and trainable in Python for import via CSV.</div>
+      </div>
+      <div class="card" style="border-top: 4px solid var(--accent);">
+        <div style="font-size:0.75rem; font-weight:800; color:var(--accent); text-transform:uppercase;">Policy 3 &bull; YOUR PPO</div>
+        <div style="font-weight:700; font-size:1.05rem; margin:4px 0;">Deep RL (PPO)</div>
+        <div style="font-size:0.8rem; color:var(--slate-600);">Neural policy trained with Stable-Baselines3. Continuous state inputs, optimizing non-linear tradeoffs.</div>
+      </div>
+    </div>
+
+    <!-- State Space and Action Space -->
+    <div class="grid-2">
+      <!-- Observation Space -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon icon-purple">&#128065;</div>
+          <div>
+            <div class="card-title">Observation Space (S<sub>t</sub>)</div>
+            <div style="font-size:0.8rem; color:var(--slate-500);">288 Discrete States for Q-Table &bull; Continuous for PPO</div>
+          </div>
+        </div>
+
+        <p style="font-size:0.85rem; color:var(--slate-700); margin-bottom:12px;">
+          The supervisory agent observes 5 core features every 5 minutes:
+        </p>
+
+        <ul style="font-size:0.82rem; line-height:1.7; color:var(--slate-700); padding-left:18px;">
+          <li><b>Sorted Mail Ready (4 bins):</b> 0 units, &lt; 2 units, &lt; 5 units, &ge; 5 units.</li>
+          <li><b>Free Idle Rovers (3 bins):</b> 0, 1, or 2+ available robots.</li>
+          <li><b>Average Battery Level (3 bins):</b> &lt; 40%, &lt; 70%, &ge; 70%.</li>
+          <li><b>Time of Day Block (4 bins):</b> &lt; 10:00, &lt; 12:00, &lt; 14:00, &ge; 14:00.</li>
+          <li><b>Class Change Soon (2 bins):</b> 1 if within 10 min of class change; else 0.</li>
+        </ul>
+
+        <div class="equation-box" style="margin-top:16px;">
+          <span class="eq-comment">// Exact state index matching AnyLogic:</span><br>
+          <span class="eq-highlight">state_idx</span> = (((ready * 3 + free) * 3 + batt) * 4 + block) * 2 + soon;
+        </div>
+      </div>
+
+      <!-- Action Space -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon icon-blue">&#9881;</div>
+          <div>
+            <div class="card-title">Action Space (A<sub>t</sub>)</div>
+            <div style="font-size:0.8rem; color:var(--slate-500);">4 Discrete Dispatch Actions</div>
+          </div>
+        </div>
+
+        <div class="action-pill">
+          <span class="action-key">Action 0</span>
+          <div>
+            <div class="action-name">WAIT (Hold Standby)</div>
+            <div class="action-desc">Do nothing now. Let incoming sorted mail pile up to form fuller, high-efficiency batches.</div>
+          </div>
+        </div>
+
+        <div class="action-pill">
+          <span class="action-key">Action 1</span>
+          <div>
+            <div class="action-name">SEND_ONE (Dispatch Single Rover)</div>
+            <div class="action-desc">Picks fullest building outbox, fills leftover slots with nearest neighboring buildings, and launches 1 robot.</div>
+          </div>
+        </div>
+
+        <div class="action-pill">
+          <span class="action-key">Action 2</span>
+          <div>
+            <div class="action-name">SEND_ALL (Fleet Surge)</div>
+            <div class="action-desc">Dispatches every eligible idle robot to clear major mailroom backlog spikes.</div>
+          </div>
+        </div>
+
+        <div class="action-pill">
+          <span class="action-key">Action 3</span>
+          <div>
+            <div class="action-name">CHARGE (Opportunistic Top-off)</div>
+            <div class="action-desc">Routes the lowest-battery idle rover to the mailroom charging pad before congestion hits.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Multi-Objective Reward Function -->
+    <div class="card" style="margin-top:24px;">
+      <div class="card-header">
+        <div class="card-icon icon-green">&#127942;</div>
+        <div>
+          <div class="card-title">Multi-Objective Reward Function (R<sub>t</sub>)</div>
+          <div style="font-size:0.8rem; color:var(--slate-500);">Balances on-time deliveries, queue latency, and fleet battery health</div>
+        </div>
+      </div>
+
+      <div class="equation-box">
+        <span class="eq-comment">// 1. Decision Step Reward (Calculated every 5 minutes):</span><br>
+        <span class="eq-highlight">R_step</span> = delivered_units - (<span class="eq-accent">0.02</span> &times; waiting_units &times; 5) - (<span class="eq-accent">0.5</span> &times; &Delta;battery_pct_used)<br><br>
+        <span class="eq-comment">// 2. End-of-Day Carryover Penalty (At 17:30 shift end):</span><br>
+        <span class="eq-highlight">R_end</span> = - (<span class="eq-accent">0.5</span> &times; items_left_in_mailroom)
+      </div>
+
+      <div class="grid-3" style="margin-top:14px;">
+        <div style="background:var(--slate-50); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--slate-200);">
+          <b style="color:var(--success); font-size:0.85rem;">+ Deliveries:</b>
+          <p style="font-size:0.8rem; color:var(--slate-600); margin-top:4px;">Direct reward for putting package units into building lockers.</p>
+        </div>
+        <div style="background:var(--slate-50); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--slate-200);">
+          <b style="color:var(--warning); font-size:0.85rem;">- Waiting Queue Penalty:</b>
+          <p style="font-size:0.8rem; color:var(--slate-600); margin-top:4px;">Penalizes sorted mail sitting idle in the mailroom instead of being delivered.</p>
+        </div>
+        <div style="background:var(--slate-50); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--slate-200);">
+          <b style="color:var(--danger); font-size:0.85rem;">- Energy &amp; Rollover:</b>
+          <p style="font-size:0.8rem; color:var(--slate-600); margin-top:4px;">Prevents unnecessary empty trips and heavily penalizes undelivered mail left overnight.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: Implementation Roadmap -->
+  <section id="roadmap">
+    <div class="section-header">
+      <div class="section-tag">Step-by-Step Execution</div>
+      <h2 class="section-title">Your Action Plan for Issue #2</h2>
+      <p class="section-subtitle">Follow these 4 phases to complete the reinforcement learning deliverables.</p>
+    </div>
+
+    <ul class="checklist">
+      <!-- Step 1 -->
+      <li class="checklist-item step-active">
+        <div class="check-icon">1</div>
+        <div class="step-content">
+          <div class="step-title">Scaffold Option 2 Gymnasium Environment</div>
+          <div class="step-desc">
+            Rewrite <span class="step-file">rl_models/robotics_lab_env.py</span>:
+            <ul style="margin-top:6px; padding-left:18px; line-height:1.5;">
+              <li>Model 1 simulated day = 1 episode (108 steps of 5 minutes from 08:00 to 17:00).</li>
+              <li>Implement stochastic vendor drops (USPS ~10:00, Amazon, UPS, FedEx).</li>
+              <li>Simulate 3 sorting clerks, 5-slot rovers, battery drain (0.8%/min), and class change crowds.</li>
+              <li>Provide both continuous observation vector (PPO) and 288-index helper (Q-Learning).</li>
+            </ul>
+          </div>
+        </div>
+      </li>
+
+      <!-- Step 2 -->
+      <li class="checklist-item">
+        <div class="check-icon">2</div>
+        <div class="step-content">
+          <div class="step-title">Implement &amp; Train Tabular Q-Learning</div>
+          <div class="step-desc">
+            Update <span class="step-file">rl_models/train_qlearning.py</span>:
+            <ul style="margin-top:6px; padding-left:18px; line-height:1.5;">
+              <li>Train over 300&ndash;600 episodes with &epsilon;-greedy exploration decay.</li>
+              <li>Export <span class="step-file">q_table.npy</span> and <span class="step-file">q_table.csv</span> (matching AnyLogic's exact CSV schema).</li>
+              <li>Export <span class="step-file">q_learning_results.json</span> with convergence history.</li>
+            </ul>
+          </div>
+        </div>
+      </li>
+
+      <!-- Step 3 -->
+      <li class="checklist-item">
+        <div class="check-icon">3</div>
+        <div class="step-content">
+          <div class="step-title">Train Deep RL PPO with Stable-Baselines3</div>
+          <div class="step-desc">
+            Update <span class="step-file">rl_models/train_ppo.py</span>:
+            <ul style="margin-top:6px; padding-left:18px; line-height:1.5;">
+              <li>Use <code>stable_baselines3.PPO("MlpPolicy", env, verbose=1)</code>.</li>
+              <li>Train for 50,000&ndash;100,000 timesteps using our GPU-enabled PyTorch.</li>
+              <li>Export model weights to <span class="step-file">ppo_robotics_lab.zip</span>.</li>
+              <li>Export layer weights to <span class="step-file">ppo_policy.json</span> so Ricardo can plug it into AnyLogic's <code>ppoAction()</code>.</li>
+              <li>Export <span class="step-file">ppo_results.json</span>.</li>
+            </ul>
+          </div>
+        </div>
+      </li>
+
+      <!-- Step 4 -->
+      <li class="checklist-item">
+        <div class="check-icon">4</div>
+        <div class="step-content">
+          <div class="step-title">Verify Integration &amp; Dashboard Compatibility</div>
+          <div class="step-desc">
+            Verify that your output JSON files adhere to <span class="step-file">docs/API_CONTRACT.md</span> &sect;3 so Illia's Streamlit Dashboard (Tab 2: AI Policy Comparison) renders without errors.
+          </div>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Section 5: Data Contract & Command Cheat Sheet -->
+  <section id="contract">
+    <div class="section-header">
+      <div class="section-tag">Integration Contract</div>
+      <h2 class="section-title">Required Output JSON Schema</h2>
+      <p class="section-subtitle">Keep these 6 mandatory top-level keys intact for backward compatibility with the dashboard.</p>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <h4 style="font-size:0.95rem; font-weight:700; margin-bottom:8px;">rl_models/ppo_results.json &amp; q_learning_results.json</h4>
+        <div class="code-block">
+{
+  <span style="color:#38bdf8;">"algorithm"</span>: "PPO (Stable-Baselines3)",
+  <span style="color:#38bdf8;">"episodes"</span>: 600,
+  <span style="color:#38bdf8;">"final_avg_reward"</span>: 519.37,
+  <span style="color:#38bdf8;">"rewards_sample"</span>: [120.5, 230.1, 450.2, ...],
+  <span style="color:#38bdf8;">"avg_battery_end"</span>: 0.74,
+  <span style="color:#38bdf8;">"avg_backlog_end"</span>: 2.1,
+
+  <span style="color:#64748b;">// Option 2 Extended Metrics:</span>
+  <span style="color:#c084fc;">"same_day_pct"</span>: 96.8,
+  <span style="color:#c084fc;">"avg_hours_to_locker"</span>: 1.45,
+  <span style="color:#c084fc;">"robot_km"</span>: 12.3,
+  <span style="color:#c084fc;">"baseline_comparison"</span>: {
+    <span style="color:#c084fc;">"fifo_same_day_pct"</span>: 74.2,
+    <span style="color:#c084fc;">"batching_same_day_pct"</span>: 91.5,
+    <span style="color:#c084fc;">"ppo_same_day_pct"</span>: 96.8
+  }
+}
+        </div>
+      </div>
+
+      <div>
+        <h4 style="font-size:0.95rem; font-weight:700; margin-bottom:8px;">Running Your Scripts in Terminal</h4>
+        <p style="font-size:0.85rem; color:var(--slate-600); margin-bottom:12px;">
+          Use the project's pre-configured virtual environment (<code>.venv</code>) to train your policies:
+        </p>
+        <div class="code-block">
+<span style="color:#64748b;"># 1. Train Q-Learning (Fast, ~10s)</span>
+.venv/bin/python rl_models/train_qlearning.py
+
+<span style="color:#64748b;"># 2. Train Deep RL PPO (~1-2 min on GPU)</span>
+.venv/bin/python rl_models/train_ppo.py
+
+<span style="color:#64748b;"># 3. Check Streamlit Dashboard Tab 2</span>
+.venv/bin/streamlit run dashboard/app.py
+        </div>
+
+        <div style="background:var(--primary-light); border:1px solid #bfdbfe; border-radius:var(--radius-sm); padding:14px; margin-top:16px;">
+          <b style="color:var(--primary); font-size:0.85rem;">&#128161; AnyLogic Q-Table Import:</b>
+          <p style="font-size:0.8rem; color:var(--slate-700); margin-top:4px;">
+            Your exported <code>q_table.csv</code> (288 rows &times; 4 actions) can be loaded directly into AnyLogic simply by toggling <code>rlLoadQTable = true</code> in the AnyLogic properties!
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  MDC Simulation for Applied AI &bull; AI4666 &bull; Miami Dade College &bull; Robotics Simulation Twin
+</footer>
+
+</body>
+</html>
