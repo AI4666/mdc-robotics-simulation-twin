@@ -18,9 +18,10 @@ This document defines the exact runtime interfaces connecting the four component
 | Humanoid | `HUM-01` | `0.05` |
 | Aerial Drones | `UAV-01`, `UAV-02`, `UAV-03` | `1.9` – `3.1` |
 
-### 3D Coordinate Axes
+### 3D Coordinate Axes & Heading Units
 * Horizontal floor plane: **`x`** (left/right) and **`z`** (front/back)
 * Vertical height: **`y`** (`0.05` for ground units, `1.9`+ for drones)
+* **`heading`:** **radians** (`0.0` = facing `+z`, e.g., `Math.atan2(dx, dz)`), matching Three.js `mesh.rotation.y = heading`. Do **not** send degrees.
 
 ### Reference Station & Dock Coordinates (`world_model.js`)
 
@@ -38,38 +39,51 @@ This document defines the exact runtime interfaces connecting the four component
 | `dock5` (`AMR-05`) | Bay 5: AMR-05 Dock | `(1.50, 0.05, 1.30)` | `(1.40, 0.05, 1.25)` |
 | `dock6` (`AMR-06`) | Bay 6: AMR-06 Dock | `(1.80, 0.05, 1.30)` | `(2.20, 0.05, 1.25)` |
 
-### JSON Request & Response
+### JSON Request & Response (`POST /api/anylogic/update`)
+
+Optional top-level fields (`pedestrians`, `clock`, `simTime`) allow the 3D view's green **AnyLogic LIVE** mode (`digital_twin_app/public/app.js` & `pedestrians.js`) to mirror walking students and the AnyLogic simulation clock.
 
 ```json
 {
   "source": "AnyLogic",
+  "simTime": 32400.0,
+  "clock": "Day 1 09:00",
   "robots": [
     {
       "id": "AMR-01",
       "x": 0.30,
       "y": 0.05,
       "z": 1.30,
-      "heading": 0,
-      "status": "Delivering",
+      "heading": 0.0,
+      "status": "InTransit",
       "battery": 86,
-      "speed": 1.2
+      "speed": 1.2,
+      "cargo": 3,
+      "slots": 5
     }
+  ],
+  "pedestrians": [
+    { "id": 1, "x": -1.20, "z": 1.25 }
   ]
 }
 ```
 
-Expected response:
+Expected response (`requestedScale` is `null` unless changed from the 3D UI speed bar):
 ```json
-{ "success": true, "count": 10 }
+{ "success": true, "count": 10, "requestedScale": 60 }
 ```
+
+### Live Speed Sync Endpoints
+* `POST http://localhost:3000/api/anylogic/speed` — body `{ "scale": 60 }` (`0 < scale <= 10000`, or `null` to leave AnyLogic's speed unchanged) → returns `{ "requestedScale": 60 }`.
+* `GET http://localhost:3000/api/anylogic/speed` → returns `{ "requestedScale": <number|null> }`.
 
 ### Minimal Java 11+ Snippet (AnyLogic Periodic Event)
 
 ```java
 String payload = String.format(
     java.util.Locale.US,
-    "{\"source\":\"AnyLogic\",\"robots\":[{\"id\":\"AMR-01\",\"x\":%.3f,\"y\":0.05,\"z\":%.3f,\"heading\":%.1f,\"status\":\"%s\",\"battery\":%.1f,\"speed\":%.2f}]}",
-    xCoord, zCoord, headingDeg, statusText, batteryPct, speedMps
+    "{\"source\":\"AnyLogic\",\"robots\":[{\"id\":\"AMR-01\",\"x\":%.3f,\"y\":0.05,\"z\":%.3f,\"heading\":%.4f,\"status\":\"%s\",\"battery\":%.1f,\"speed\":%.2f}]}",
+    xCoord, zCoord, headingRad, statusText, batteryPct, speedMps
 );
 java.net.http.HttpRequest req = java.net.http.HttpRequest.newBuilder()
     .uri(java.net.URI.create("http://localhost:3000/api/anylogic/update"))
@@ -132,10 +146,12 @@ Response schema for `GET /api/robots`:
 
 ---
 
-## 4. AnyLogic Experiment Exports (`Issues #1 & #3`)
+## 4. AnyLogic Model & Experiment Exports (`Issues #1 & #3`)
 
-* **Recommended Export Directory:** `anylogic_model/exports/` (`.csv` or `.json`)
-* Export outputs from the 5 AnyLogic experiments (Optimization, Compare Runs, Monte Carlo, Sensitivity, Calibration) here so Streamlit Dashboard Tab 3 can read and plot real simulation runs.
+* **Active Option 2 Model:** `anylogic_model/campus_courier/MDC_Campus_Courier.alp` (Option 1 lab files were archived under `archive/option1_lab/`).
+* **Export Directory:** `anylogic_model/exports/`
+  * Sample CSVs committed in `main`: `daily_kpis.csv`, `exp_calibration.csv`, `exp_compare_runs.csv`, `exp_monte_carlo.csv`, `exp_optimization.csv`, `exp_sensitivity.csv`, and `q_table.csv`.
+  * See [`HANDOFF.md`](../HANDOFF.md) §4 for the full CSV column definitions and §6 for the Dashboard tab mapping.
 
 ---
 
