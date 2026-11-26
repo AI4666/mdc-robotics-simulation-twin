@@ -148,8 +148,8 @@ public double avgHoursToLocker() { return totalDelivered == 0 ? 0 : totalHoursTo
 public String f1(double v) { return String.format(java.util.Locale.US, "%.1f", v); }
 
 // ---- drawing helpers (twin units -> canvas pixels)
-public double roverPx(int i) { return i < rovers.size() ? 546.0 + rovers.get(i).posX / metersPerTwinUnit * 110 : -500; }
-public double roverPy(int i) { return i < rovers.size() ? 448.0 + rovers.get(i).posY / metersPerTwinUnit * 110 : -500; }
+public double roverPx(int i) { return i < rovers.size() ? 480.0 + rovers.get(i).posX / metersPerTwinUnit * 34.0 : -500; }
+public double roverPy(int i) { return i < rovers.size() ? 456.0 + rovers.get(i).posY / metersPerTwinUnit * 34.0 : -500; }
 public String roverLabel(int i) { return i < rovers.size() ? rovers.get(i).roverName.substring(4) : ""; }
 public Color roverColor(int i) {
     if (i >= rovers.size()) return new Color(0, 0, 0, 0);
@@ -161,8 +161,19 @@ public Color roverColor(int i) {
     if (p.equals("Depleted")) return new Color(20, 20, 20);
     return new Color(150, 150, 150);
 }
-public double walkerPx(int i) { return i < walkers.size() && walkers.get(i).active ? 546.0 + walkers.get(i).posX / metersPerTwinUnit * 110 : -500; }
-public double walkerPy(int i) { return i < walkers.size() && walkers.get(i).active ? 448.0 + walkers.get(i).posY / metersPerTwinUnit * 110 : -500; }
+public double walkerPx(int i) { return i < walkers.size() && walkers.get(i).active ? 480.0 + walkers.get(i).posX / metersPerTwinUnit * 34.0 : -500; }
+public double walkerPy(int i) { return i < walkers.size() && walkers.get(i).active ? 456.0 + walkers.get(i).posY / metersPerTwinUnit * 34.0 : -500; }
+public double dronePx(int i) { return i < drones.size() ? 480.0 + drones.get(i).tx * 34.0 : -500; }
+public double dronePy(int i) { return i < drones.size() ? 456.0 + drones.get(i).tz * 34.0 : -500; }
+public String droneLabel(int i) { return i < drones.size() ? drones.get(i).id.substring(4) : ""; }
+public Color droneColor(int i) {
+    if (i >= drones.size()) return new Color(0, 0, 0, 0);
+    String p = drones.get(i).phase;
+    if (p.equals("Loading") || p.equals("Handoff")) return new Color(245, 158, 11);
+    if (p.equals("Charging")) return new Color(220, 50, 50);
+    if (p.equals("Standby")) return new Color(90, 130, 160);
+    return new Color(14, 165, 233);
+}
 public String buildingText(int node) {
     if (node < 0 || node >= nodeKey.length) return "";
     if (node == depotNode) return "outbox: " + sortedWaiting() + " items";
@@ -4403,7 +4414,7 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-10855846</Color>
-					<Text><![CDATA[Robots: gray idle - orange loading / locker - green delivering - purple returning - red charging.   Pink dots: students walking.]]></Text>
+					<Text><![CDATA[AMRs: gray idle, green delivering, purple returning, red charging.  Cyan: UAV drones.  Pink: students.]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>11</Size>
@@ -4412,8 +4423,8 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<Alignment>LEFT</Alignment>
 				</Text>
 				<Rectangle>
-					<Id>1762800000231</Id>
-					<Name><![CDATA[rect8]]></Name>
+					<Id>1796000000001</Id>
+					<Name><![CDATA[map_rect_1]]></Name>
 					<X>20</X><Y>120</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
@@ -4434,9 +4445,9 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<FillMaterial>null</FillMaterial>
 				</Rectangle>
 				<Rectangle>
-					<Id>1762800000232</Id>
-					<Name><![CDATA[rect9]]></Name>
-					<X>326</X><Y>332.5</Y>
+					<Id>1796000000002</Id>
+					<Name><![CDATA[map_rect_2]]></Name>
+					<X>415.4</X><Y>432.9</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4449,16 +4460,16 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<LineColor/>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<Width>446</Width>
-					<Height>231</Height>
+					<Width>112.2</Width>
+					<Height>46.2</Height>
 					<Rotation>0.0</Rotation>
 					<FillColor>-5583381</FillColor>
 					<FillMaterial>null</FillMaterial>
 				</Rectangle>
 				<Text>
-					<Id>1762800000233</Id>
-					<Name><![CDATA[text10]]></Name>
-					<X>546</X><Y>448</Y>
+					<Id>1796000000003</Id>
+					<Name><![CDATA[map_text_3]]></Name>
+					<X>471.5</X><Y>456.0</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4471,15 +4482,15 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<Text><![CDATA[Central Lake]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>12</Size>
+						<Size>10</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
-				<Polyline>
-					<Id>1762800000234</Id>
-					<Name><![CDATA[walk11]]></Name>
-					<X>843</X><Y>448</Y>
+				<Rectangle>
+					<Id>1796000000004</Id>
+					<Name><![CDATA[map_rect_4]]></Name>
+					<X>214.8</X><Y>146.6</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4488,26 +4499,41 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>1</LineWidth>
+					<LineColor>-7035976</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<BeginArrowSize>1</BeginArrowSize>
-					<BeginArrowStyle>0</BeginArrowStyle>
-					<EndArrowSize>1</EndArrowSize>
-					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<Width>132.6</Width>
+					<Height>74.8</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-1511691</FillColor>
 					<FillMaterial>null</FillMaterial>
-					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-49.5</X><Y>0</Y><Z>0</Z></Point>
-					</Points>
-					<Closed>false</Closed>
-				</Polyline>
+				</Rectangle>
+				<Text>
+					<Id>1796000000005</Id>
+					<Name><![CDATA[map_text_5]]></Name>
+					<X>281.1</X><Y>139.8</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-13418155</Color>
+					<Text><![CDATA[6 NW AMR Charging Bays]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>10</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>CENTER</Alignment>
+				</Text>
 				<Polyline>
-					<Id>1762800000235</Id>
-					<Name><![CDATA[walk12]]></Name>
-					<X>843</X><Y>448</Y>
+					<Id>1796000000006</Id>
+					<Name><![CDATA[map_walk_6]]></Name>
+					<X>657.8</X><Y>453.4</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4516,26 +4542,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-49.5</X><Y>-137.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-101.3</X><Y>2.6</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000236</Id>
-					<Name><![CDATA[walk13]]></Name>
-					<X>843</X><Y>448</Y>
+					<Id>1796000000007</Id>
+					<Name><![CDATA[map_walk_7]]></Name>
+					<X>561.4</X><Y>582.2</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4544,26 +4570,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-49.5</X><Y>137.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-4.9</X><Y>-83.7</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000237</Id>
-					<Name><![CDATA[walk14]]></Name>
-					<X>634</X><Y>629.5</Y>
+					<Id>1796000000008</Id>
+					<Name><![CDATA[map_walk_8]]></Name>
+					<X>561.4</X><Y>582.2</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4572,26 +4598,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>159.5</X><Y>-44</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-54.2</X><Y>-83.7</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000238</Id>
-					<Name><![CDATA[walk15]]></Name>
-					<X>634</X><Y>629.5</Y>
+					<Id>1796000000009</Id>
+					<Name><![CDATA[map_walk_9]]></Name>
+					<X>527.6</X><Y>405.2</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4600,26 +4626,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>0</X><Y>-44</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>28.9</X><Y>8.3</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000239</Id>
-					<Name><![CDATA[walk16]]></Name>
-					<X>518.5</X><Y>272</Y>
+					<Id>1796000000010</Id>
+					<Name><![CDATA[map_walk_10]]></Name>
+					<X>527.6</X><Y>405.2</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4628,26 +4654,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>27.5</X><Y>38.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-47.6</X><Y>8.3</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000240</Id>
-					<Name><![CDATA[walk17]]></Name>
-					<X>518.5</X><Y>272</Y>
+					<Id>1796000000011</Id>
+					<Name><![CDATA[map_walk_11]]></Name>
+					<X>527.6</X><Y>405.2</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4656,26 +4682,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-214.5</X><Y>38.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>30.6</X><Y>-10.4</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000241</Id>
-					<Name><![CDATA[walk18]]></Name>
-					<X>854</X><Y>206</Y>
+					<Id>1796000000012</Id>
+					<Name><![CDATA[map_walk_12]]></Name>
+					<X>628.8</X><Y>270.9</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4684,26 +4710,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-60.5</X><Y>104.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-70.6</X><Y>123.9</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000242</Id>
-					<Name><![CDATA[walk19]]></Name>
-					<X>854</X><Y>206</Y>
+					<Id>1796000000013</Id>
+					<Name><![CDATA[map_walk_13]]></Name>
+					<X>628.8</X><Y>270.9</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4712,26 +4738,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-55</X><Y>44</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-48.5</X><Y>-12.1</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000243</Id>
-					<Name><![CDATA[walk20]]></Name>
-					<X>367.8</X><Y>624</Y>
+					<Id>1796000000014</Id>
+					<Name><![CDATA[map_walk_14]]></Name>
+					<X>443.1</X><Y>583.5</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4740,26 +4766,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>0</X><Y>-38.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-18.2</X><Y>-85.0</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000244</Id>
-					<Name><![CDATA[walk21]]></Name>
-					<X>367.8</X><Y>624</Y>
+					<Id>1796000000015</Id>
+					<Name><![CDATA[map_walk_15]]></Name>
+					<X>443.1</X><Y>583.5</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4768,26 +4794,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-63.8</X><Y>-38.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-37.9</X><Y>-85.0</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000245</Id>
-					<Name><![CDATA[walk22]]></Name>
-					<X>757.2</X><Y>266.5</Y>
+					<Id>1796000000016</Id>
+					<Name><![CDATA[map_walk_16]]></Name>
+					<X>564.1</X><Y>338.7</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4796,26 +4822,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>36.3</X><Y>44</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-5.9</X><Y>56.1</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000246</Id>
-					<Name><![CDATA[walk23]]></Name>
-					<X>757.2</X><Y>266.5</Y>
+					<Id>1796000000017</Id>
+					<Name><![CDATA[map_walk_17]]></Name>
+					<X>564.1</X><Y>338.7</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4824,26 +4850,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>41.8</X><Y>-16.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-74.6</X><Y>-79.9</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000247</Id>
-					<Name><![CDATA[walk24]]></Name>
-					<X>249</X><Y>272</Y>
+					<Id>1796000000018</Id>
+					<Name><![CDATA[map_walk_18]]></Name>
+					<X>564.1</X><Y>338.7</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4852,26 +4878,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>55</X><Y>38.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>16.2</X><Y>-79.9</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000248</Id>
-					<Name><![CDATA[walk25]]></Name>
-					<X>249</X><Y>272</Y>
+					<Id>1796000000019</Id>
+					<Name><![CDATA[map_walk_19]]></Name>
+					<X>446.2</X><Y>409.3</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4880,26 +4906,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-11</X><Y>38.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>33.8</X><Y>4.2</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000249</Id>
-					<Name><![CDATA[walk26]]></Name>
-					<X>150</X><Y>272</Y>
+					<Id>1796000000020</Id>
+					<Name><![CDATA[map_walk_20]]></Name>
+					<X>446.2</X><Y>409.3</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4908,26 +4934,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>88</X><Y>38.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-41.0</X><Y>4.2</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000250</Id>
-					<Name><![CDATA[walk27]]></Name>
-					<X>150</X><Y>272</Y>
+					<Id>1796000000021</Id>
+					<Name><![CDATA[map_walk_21]]></Name>
+					<X>446.2</X><Y>409.3</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4936,26 +4962,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>11</X><Y>-22</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-61.4</X><Y>4.2</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000251</Id>
-					<Name><![CDATA[walk28]]></Name>
-					<X>95</X><Y>151</Y>
+					<Id>1796000000022</Id>
+					<Name><![CDATA[map_walk_22]]></Name>
+					<X>557.9</X><Y>168.0</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4964,26 +4990,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>66</X><Y>99</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-68.5</X><Y>50.9</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000252</Id>
-					<Name><![CDATA[walk29]]></Name>
-					<X>95</X><Y>151</Y>
+					<Id>1796000000023</Id>
+					<Name><![CDATA[map_walk_23]]></Name>
+					<X>557.9</X><Y>168.0</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4992,26 +5018,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>11</X><Y>187</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>22.4</X><Y>90.8</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000253</Id>
-					<Name><![CDATA[walk30]]></Name>
-					<X>95</X><Y>503</Y>
+					<Id>1796000000024</Id>
+					<Name><![CDATA[map_walk_24]]></Name>
+					<X>328.3</X><Y>368.4</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5020,26 +5046,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>88</X><Y>11</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>32.7</X><Y>26.4</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000254</Id>
-					<Name><![CDATA[walk31]]></Name>
-					<X>95</X><Y>503</Y>
+					<Id>1796000000025</Id>
+					<Name><![CDATA[map_walk_25]]></Name>
+					<X>328.3</X><Y>368.4</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5048,26 +5074,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>11</X><Y>-165</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>15.7</X><Y>53.6</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000255</Id>
-					<Name><![CDATA[walk32]]></Name>
-					<X>95</X><Y>503</Y>
+					<Id>1796000000026</Id>
+					<Name><![CDATA[map_walk_26]]></Name>
+					<X>351.2</X><Y>459.7</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5076,26 +5102,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>0</X><Y>110</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>16.6</X><Y>16.7</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000256</Id>
-					<Name><![CDATA[walk33]]></Name>
-					<X>793.5</X><Y>448</Y>
+					<Id>1796000000027</Id>
+					<Name><![CDATA[map_walk_27]]></Name>
+					<X>351.2</X><Y>459.7</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5104,26 +5130,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>0</X><Y>-137.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-7.2</X><Y>-37.7</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000257</Id>
-					<Name><![CDATA[walk34]]></Name>
-					<X>793.5</X><Y>448</Y>
+					<Id>1796000000028</Id>
+					<Name><![CDATA[map_walk_28]]></Name>
+					<X>351.2</X><Y>459.7</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5132,26 +5158,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>0</X><Y>137.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-61.6</X><Y>-9.8</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000258</Id>
-					<Name><![CDATA[walk35]]></Name>
-					<X>793.5</X><Y>310.5</Y>
+					<Id>1796000000029</Id>
+					<Name><![CDATA[map_walk_29]]></Name>
+					<X>489.4</X><Y>218.9</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5160,26 +5186,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-247.5</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>0.1</X><Y>39.9</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000259</Id>
-					<Name><![CDATA[walk36]]></Name>
-					<X>793.5</X><Y>310.5</Y>
+					<Id>1796000000030</Id>
+					<Name><![CDATA[map_walk_30]]></Name>
+					<X>707.3</X><Y>167.4</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5188,26 +5214,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>5.5</X><Y>-60.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-127.0</X><Y>91.4</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000260</Id>
-					<Name><![CDATA[walk37]]></Name>
-					<X>793.5</X><Y>585.5</Y>
+					<Id>1796000000031</Id>
+					<Name><![CDATA[map_walk_31]]></Name>
+					<X>556.5</X><Y>456.0</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5216,26 +5242,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-159.5</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>0.0</X><Y>-42.5</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000261</Id>
-					<Name><![CDATA[walk38]]></Name>
-					<X>546</X><Y>310.5</Y>
+					<Id>1796000000032</Id>
+					<Name><![CDATA[map_walk_32]]></Name>
+					<X>556.5</X><Y>456.0</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5244,26 +5270,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-242</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>0.0</X><Y>42.5</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000262</Id>
-					<Name><![CDATA[walk39]]></Name>
-					<X>634</X><Y>585.5</Y>
+					<Id>1796000000033</Id>
+					<Name><![CDATA[map_walk_33]]></Name>
+					<X>556.5</X><Y>413.5</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5272,26 +5298,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-266.2</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-76.5</X><Y>0.0</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000263</Id>
-					<Name><![CDATA[walk40]]></Name>
-					<X>367.8</X><Y>585.5</Y>
+					<Id>1796000000034</Id>
+					<Name><![CDATA[map_walk_34]]></Name>
+					<X>556.5</X><Y>413.5</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5300,26 +5326,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-63.8</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>1.7</X><Y>-18.7</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000264</Id>
-					<Name><![CDATA[walk41]]></Name>
-					<X>304</X><Y>310.5</Y>
+					<Id>1796000000035</Id>
+					<Name><![CDATA[map_walk_35]]></Name>
+					<X>556.5</X><Y>498.5</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5328,26 +5354,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>0</X><Y>137.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-49.3</X><Y>0.0</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000265</Id>
-					<Name><![CDATA[walk42]]></Name>
-					<X>304</X><Y>310.5</Y>
+					<Id>1796000000036</Id>
+					<Name><![CDATA[map_walk_36]]></Name>
+					<X>480.0</X><Y>413.5</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5356,26 +5382,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-66</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-74.8</X><Y>0.0</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000266</Id>
-					<Name><![CDATA[walk43]]></Name>
-					<X>304</X><Y>585.5</Y>
+					<Id>1796000000037</Id>
+					<Name><![CDATA[map_walk_37]]></Name>
+					<X>507.2</X><Y>498.5</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5384,26 +5410,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>0</X><Y>-137.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-82.3</X><Y>0.0</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000267</Id>
-					<Name><![CDATA[walk44]]></Name>
-					<X>304</X><Y>585.5</Y>
+					<Id>1796000000038</Id>
+					<Name><![CDATA[map_walk_38]]></Name>
+					<X>424.9</X><Y>498.5</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5412,26 +5438,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-121</X><Y>-71.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-19.7</X><Y>0.0</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000268</Id>
-					<Name><![CDATA[walk45]]></Name>
-					<X>304</X><Y>448</Y>
+					<Id>1796000000039</Id>
+					<Name><![CDATA[map_walk_39]]></Name>
+					<X>405.2</X><Y>413.5</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5440,26 +5466,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-66</X><Y>-137.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>0.0</X><Y>42.5</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000269</Id>
-					<Name><![CDATA[walk46]]></Name>
-					<X>238</X><Y>310.5</Y>
+					<Id>1796000000040</Id>
+					<Name><![CDATA[map_walk_40]]></Name>
+					<X>405.2</X><Y>413.5</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5468,26 +5494,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-77</X><Y>-60.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-20.4</X><Y>0.0</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000270</Id>
-					<Name><![CDATA[walk47]]></Name>
-					<X>238</X><Y>310.5</Y>
+					<Id>1796000000041</Id>
+					<Name><![CDATA[map_walk_41]]></Name>
+					<X>405.2</X><Y>498.5</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5496,26 +5522,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-27.5</X><Y>-143</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>0.0</X><Y>-42.5</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000271</Id>
-					<Name><![CDATA[walk48]]></Name>
-					<X>161</X><Y>250</Y>
+					<Id>1796000000042</Id>
+					<Name><![CDATA[map_walk_42]]></Name>
+					<X>405.2</X><Y>498.5</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5524,26 +5550,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-55</X><Y>88</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-37.4</X><Y>-22.1</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000272</Id>
-					<Name><![CDATA[walk49]]></Name>
-					<X>161</X><Y>250</Y>
+					<Id>1796000000043</Id>
+					<Name><![CDATA[map_walk_43]]></Name>
+					<X>405.2</X><Y>456.0</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5552,26 +5578,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>49.5</X><Y>-82.5</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-20.4</X><Y>-42.5</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000273</Id>
-					<Name><![CDATA[walk50]]></Name>
-					<X>183</X><Y>514</Y>
+					<Id>1796000000044</Id>
+					<Name><![CDATA[map_walk_44]]></Name>
+					<X>384.8</X><Y>413.5</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5580,26 +5606,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-77</X><Y>-176</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-23.8</X><Y>-18.7</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000274</Id>
-					<Name><![CDATA[walk51]]></Name>
-					<X>183</X><Y>514</Y>
+					<Id>1796000000045</Id>
+					<Name><![CDATA[map_walk_45]]></Name>
+					<X>361.0</X><Y>394.8</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5608,26 +5634,26 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-88</X><Y>99</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-17.0</X><Y>27.2</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
 				<Polyline>
-					<Id>1762800000275</Id>
-					<Name><![CDATA[walk52]]></Name>
-					<X>95</X><Y>613</Y>
+					<Id>1796000000046</Id>
+					<Name><![CDATA[map_walk_46]]></Name>
+					<X>361.0</X><Y>394.8</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5636,26 +5662,433 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>0</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8882056</LineColor>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<BeginArrowSize>1</BeginArrowSize>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<FillColor/>
+					<FillColor/> 
 					<FillMaterial>null</FillMaterial>
 					<Points>
-					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>-38.5</X><Y>99</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-78.2</X><Y>-180.2</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>false</Closed>
 				</Polyline>
+				<Polyline>
+					<Id>1796000000047</Id>
+					<Name><![CDATA[map_walk_47]]></Name>
+					<X>367.8</X><Y>476.4</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>0</ZHeight>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<FillColor/> 
+					<FillMaterial>null</FillMaterial>
+					<Points>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-23.8</X><Y>-54.4</Y><Z>0</Z></Point>
+					</Points>
+					<Closed>false</Closed>
+				</Polyline>
+				<Polyline>
+					<Id>1796000000048</Id>
+					<Name><![CDATA[map_walk_48]]></Name>
+					<X>367.8</X><Y>476.4</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>0</ZHeight>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<FillColor/> 
+					<FillMaterial>null</FillMaterial>
+					<Points>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-78.2</X><Y>-26.5</Y><Z>0</Z></Point>
+					</Points>
+					<Closed>false</Closed>
+				</Polyline>
+				<Polyline>
+					<Id>1796000000049</Id>
+					<Name><![CDATA[map_walk_49]]></Name>
+					<X>344.0</X><Y>422.0</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>0</ZHeight>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<FillColor/> 
+					<FillMaterial>null</FillMaterial>
+					<Points>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-54.4</X><Y>27.9</Y><Z>0</Z></Point>
+					</Points>
+					<Closed>false</Closed>
+				</Polyline>
+				<Polyline>
+					<Id>1796000000050</Id>
+					<Name><![CDATA[map_walk_50]]></Name>
+					<X>289.6</X><Y>449.9</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>0</ZHeight>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<FillColor/> 
+					<FillMaterial>null</FillMaterial>
+					<Points>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-67.3</X><Y>0.0</Y><Z>0</Z></Point>
+					</Points>
+					<Closed>false</Closed>
+				</Polyline>
+				<Polyline>
+					<Id>1796000000051</Id>
+					<Name><![CDATA[map_walk_51]]></Name>
+					<X>289.6</X><Y>449.9</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>0</ZHeight>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<FillColor/> 
+					<FillMaterial>null</FillMaterial>
+					<Points>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-6.8</X><Y>-235.3</Y><Z>0</Z></Point>
+					</Points>
+					<Closed>false</Closed>
+				</Polyline>
+				<Polyline>
+					<Id>1796000000052</Id>
+					<Name><![CDATA[map_walk_52]]></Name>
+					<X>282.8</X><Y>214.6</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>0</ZHeight>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<FillColor/> 
+					<FillMaterial>null</FillMaterial>
+					<Points>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>206.7</X><Y>44.2</Y><Z>0</Z></Point>
+					</Points>
+					<Closed>false</Closed>
+				</Polyline>
+				<Polyline>
+					<Id>1796000000053</Id>
+					<Name><![CDATA[map_walk_53]]></Name>
+					<X>282.8</X><Y>214.6</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>0</ZHeight>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<FillColor/> 
+					<FillMaterial>null</FillMaterial>
+					<Points>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>44.0</X><Y>-13.5</Y><Z>0</Z></Point>
+					</Points>
+					<Closed>false</Closed>
+				</Polyline>
+				<Polyline>
+					<Id>1796000000054</Id>
+					<Name><![CDATA[map_walk_54]]></Name>
+					<X>282.8</X><Y>214.6</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>0</ZHeight>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<FillColor/> 
+					<FillMaterial>null</FillMaterial>
+					<Points>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>44.9</X><Y>-44.6</Y><Z>0</Z></Point>
+					</Points>
+					<Closed>false</Closed>
+				</Polyline>
+				<Polyline>
+					<Id>1796000000055</Id>
+					<Name><![CDATA[map_walk_55]]></Name>
+					<X>282.8</X><Y>214.6</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>0</ZHeight>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<FillColor/> 
+					<FillMaterial>null</FillMaterial>
+					<Points>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-46.4</X><Y>-49.0</Y><Z>0</Z></Point>
+					</Points>
+					<Closed>false</Closed>
+				</Polyline>
+				<Polyline>
+					<Id>1796000000056</Id>
+					<Name><![CDATA[map_walk_56]]></Name>
+					<X>282.8</X><Y>214.6</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>0</ZHeight>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<FillColor/> 
+					<FillMaterial>null</FillMaterial>
+					<Points>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-49.5</X><Y>-18.1</Y><Z>0</Z></Point>
+					</Points>
+					<Closed>false</Closed>
+				</Polyline>
+				<Polyline>
+					<Id>1796000000057</Id>
+					<Name><![CDATA[map_walk_57]]></Name>
+					<X>282.8</X><Y>214.6</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>0</ZHeight>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<FillColor/> 
+					<FillMaterial>null</FillMaterial>
+					<Points>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-8.9</X><Y>-18.5</Y><Z>0</Z></Point>
+					</Points>
+					<Closed>false</Closed>
+				</Polyline>
+				<Polyline>
+					<Id>1796000000058</Id>
+					<Name><![CDATA[map_walk_58]]></Name>
+					<X>282.8</X><Y>214.6</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>0</ZHeight>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<FillColor/> 
+					<FillMaterial>null</FillMaterial>
+					<Points>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>-4.8</X><Y>-48.0</Y><Z>0</Z></Point>
+					</Points>
+					<Closed>false</Closed>
+				</Polyline>
+				<Polyline>
+					<Id>1796000000059</Id>
+					<Name><![CDATA[map_walk_59]]></Name>
+					<X>489.5</X><Y>258.8</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>0</ZHeight>
+					<LineWidth>2</LineWidth>
+					<LineColor>-7895161</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<FillColor/> 
+					<FillMaterial>null</FillMaterial>
+					<Points>
+						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>90.8</X><Y>0.0</Y><Z>0</Z></Point>
+					</Points>
+					<Closed>false</Closed>
+				</Polyline>
+				<Rectangle>
+					<Id>1796000000060</Id>
+					<Name><![CDATA[map_rect_60]]></Name>
+					<X>146.8</X><Y>415.2</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>0</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-2525434</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>85.0</Width>
+					<Height>71.4</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-68665</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Rectangle>
+				<Text>
+					<Id>1796000000061</Id>
+					<Name><![CDATA[map_text_61]]></Name>
+					<X>189.3</X><Y>406.7</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-4959479</Color>
+					<Text><![CDATA[MDC Central Sorting Depot]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>10</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>CENTER</Alignment>
+				</Text>
 				<Oval>
-					<Id>1762800000276</Id>
-					<Name><![CDATA[oval53]]></Name>
-					<X>843</X><Y>448</Y>
+					<Id>1796000000062</Id>
+					<Name><![CDATA[map_oval_62]]></Name>
+					<X>222.3</X><Y>449.9</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5668,16 +6101,103 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<LineColor>-1</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<RadiusX>11</RadiusX>
-					<RadiusY>11</RadiusY>
+					<RadiusX>9</RadiusX>
+					<RadiusY>9</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-2525434</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Text>
+					<Id>1796000000063</Id>
+					<Name><![CDATA[map_text_63]]></Name>
+					<X>222.3</X><Y>463.9</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-8899313</Color>
+					<Text><![CDATA[]]></Text>
+					<TextCode><![CDATA[buildingText(27)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>9</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>CENTER</Alignment>
+				</Text>
+				<Oval>
+					<Id>1796000000064</Id>
+					<Name><![CDATA[map_oval_64]]></Name>
+					<X>261.7</X><Y>699.0</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-16612153</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>12</RadiusX>
+					<RadiusY>12</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-278748</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Text>
+					<Id>1796000000065</Id>
+					<Name><![CDATA[map_text_65]]></Name>
+					<X>261.7</X><Y>677.0</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16553567</Color>
+					<Text><![CDATA[Station E: Drone Helipad (3 UAVs)]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>10</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>CENTER</Alignment>
+				</Text>
+				<Oval>
+					<Id>1796000000066</Id>
+					<Name><![CDATA[map_oval_66]]></Name>
+					<X>657.8</X><Y>453.4</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-1</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>8</RadiusX>
+					<RadiusY>8</RadiusY>
 					<Rotation>0.0</Rotation>
 					<FillColor>-16758854</FillColor>
 					<FillMaterial>null</FillMaterial>
 				</Oval>
 				<Text>
-					<Id>1762800000277</Id>
-					<Name><![CDATA[text54]]></Name>
-					<X>843</X><Y>420</Y>
+					<Id>1796000000067</Id>
+					<Name><![CDATA[map_text_67]]></Name>
+					<X>657.8</X><Y>435.4</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5687,18 +6207,18 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-16764276</Color>
-					<Text><![CDATA[Bldg 1 - Administration]]></Text>
+					<Text><![CDATA[Bldg 1]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>11</Size>
+						<Size>10</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Text>
-					<Id>1762800000278</Id>
-					<Name><![CDATA[text55]]></Name>
-					<X>843</X><Y>463</Y>
+					<Id>1796000000068</Id>
+					<Name><![CDATA[map_text_68]]></Name>
+					<X>657.8</X><Y>464.4</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5707,20 +6227,20 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
-					<Color>-12829636</Color>
+					<Color>-12171706</Color>
 					<Text><![CDATA[]]></Text>
 					<TextCode><![CDATA[buildingText(0)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>9</Size>
+						<Size>8</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Oval>
-					<Id>1762800000279</Id>
-					<Name><![CDATA[oval56]]></Name>
-					<X>634</X><Y>629.5</Y>
+					<Id>1796000000069</Id>
+					<Name><![CDATA[map_oval_69]]></Name>
+					<X>561.4</X><Y>582.2</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5733,16 +6253,16 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<LineColor>-1</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<RadiusX>11</RadiusX>
-					<RadiusY>11</RadiusY>
+					<RadiusX>8</RadiusX>
+					<RadiusY>8</RadiusY>
 					<Rotation>0.0</Rotation>
 					<FillColor>-16758854</FillColor>
 					<FillMaterial>null</FillMaterial>
 				</Oval>
 				<Text>
-					<Id>1762800000280</Id>
-					<Name><![CDATA[text57]]></Name>
-					<X>634</X><Y>601.5</Y>
+					<Id>1796000000070</Id>
+					<Name><![CDATA[map_text_70]]></Name>
+					<X>561.4</X><Y>604.2</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5752,18 +6272,18 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-16764276</Color>
-					<Text><![CDATA[Bldg 2 - Library]]></Text>
+					<Text><![CDATA[Bldg 2]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>11</Size>
+						<Size>10</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Text>
-					<Id>1762800000281</Id>
-					<Name><![CDATA[text58]]></Name>
-					<X>634</X><Y>644.5</Y>
+					<Id>1796000000071</Id>
+					<Name><![CDATA[map_text_71]]></Name>
+					<X>561.4</X><Y>566.2</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5772,20 +6292,20 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
-					<Color>-12829636</Color>
+					<Color>-12171706</Color>
 					<Text><![CDATA[]]></Text>
 					<TextCode><![CDATA[buildingText(1)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>9</Size>
+						<Size>8</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Oval>
-					<Id>1762800000282</Id>
-					<Name><![CDATA[oval59]]></Name>
-					<X>518.5</X><Y>272</Y>
+					<Id>1796000000072</Id>
+					<Name><![CDATA[map_oval_72]]></Name>
+					<X>527.6</X><Y>405.2</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5798,16 +6318,16 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<LineColor>-1</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<RadiusX>14</RadiusX>
-					<RadiusY>14</RadiusY>
+					<RadiusX>8</RadiusX>
+					<RadiusY>8</RadiusY>
 					<Rotation>0.0</Rotation>
-					<FillColor>-3659736</FillColor>
+					<FillColor>-16758854</FillColor>
 					<FillMaterial>null</FillMaterial>
 				</Oval>
 				<Text>
-					<Id>1762800000283</Id>
-					<Name><![CDATA[text60]]></Name>
-					<X>518.5</X><Y>244</Y>
+					<Id>1796000000073</Id>
+					<Name><![CDATA[map_text_73]]></Name>
+					<X>527.6</X><Y>387.2</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5816,19 +6336,19 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
-					<Color>-6286316</Color>
-					<Text><![CDATA[Bldg 3 - MAILROOM]]></Text>
+					<Color>-16764276</Color>
+					<Text><![CDATA[Bldg 3]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>11</Size>
+						<Size>10</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Text>
-					<Id>1762800000284</Id>
-					<Name><![CDATA[text61]]></Name>
-					<X>518.5</X><Y>287</Y>
+					<Id>1796000000074</Id>
+					<Name><![CDATA[map_text_74]]></Name>
+					<X>527.6</X><Y>416.2</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5837,20 +6357,20 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
-					<Color>-12829636</Color>
+					<Color>-12171706</Color>
 					<Text><![CDATA[]]></Text>
 					<TextCode><![CDATA[buildingText(2)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>9</Size>
+						<Size>8</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Oval>
-					<Id>1762800000285</Id>
-					<Name><![CDATA[oval62]]></Name>
-					<X>854</X><Y>206</Y>
+					<Id>1796000000075</Id>
+					<Name><![CDATA[map_oval_75]]></Name>
+					<X>628.8</X><Y>270.9</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5863,16 +6383,16 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<LineColor>-1</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<RadiusX>11</RadiusX>
-					<RadiusY>11</RadiusY>
+					<RadiusX>8</RadiusX>
+					<RadiusY>8</RadiusY>
 					<Rotation>0.0</Rotation>
 					<FillColor>-16758854</FillColor>
 					<FillMaterial>null</FillMaterial>
 				</Oval>
 				<Text>
-					<Id>1762800000286</Id>
-					<Name><![CDATA[text63]]></Name>
-					<X>854</X><Y>178</Y>
+					<Id>1796000000076</Id>
+					<Name><![CDATA[map_text_76]]></Name>
+					<X>628.8</X><Y>252.89999999999998</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5882,18 +6402,18 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-16764276</Color>
-					<Text><![CDATA[Bldg 4 - Student Life]]></Text>
+					<Text><![CDATA[Bldg 4]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>11</Size>
+						<Size>10</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Text>
-					<Id>1762800000287</Id>
-					<Name><![CDATA[text64]]></Name>
-					<X>854</X><Y>221</Y>
+					<Id>1796000000077</Id>
+					<Name><![CDATA[map_text_77]]></Name>
+					<X>628.8</X><Y>281.9</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5902,20 +6422,20 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
-					<Color>-12829636</Color>
+					<Color>-12171706</Color>
 					<Text><![CDATA[]]></Text>
 					<TextCode><![CDATA[buildingText(3)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>9</Size>
+						<Size>8</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Oval>
-					<Id>1762800000288</Id>
-					<Name><![CDATA[oval65]]></Name>
-					<X>367.8</X><Y>624</Y>
+					<Id>1796000000078</Id>
+					<Name><![CDATA[map_oval_78]]></Name>
+					<X>443.1</X><Y>583.5</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5928,16 +6448,16 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<LineColor>-1</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<RadiusX>11</RadiusX>
-					<RadiusY>11</RadiusY>
+					<RadiusX>8</RadiusX>
+					<RadiusY>8</RadiusY>
 					<Rotation>0.0</Rotation>
 					<FillColor>-16758854</FillColor>
 					<FillMaterial>null</FillMaterial>
 				</Oval>
 				<Text>
-					<Id>1762800000289</Id>
-					<Name><![CDATA[text66]]></Name>
-					<X>367.8</X><Y>596</Y>
+					<Id>1796000000079</Id>
+					<Name><![CDATA[map_text_79]]></Name>
+					<X>443.1</X><Y>605.5</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5947,18 +6467,18 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-16764276</Color>
-					<Text><![CDATA[Bldg 5 - Arts]]></Text>
+					<Text><![CDATA[Bldg 5]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>11</Size>
+						<Size>10</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Text>
-					<Id>1762800000290</Id>
-					<Name><![CDATA[text67]]></Name>
-					<X>367.8</X><Y>639</Y>
+					<Id>1796000000080</Id>
+					<Name><![CDATA[map_text_80]]></Name>
+					<X>443.1</X><Y>567.5</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5967,20 +6487,20 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
-					<Color>-12829636</Color>
+					<Color>-12171706</Color>
 					<Text><![CDATA[]]></Text>
 					<TextCode><![CDATA[buildingText(4)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>9</Size>
+						<Size>8</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Oval>
-					<Id>1762800000291</Id>
-					<Name><![CDATA[oval68]]></Name>
-					<X>757.2</X><Y>266.5</Y>
+					<Id>1796000000081</Id>
+					<Name><![CDATA[map_oval_81]]></Name>
+					<X>564.1</X><Y>338.7</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5993,16 +6513,16 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<LineColor>-1</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<RadiusX>11</RadiusX>
-					<RadiusY>11</RadiusY>
+					<RadiusX>8</RadiusX>
+					<RadiusY>8</RadiusY>
 					<Rotation>0.0</Rotation>
 					<FillColor>-16758854</FillColor>
 					<FillMaterial>null</FillMaterial>
 				</Oval>
 				<Text>
-					<Id>1762800000292</Id>
-					<Name><![CDATA[text69]]></Name>
-					<X>757.2</X><Y>238.5</Y>
+					<Id>1796000000082</Id>
+					<Name><![CDATA[map_text_82]]></Name>
+					<X>564.1</X><Y>320.7</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6012,18 +6532,18 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-16764276</Color>
-					<Text><![CDATA[Bldg 6 - ACCESS]]></Text>
+					<Text><![CDATA[Bldg 6]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>11</Size>
+						<Size>10</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Text>
-					<Id>1762800000293</Id>
-					<Name><![CDATA[text70]]></Name>
-					<X>757.2</X><Y>281.5</Y>
+					<Id>1796000000083</Id>
+					<Name><![CDATA[map_text_83]]></Name>
+					<X>564.1</X><Y>349.7</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6032,20 +6552,20 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
-					<Color>-12829636</Color>
+					<Color>-12171706</Color>
 					<Text><![CDATA[]]></Text>
 					<TextCode><![CDATA[buildingText(5)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>9</Size>
+						<Size>8</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Oval>
-					<Id>1762800000294</Id>
-					<Name><![CDATA[oval71]]></Name>
-					<X>249</X><Y>272</Y>
+					<Id>1796000000084</Id>
+					<Name><![CDATA[map_oval_84]]></Name>
+					<X>446.2</X><Y>409.3</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6058,16 +6578,16 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<LineColor>-1</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<RadiusX>11</RadiusX>
-					<RadiusY>11</RadiusY>
+					<RadiusX>8</RadiusX>
+					<RadiusY>8</RadiusY>
 					<Rotation>0.0</Rotation>
 					<FillColor>-16758854</FillColor>
 					<FillMaterial>null</FillMaterial>
 				</Oval>
 				<Text>
-					<Id>1762800000295</Id>
-					<Name><![CDATA[text72]]></Name>
-					<X>249</X><Y>244</Y>
+					<Id>1796000000085</Id>
+					<Name><![CDATA[map_text_85]]></Name>
+					<X>446.2</X><Y>391.3</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6077,18 +6597,18 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-16764276</Color>
-					<Text><![CDATA[Bldg 7 - English / Math]]></Text>
+					<Text><![CDATA[Bldg 7]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>11</Size>
+						<Size>10</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Text>
-					<Id>1762800000296</Id>
-					<Name><![CDATA[text73]]></Name>
-					<X>249</X><Y>287</Y>
+					<Id>1796000000086</Id>
+					<Name><![CDATA[map_text_86]]></Name>
+					<X>446.2</X><Y>420.3</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6097,20 +6617,20 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
-					<Color>-12829636</Color>
+					<Color>-12171706</Color>
 					<Text><![CDATA[]]></Text>
 					<TextCode><![CDATA[buildingText(6)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>9</Size>
+						<Size>8</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Oval>
-					<Id>1762800000297</Id>
-					<Name><![CDATA[oval74]]></Name>
-					<X>150</X><Y>272</Y>
+					<Id>1796000000087</Id>
+					<Name><![CDATA[map_oval_87]]></Name>
+					<X>557.9</X><Y>168.0</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6123,16 +6643,16 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<LineColor>-1</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<RadiusX>11</RadiusX>
-					<RadiusY>11</RadiusY>
+					<RadiusX>8</RadiusX>
+					<RadiusY>8</RadiusY>
 					<Rotation>0.0</Rotation>
 					<FillColor>-16758854</FillColor>
 					<FillMaterial>null</FillMaterial>
 				</Oval>
 				<Text>
-					<Id>1762800000298</Id>
-					<Name><![CDATA[text75]]></Name>
-					<X>150</X><Y>244</Y>
+					<Id>1796000000088</Id>
+					<Name><![CDATA[map_text_88]]></Name>
+					<X>557.9</X><Y>150.0</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6145,15 +6665,15 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<Text><![CDATA[Bldg 8]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>11</Size>
+						<Size>10</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Text>
-					<Id>1762800000299</Id>
-					<Name><![CDATA[text76]]></Name>
-					<X>150</X><Y>287</Y>
+					<Id>1796000000089</Id>
+					<Name><![CDATA[map_text_89]]></Name>
+					<X>557.9</X><Y>179.0</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6162,20 +6682,20 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
-					<Color>-12829636</Color>
+					<Color>-12171706</Color>
 					<Text><![CDATA[]]></Text>
 					<TextCode><![CDATA[buildingText(7)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>9</Size>
+						<Size>8</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Oval>
-					<Id>1762800000300</Id>
-					<Name><![CDATA[oval77]]></Name>
-					<X>95</X><Y>151</Y>
+					<Id>1796000000090</Id>
+					<Name><![CDATA[map_oval_90]]></Name>
+					<X>328.3</X><Y>368.4</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6188,16 +6708,16 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<LineColor>-1</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<RadiusX>11</RadiusX>
-					<RadiusY>11</RadiusY>
+					<RadiusX>8</RadiusX>
+					<RadiusY>8</RadiusY>
 					<Rotation>0.0</Rotation>
 					<FillColor>-16758854</FillColor>
 					<FillMaterial>null</FillMaterial>
 				</Oval>
 				<Text>
-					<Id>1762800000301</Id>
-					<Name><![CDATA[text78]]></Name>
-					<X>95</X><Y>123</Y>
+					<Id>1796000000091</Id>
+					<Name><![CDATA[map_text_91]]></Name>
+					<X>328.3</X><Y>350.4</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6210,15 +6730,15 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<Text><![CDATA[Bldg 9]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>11</Size>
+						<Size>10</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Text>
-					<Id>1762800000302</Id>
-					<Name><![CDATA[text79]]></Name>
-					<X>95</X><Y>166</Y>
+					<Id>1796000000092</Id>
+					<Name><![CDATA[map_text_92]]></Name>
+					<X>328.3</X><Y>379.4</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6227,20 +6747,20 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
-					<Color>-12829636</Color>
+					<Color>-12171706</Color>
 					<Text><![CDATA[]]></Text>
 					<TextCode><![CDATA[buildingText(8)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>9</Size>
+						<Size>8</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Oval>
-					<Id>1762800000303</Id>
-					<Name><![CDATA[oval80]]></Name>
-					<X>95</X><Y>503</Y>
+					<Id>1796000000093</Id>
+					<Name><![CDATA[map_oval_93]]></Name>
+					<X>351.2</X><Y>459.7</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6253,16 +6773,16 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<LineColor>-1</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<RadiusX>11</RadiusX>
-					<RadiusY>11</RadiusY>
+					<RadiusX>8</RadiusX>
+					<RadiusY>8</RadiusY>
 					<Rotation>0.0</Rotation>
 					<FillColor>-16758854</FillColor>
 					<FillMaterial>null</FillMaterial>
 				</Oval>
 				<Text>
-					<Id>1762800000304</Id>
-					<Name><![CDATA[text81]]></Name>
-					<X>95</X><Y>475</Y>
+					<Id>1796000000094</Id>
+					<Name><![CDATA[map_text_94]]></Name>
+					<X>351.2</X><Y>441.7</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6272,18 +6792,18 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-16764276</Color>
-					<Text><![CDATA[Bldg A - Science]]></Text>
+					<Text><![CDATA[Bldg A (Science)]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>11</Size>
+						<Size>10</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Text>
-					<Id>1762800000305</Id>
-					<Name><![CDATA[text82]]></Name>
-					<X>95</X><Y>518</Y>
+					<Id>1796000000095</Id>
+					<Name><![CDATA[map_text_95]]></Name>
+					<X>351.2</X><Y>470.7</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6292,372 +6812,20 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
-					<Color>-12829636</Color>
+					<Color>-12171706</Color>
 					<Text><![CDATA[]]></Text>
 					<TextCode><![CDATA[buildingText(9)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>9</Size>
+						<Size>8</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Oval>
-					<Id>1762800000306</Id>
-					<Name><![CDATA[oval83]]></Name>
-					<X>793.5</X><Y>448</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>1</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-10855846</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<RadiusX>3</RadiusX>
-					<RadiusY>3</RadiusY>
-					<Rotation>0.0</Rotation>
-					<FillColor>-10855846</FillColor>
-					<FillMaterial>null</FillMaterial>
-				</Oval>
-				<Oval>
-					<Id>1762800000307</Id>
-					<Name><![CDATA[oval84]]></Name>
-					<X>793.5</X><Y>310.5</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>1</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-10855846</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<RadiusX>3</RadiusX>
-					<RadiusY>3</RadiusY>
-					<Rotation>0.0</Rotation>
-					<FillColor>-10855846</FillColor>
-					<FillMaterial>null</FillMaterial>
-				</Oval>
-				<Oval>
-					<Id>1762800000308</Id>
-					<Name><![CDATA[oval85]]></Name>
-					<X>793.5</X><Y>585.5</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>1</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-10855846</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<RadiusX>3</RadiusX>
-					<RadiusY>3</RadiusY>
-					<Rotation>0.0</Rotation>
-					<FillColor>-10855846</FillColor>
-					<FillMaterial>null</FillMaterial>
-				</Oval>
-				<Oval>
-					<Id>1762800000309</Id>
-					<Name><![CDATA[oval86]]></Name>
-					<X>546</X><Y>310.5</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>1</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-10855846</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<RadiusX>3</RadiusX>
-					<RadiusY>3</RadiusY>
-					<Rotation>0.0</Rotation>
-					<FillColor>-10855846</FillColor>
-					<FillMaterial>null</FillMaterial>
-				</Oval>
-				<Oval>
-					<Id>1762800000310</Id>
-					<Name><![CDATA[oval87]]></Name>
-					<X>634</X><Y>585.5</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>1</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-10855846</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<RadiusX>3</RadiusX>
-					<RadiusY>3</RadiusY>
-					<Rotation>0.0</Rotation>
-					<FillColor>-10855846</FillColor>
-					<FillMaterial>null</FillMaterial>
-				</Oval>
-				<Oval>
-					<Id>1762800000311</Id>
-					<Name><![CDATA[oval88]]></Name>
-					<X>367.8</X><Y>585.5</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>1</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-10855846</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<RadiusX>3</RadiusX>
-					<RadiusY>3</RadiusY>
-					<Rotation>0.0</Rotation>
-					<FillColor>-10855846</FillColor>
-					<FillMaterial>null</FillMaterial>
-				</Oval>
-				<Oval>
-					<Id>1762800000312</Id>
-					<Name><![CDATA[oval89]]></Name>
-					<X>304</X><Y>310.5</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>1</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-10855846</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<RadiusX>3</RadiusX>
-					<RadiusY>3</RadiusY>
-					<Rotation>0.0</Rotation>
-					<FillColor>-10855846</FillColor>
-					<FillMaterial>null</FillMaterial>
-				</Oval>
-				<Oval>
-					<Id>1762800000313</Id>
-					<Name><![CDATA[oval90]]></Name>
-					<X>304</X><Y>585.5</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>1</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-10855846</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<RadiusX>3</RadiusX>
-					<RadiusY>3</RadiusY>
-					<Rotation>0.0</Rotation>
-					<FillColor>-10855846</FillColor>
-					<FillMaterial>null</FillMaterial>
-				</Oval>
-				<Oval>
-					<Id>1762800000314</Id>
-					<Name><![CDATA[oval91]]></Name>
-					<X>304</X><Y>448</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>1</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-10855846</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<RadiusX>3</RadiusX>
-					<RadiusY>3</RadiusY>
-					<Rotation>0.0</Rotation>
-					<FillColor>-10855846</FillColor>
-					<FillMaterial>null</FillMaterial>
-				</Oval>
-				<Oval>
-					<Id>1762800000315</Id>
-					<Name><![CDATA[oval92]]></Name>
-					<X>799</X><Y>250</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>1</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-10855846</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<RadiusX>3</RadiusX>
-					<RadiusY>3</RadiusY>
-					<Rotation>0.0</Rotation>
-					<FillColor>-10855846</FillColor>
-					<FillMaterial>null</FillMaterial>
-				</Oval>
-				<Oval>
-					<Id>1762800000316</Id>
-					<Name><![CDATA[oval93]]></Name>
-					<X>238</X><Y>310.5</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>1</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-10855846</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<RadiusX>3</RadiusX>
-					<RadiusY>3</RadiusY>
-					<Rotation>0.0</Rotation>
-					<FillColor>-10855846</FillColor>
-					<FillMaterial>null</FillMaterial>
-				</Oval>
-				<Oval>
-					<Id>1762800000317</Id>
-					<Name><![CDATA[oval94]]></Name>
-					<X>161</X><Y>250</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>1</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-10855846</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<RadiusX>3</RadiusX>
-					<RadiusY>3</RadiusY>
-					<Rotation>0.0</Rotation>
-					<FillColor>-10855846</FillColor>
-					<FillMaterial>null</FillMaterial>
-				</Oval>
-				<Oval>
-					<Id>1762800000318</Id>
-					<Name><![CDATA[oval95]]></Name>
-					<X>183</X><Y>514</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>1</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-10855846</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<RadiusX>3</RadiusX>
-					<RadiusY>3</RadiusY>
-					<Rotation>0.0</Rotation>
-					<FillColor>-10855846</FillColor>
-					<FillMaterial>null</FillMaterial>
-				</Oval>
-				<Oval>
-					<Id>1762800000319</Id>
-					<Name><![CDATA[oval96]]></Name>
-					<X>106</X><Y>338</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>1</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-10855846</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<RadiusX>3</RadiusX>
-					<RadiusY>3</RadiusY>
-					<Rotation>0.0</Rotation>
-					<FillColor>-10855846</FillColor>
-					<FillMaterial>null</FillMaterial>
-				</Oval>
-				<Oval>
-					<Id>1762800000320</Id>
-					<Name><![CDATA[oval97]]></Name>
-					<X>95</X><Y>613</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>1</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-10855846</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<RadiusX>3</RadiusX>
-					<RadiusY>3</RadiusY>
-					<Rotation>0.0</Rotation>
-					<FillColor>-10855846</FillColor>
-					<FillMaterial>null</FillMaterial>
-				</Oval>
-				<Oval>
-					<Id>1762800000321</Id>
-					<Name><![CDATA[oval98]]></Name>
-					<X>56.5</X><Y>712</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>1</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-10855846</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<RadiusX>3</RadiusX>
-					<RadiusY>3</RadiusY>
-					<Rotation>0.0</Rotation>
-					<FillColor>-10855846</FillColor>
-					<FillMaterial>null</FillMaterial>
-				</Oval>
-				<Oval>
-					<Id>1762800000322</Id>
-					<Name><![CDATA[oval99]]></Name>
-					<X>210.5</X><Y>167.5</Y>
+					<Id>1796000000096</Id>
+					<Name><![CDATA[map_oval_96]]></Name>
+					<X>489.4</X><Y>218.9</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6670,16 +6838,16 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<LineColor>-1</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<RadiusX>11</RadiusX>
-					<RadiusY>11</RadiusY>
+					<RadiusX>8</RadiusX>
+					<RadiusY>8</RadiusY>
 					<Rotation>0.0</Rotation>
 					<FillColor>-16758854</FillColor>
 					<FillMaterial>null</FillMaterial>
 				</Oval>
 				<Text>
-					<Id>1762800000323</Id>
-					<Name><![CDATA[text100]]></Name>
-					<X>210.5</X><Y>139.5</Y>
+					<Id>1796000000097</Id>
+					<Name><![CDATA[map_text_97]]></Name>
+					<X>489.4</X><Y>200.9</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6689,18 +6857,18 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-16764276</Color>
-					<Text><![CDATA[Bldg J - Justice]]></Text>
+					<Text><![CDATA[Bldg 20]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>11</Size>
+						<Size>10</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
 				</Text>
 				<Text>
-					<Id>1762800000324</Id>
-					<Name><![CDATA[text101]]></Name>
-					<X>210.5</X><Y>182.5</Y>
+					<Id>1796000000098</Id>
+					<Name><![CDATA[map_text_98]]></Name>
+					<X>489.4</X><Y>229.9</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -6709,12 +6877,731 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
-					<Color>-12829636</Color>
+					<Color>-12171706</Color>
 					<Text><![CDATA[]]></Text>
-					<TextCode><![CDATA[buildingText(26)]]></TextCode>
+					<TextCode><![CDATA[buildingText(10)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>9</Size>
+						<Size>8</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>CENTER</Alignment>
+				</Text>
+				<Oval>
+					<Id>1796000000099</Id>
+					<Name><![CDATA[map_oval_99]]></Name>
+					<X>707.3</X><Y>167.4</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-1</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>8</RadiusX>
+					<RadiusY>8</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-16758854</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Text>
+					<Id>1796000000100</Id>
+					<Name><![CDATA[map_text_100]]></Name>
+					<X>707.3</X><Y>149.4</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16764276</Color>
+					<Text><![CDATA[Bldg 33]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>10</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>CENTER</Alignment>
+				</Text>
+				<Text>
+					<Id>1796000000101</Id>
+					<Name><![CDATA[map_text_101]]></Name>
+					<X>707.3</X><Y>178.4</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-12171706</Color>
+					<Text><![CDATA[]]></Text>
+					<TextCode><![CDATA[buildingText(11)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>8</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>CENTER</Alignment>
+				</Text>
+				<Oval>
+					<Id>1796000000102</Id>
+					<Name><![CDATA[map_oval_102]]></Name>
+					<X>556.5</X><Y>456.0</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000103</Id>
+					<Name><![CDATA[map_oval_103]]></Name>
+					<X>556.5</X><Y>413.5</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000104</Id>
+					<Name><![CDATA[map_oval_104]]></Name>
+					<X>556.5</X><Y>498.5</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000105</Id>
+					<Name><![CDATA[map_oval_105]]></Name>
+					<X>480.0</X><Y>413.5</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000106</Id>
+					<Name><![CDATA[map_oval_106]]></Name>
+					<X>507.2</X><Y>498.5</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000107</Id>
+					<Name><![CDATA[map_oval_107]]></Name>
+					<X>424.9</X><Y>498.5</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000108</Id>
+					<Name><![CDATA[map_oval_108]]></Name>
+					<X>405.2</X><Y>413.5</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000109</Id>
+					<Name><![CDATA[map_oval_109]]></Name>
+					<X>405.2</X><Y>498.5</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000110</Id>
+					<Name><![CDATA[map_oval_110]]></Name>
+					<X>405.2</X><Y>456.0</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000111</Id>
+					<Name><![CDATA[map_oval_111]]></Name>
+					<X>558.2</X><Y>394.8</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000112</Id>
+					<Name><![CDATA[map_oval_112]]></Name>
+					<X>384.8</X><Y>413.5</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000113</Id>
+					<Name><![CDATA[map_oval_113]]></Name>
+					<X>361.0</X><Y>394.8</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000114</Id>
+					<Name><![CDATA[map_oval_114]]></Name>
+					<X>367.8</X><Y>476.4</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000115</Id>
+					<Name><![CDATA[map_oval_115]]></Name>
+					<X>344.0</X><Y>422.0</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000116</Id>
+					<Name><![CDATA[map_oval_116]]></Name>
+					<X>289.6</X><Y>449.9</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000117</Id>
+					<Name><![CDATA[map_oval_117]]></Name>
+					<X>282.8</X><Y>214.6</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000118</Id>
+					<Name><![CDATA[map_oval_118]]></Name>
+					<X>489.5</X><Y>258.8</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000119</Id>
+					<Name><![CDATA[map_oval_119]]></Name>
+					<X>580.3</X><Y>258.8</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-9539986</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>2</RadiusX>
+					<RadiusY>2</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-9539986</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Oval>
+					<Id>1796000000120</Id>
+					<Name><![CDATA[map_oval_120]]></Name>
+					<X>326.8</X><Y>201.1</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-1</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>5</RadiusX>
+					<RadiusY>5</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-13418155</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Text>
+					<Id>1796000000121</Id>
+					<Name><![CDATA[map_text_121]]></Name>
+					<X>326.8</X><Y>210.1</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-13418155</Color>
+					<Text><![CDATA[B1]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>8</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>CENTER</Alignment>
+				</Text>
+				<Oval>
+					<Id>1796000000122</Id>
+					<Name><![CDATA[map_oval_122]]></Name>
+					<X>327.7</X><Y>170.0</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-1</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>5</RadiusX>
+					<RadiusY>5</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-13418155</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Text>
+					<Id>1796000000123</Id>
+					<Name><![CDATA[map_text_123]]></Name>
+					<X>327.7</X><Y>179.0</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-13418155</Color>
+					<Text><![CDATA[B2]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>8</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>CENTER</Alignment>
+				</Text>
+				<Oval>
+					<Id>1796000000124</Id>
+					<Name><![CDATA[map_oval_124]]></Name>
+					<X>236.4</X><Y>165.6</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-1</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>5</RadiusX>
+					<RadiusY>5</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-13418155</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Text>
+					<Id>1796000000125</Id>
+					<Name><![CDATA[map_text_125]]></Name>
+					<X>236.4</X><Y>174.6</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-13418155</Color>
+					<Text><![CDATA[B3]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>8</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>CENTER</Alignment>
+				</Text>
+				<Oval>
+					<Id>1796000000126</Id>
+					<Name><![CDATA[map_oval_126]]></Name>
+					<X>233.3</X><Y>196.5</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-1</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>5</RadiusX>
+					<RadiusY>5</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-13418155</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Text>
+					<Id>1796000000127</Id>
+					<Name><![CDATA[map_text_127]]></Name>
+					<X>233.3</X><Y>205.5</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-13418155</Color>
+					<Text><![CDATA[B4]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>8</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>CENTER</Alignment>
+				</Text>
+				<Oval>
+					<Id>1796000000128</Id>
+					<Name><![CDATA[map_oval_128]]></Name>
+					<X>273.9</X><Y>196.1</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-1</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>5</RadiusX>
+					<RadiusY>5</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-13418155</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Text>
+					<Id>1796000000129</Id>
+					<Name><![CDATA[map_text_129]]></Name>
+					<X>273.9</X><Y>205.1</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-13418155</Color>
+					<Text><![CDATA[B5]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>8</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>CENTER</Alignment>
+				</Text>
+				<Oval>
+					<Id>1796000000130</Id>
+					<Name><![CDATA[map_oval_130]]></Name>
+					<X>278.0</X><Y>166.6</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-1</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>5</RadiusX>
+					<RadiusY>5</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-13418155</FillColor>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Text>
+					<Id>1796000000131</Id>
+					<Name><![CDATA[map_text_131]]></Name>
+					<X>278.0</X><Y>175.6</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-13418155</Color>
+					<Text><![CDATA[B6]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>8</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
@@ -9223,6 +10110,153 @@ postToTwin(sb.toString(), twinUrl);]]></Body>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>9</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>CENTER</Alignment>
+				</Text>
+				<Oval>
+					<Id>1796000000132</Id>
+					<Name><![CDATA[uav_oval_132]]></Name>
+					<X>0</X><Y>0</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<XCode><![CDATA[dronePx(0)]]></XCode>
+					<YCode><![CDATA[dronePy(0)]]></YCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-1</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>8</RadiusX>
+					<RadiusY>8</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-15817239</FillColor>
+					<FillColorCode><![CDATA[droneColor(0)]]></FillColorCode>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Text>
+					<Id>1796000000133</Id>
+					<Name><![CDATA[map_text_133]]></Name>
+					<X>0</X><Y>0</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<XCode><![CDATA[dronePx(0)]]></XCode>
+					<YCode><![CDATA[dronePy(0) - 5]]></YCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-1</Color>
+					<Text><![CDATA[]]></Text>
+					<TextCode><![CDATA[droneLabel(0)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>8</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>CENTER</Alignment>
+				</Text>
+				<Oval>
+					<Id>1796000000134</Id>
+					<Name><![CDATA[uav_oval_134]]></Name>
+					<X>0</X><Y>0</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<XCode><![CDATA[dronePx(1)]]></XCode>
+					<YCode><![CDATA[dronePy(1)]]></YCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-1</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>8</RadiusX>
+					<RadiusY>8</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-15817239</FillColor>
+					<FillColorCode><![CDATA[droneColor(1)]]></FillColorCode>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Text>
+					<Id>1796000000135</Id>
+					<Name><![CDATA[map_text_135]]></Name>
+					<X>0</X><Y>0</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<XCode><![CDATA[dronePx(1)]]></XCode>
+					<YCode><![CDATA[dronePy(1) - 5]]></YCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-1</Color>
+					<Text><![CDATA[]]></Text>
+					<TextCode><![CDATA[droneLabel(1)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>8</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>CENTER</Alignment>
+				</Text>
+				<Oval>
+					<Id>1796000000136</Id>
+					<Name><![CDATA[uav_oval_136]]></Name>
+					<X>0</X><Y>0</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<XCode><![CDATA[dronePx(2)]]></XCode>
+					<YCode><![CDATA[dronePy(2)]]></YCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>1</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-1</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<RadiusX>8</RadiusX>
+					<RadiusY>8</RadiusY>
+					<Rotation>0.0</Rotation>
+					<FillColor>-15817239</FillColor>
+					<FillColorCode><![CDATA[droneColor(2)]]></FillColorCode>
+					<FillMaterial>null</FillMaterial>
+				</Oval>
+				<Text>
+					<Id>1796000000137</Id>
+					<Name><![CDATA[map_text_137]]></Name>
+					<X>0</X><Y>0</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<XCode><![CDATA[dronePx(2)]]></XCode>
+					<YCode><![CDATA[dronePy(2) - 5]]></YCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-1</Color>
+					<Text><![CDATA[]]></Text>
+					<TextCode><![CDATA[droneLabel(2)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>8</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>CENTER</Alignment>
