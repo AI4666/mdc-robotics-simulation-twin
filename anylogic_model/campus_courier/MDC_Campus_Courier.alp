@@ -2340,7 +2340,7 @@ traceln("MDC Campus Courier v2: " + nodeKey.length + " walkway nodes, " + edgeLi
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[false]]></Code>
+							<Code><![CDATA[true]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1762800000168</Id>
