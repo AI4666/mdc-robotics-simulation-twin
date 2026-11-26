@@ -8,38 +8,50 @@ import * as THREE from 'three';
 // 1. MDC NORTH CAMPUS SIDEWALK GRAPH & WAYPOINT HUBS
 // ============================================================================
 export const CAMPUS_SIDEWALK_NODES = {
-  // Building Portals / Drop-Off Entrances
-  'b1': { id: 'b1', name: 'Building 1 Entrance', x: 2.70, z: 0.00, neighbors: ['ne_lake', 'se_lake', 'e_lake'] },
-  'b2': { id: 'b2', name: 'Building 2 Entrance', x: 0.80, z: 1.65, neighbors: ['s_lake_e', 'se_lake'] },
-  'b3': { id: 'b3', name: 'Building 3 Entrance', x: -0.25, z: -1.60, neighbors: ['n_lake_mid', 'nw_lake'] },
-  'b4': { id: 'b4', name: 'Building 4 Entrance', x: 2.80, z: -2.20, neighbors: ['ne_lake', 'rotunda_junction'] },
-  'b5': { id: 'b5', name: 'Building 5 Entrance', x: -1.62, z: 1.60, neighbors: ['s_lake_w', 'sw_lake'] },
-  'b6': { id: 'b6', name: 'Building 6 Entrance', x: 1.92, z: -1.65, neighbors: ['rotunda_junction', 'ne_lake'] },
-  'b7': { id: 'b7', name: 'Building 7 Entrance', x: -2.70, z: -1.60, neighbors: ['nw_lake', 'w_lake_junction'] },
-  'b8': { id: 'b8', name: 'Building 8 Entrance', x: -3.60, z: -1.60, neighbors: ['w_lake_junction', 'lake_rd_north'] },
-  'b9': { id: 'b9', name: 'Building 9 Entrance', x: -4.10, z: -2.70, neighbors: ['lake_rd_north', 'west_crosswalk'] },
-  'ba': { id: 'ba', name: 'Building A Entrance', x: -4.10, z: 0.50, neighbors: ['west_crosswalk', 'lake_rd_south'] },
-  'bj': { id: 'bj', name: 'Building J Entrance', x: -3.05, z: -2.55, neighbors: ['lake_rd_north', 'w_lake_junction'] },
+  // 12 Campus Delivery Building Portals / Drop-Off Entrances
+  'b1': { id: 'b1', name: 'Building 1 Entrance', x: 5.229, z: -0.075, neighbors: ['e_lake'] },
+  'b2': { id: 'b2', name: 'Building 2 Entrance', x: 2.395, z: 3.711, neighbors: ['s_lake_e', 'se_lake'] },
+  'b3': { id: 'b3', name: 'Building 3 Entrance', x: 1.399, z: -1.493, neighbors: ['n_lake_mid', 'ne_lake', 'rotunda_junction'] },
+  'b4': { id: 'b4', name: 'Building 4 Entrance', x: 4.377, z: -5.445, neighbors: ['rotunda_junction', 'n_campus_east'] },
+  'b5': { id: 'b5', name: 'Building 5 Entrance', x: -1.085, z: 3.751, neighbors: ['s_lake_w', 'sw_lake'] },
+  'b6': { id: 'b6', name: 'Building 6 Entrance', x: 2.475, z: -3.450, neighbors: ['rotunda_junction', 'n_campus_mid', 'n_campus_east'] },
+  'b7': { id: 'b7', name: 'Building 7 Entrance', x: -0.995, z: -1.373, neighbors: ['n_lake_mid', 'nw_lake', 'w_lake_junction'] },
+  'b8': { id: 'b8', name: 'Building 8 Entrance', x: 2.290, z: -8.471, neighbors: ['n_campus_east', 'b20'] },
+  'b9': { id: 'b9', name: 'Building 9 Entrance', x: -4.463, z: -2.576, neighbors: ['lake_rd_north', 'west_crosswalk'] },
+  'ba': { id: 'ba', name: 'Building A Entrance', x: -3.787, z: 0.109, neighbors: ['west_crosswalk', 'lake_rd_south', 'depot_access'] },
+  'b20': { id: 'b20', name: 'Building 20 Entrance', x: 0.277, z: -6.975, neighbors: ['n_campus_mid', 'b8'] },
+  'b33': { id: 'b33', name: 'Building 33 Entrance', x: 6.686, z: -8.487, neighbors: ['n_campus_east'] },
 
   // Central Lake Loop & Plaza Connectors
   'e_lake': { id: 'e_lake', name: 'East Lake Promenade', x: 2.25, z: 0.00, neighbors: ['b1', 'ne_lake', 'se_lake'] },
-  'ne_lake': { id: 'ne_lake', name: 'Northeast Lake Plaza', x: 2.25, z: -1.25, neighbors: ['e_lake', 'b1', 'b4', 'b6', 'rotunda_junction', 'n_lake_mid'] },
-  'se_lake': { id: 'se_lake', name: 'Southeast Lake Plaza', x: 2.25, z: 1.25, neighbors: ['e_lake', 'b1', 's_lake_e', 'b2'] },
-  'n_lake_mid': { id: 'n_lake_mid', name: 'North Lake Promenade', x: 0.00, z: -1.25, neighbors: ['ne_lake', 'nw_lake', 'b3'] },
+  'ne_lake': { id: 'ne_lake', name: 'Northeast Lake Plaza', x: 2.25, z: -1.25, neighbors: ['e_lake', 'b3', 'rotunda_junction', 'n_lake_mid'] },
+  'se_lake': { id: 'se_lake', name: 'Southeast Lake Plaza', x: 2.25, z: 1.25, neighbors: ['e_lake', 's_lake_e', 'b2'] },
+  'n_lake_mid': { id: 'n_lake_mid', name: 'North Lake Promenade', x: 0.00, z: -1.25, neighbors: ['ne_lake', 'nw_lake', 'b3', 'b7'] },
   's_lake_e': { id: 's_lake_e', name: 'South Lake East Promenade', x: 0.80, z: 1.25, neighbors: ['se_lake', 'b2', 's_lake_w'] },
   's_lake_w': { id: 's_lake_w', name: 'South Lake West Promenade', x: -1.62, z: 1.25, neighbors: ['s_lake_e', 'sw_lake', 'b5'] },
-  'nw_lake': { id: 'nw_lake', name: 'Northwest Lake Plaza', x: -2.20, z: -1.25, neighbors: ['n_lake_mid', 'w_lake_junction', 'b3', 'b7', 'w_lake'] },
+  'nw_lake': { id: 'nw_lake', name: 'Northwest Lake Plaza', x: -2.20, z: -1.25, neighbors: ['n_lake_mid', 'w_lake_junction', 'b7', 'w_lake'] },
   'sw_lake': { id: 'sw_lake', name: 'Southwest Lake Plaza', x: -2.20, z: 1.25, neighbors: ['s_lake_w', 'w_lake', 'b5', 'lake_rd_south'] },
   'w_lake': { id: 'w_lake', name: 'West Lake Promenade', x: -2.20, z: 0.00, neighbors: ['nw_lake', 'sw_lake', 'w_lake_junction'] },
 
-  // West Campus & Lake Road Crosswalks
-  'rotunda_junction': { id: 'rotunda_junction', name: 'Rotunda Crosswalk', x: 2.30, z: -1.80, neighbors: ['b4', 'b6', 'ne_lake'] },
-  'w_lake_junction': { id: 'w_lake_junction', name: 'West Walkway Hub', x: -2.80, z: -1.25, neighbors: ['nw_lake', 'w_lake', 'b7', 'b8', 'lake_rd_north', 'bj'] },
-  'lake_rd_north': { id: 'lake_rd_north', name: 'Lake Rd North Crosswalk', x: -3.50, z: -1.80, neighbors: ['b8', 'w_lake_junction', 'b9', 'west_crosswalk', 'bj'] },
+  // West Campus, Central Depot & North Dock Connectors
+  'rotunda_junction': { id: 'rotunda_junction', name: 'Rotunda Crosswalk', x: 2.30, z: -1.80, neighbors: ['b3', 'b4', 'b6', 'ne_lake'] },
+  'w_lake_junction': { id: 'w_lake_junction', name: 'West Walkway Hub', x: -2.80, z: -1.25, neighbors: ['nw_lake', 'w_lake', 'b7', 'lake_rd_north'] },
+  'lake_rd_north': { id: 'lake_rd_north', name: 'Lake Rd North Crosswalk', x: -3.50, z: -1.80, neighbors: ['w_lake_junction', 'b9', 'west_crosswalk', 'nw_dock_hub'] },
   'lake_rd_south': { id: 'lake_rd_south', name: 'Lake Rd South Crosswalk', x: -3.30, z: 0.60, neighbors: ['sw_lake', 'west_crosswalk', 'ba', 'depot_access'] },
-  'west_crosswalk': { id: 'west_crosswalk', name: 'West Campus Promenade', x: -4.00, z: -1.00, neighbors: ['lake_rd_north', 'lake_rd_south', 'b9', 'ba'] },
-  'depot_access': { id: 'depot_access', name: 'Depot Sidewalk Access', x: -4.10, z: 1.50, neighbors: ['ba', 'lake_rd_south', 'depot_bay'] },
-  'depot_bay': { id: 'depot_bay', name: 'Central Depot Loading Bay', x: -4.45, z: 2.40, neighbors: ['depot_access'] }
+  'west_crosswalk': { id: 'west_crosswalk', name: 'West Campus Promenade', x: -4.00, z: -1.00, neighbors: ['lake_rd_north', 'lake_rd_south', 'b9', 'ba', 'depot_access'] },
+  'depot_access': { id: 'depot_access', name: 'Depot Sidewalk Access', x: -5.60, z: -0.18, neighbors: ['ba', 'lake_rd_south', 'west_crosswalk', 'depot_bay', 'nw_dock_hub'] },
+  'depot_bay': { id: 'depot_bay', name: 'Central Depot Loading Bay', x: -7.58, z: -0.178, neighbors: ['depot_access'] },
+  'nw_dock_hub': { id: 'nw_dock_hub', name: 'NW AMR Docking Hub', x: -5.80, z: -7.10, neighbors: ['lake_rd_north', 'depot_access', 'n_campus_mid', 'dock1', 'dock2', 'dock3', 'dock4', 'dock5', 'dock6'] },
+  'n_campus_mid': { id: 'n_campus_mid', name: 'North Campus Mid Connector', x: 0.28, z: -5.80, neighbors: ['nw_dock_hub', 'b20', 'b6', 'n_campus_east'] },
+  'n_campus_east': { id: 'n_campus_east', name: 'North Campus East Connector', x: 2.95, z: -5.80, neighbors: ['n_campus_mid', 'b6', 'b4', 'b8', 'b33'] },
+
+  // Dedicated 6 AMR Home Charging Docks (NW Staging Apron)
+  'dock1': { id: 'dock1', name: 'Bay 1: AMR-01 Dock', x: -4.507, z: -7.496, neighbors: ['nw_dock_hub'] },
+  'dock2': { id: 'dock2', name: 'Bay 2: AMR-02 Dock', x: -4.478, z: -8.413, neighbors: ['nw_dock_hub'] },
+  'dock3': { id: 'dock3', name: 'Bay 3: AMR-03 Dock', x: -7.164, z: -8.540, neighbors: ['nw_dock_hub'] },
+  'dock4': { id: 'dock4', name: 'Bay 4: AMR-04 Dock', x: -7.256, z: -7.631, neighbors: ['nw_dock_hub'] },
+  'dock5': { id: 'dock5', name: 'Bay 5: AMR-05 Dock', x: -6.061, z: -7.644, neighbors: ['nw_dock_hub'] },
+  'dock6': { id: 'dock6', name: 'Bay 6: AMR-06 Dock', x: -5.941, z: -8.512, neighbors: ['nw_dock_hub'] }
 };
 
 // Breadth-First-Search shortest path over sidewalk graph
@@ -245,7 +257,7 @@ export class CampusPedestrianSwarm {
     this.yieldCount = 0;
     this.activeCampusScan = false;
 
-    this.buildingPortalKeys = ['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9', 'ba', 'bj'];
+    this.buildingPortalKeys = ['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9', 'ba', 'b20', 'b33'];
     this.initPool();
   }
 

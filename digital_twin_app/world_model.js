@@ -36,17 +36,17 @@ const INITIAL_CLASSROOM_STATIONS = {
 };
 
 const INITIAL_CAMPUS_OSM_STATIONS = {
-  inventory: { name: 'Station A: Parts Shelf', x: -0.2, y: 0.05, z: -1.30 },
-  electronics: { name: 'Station B: Electronics Bench', x: -3.50, y: 0.05, z: 0.40 },
-  testing: { name: 'Station C: Testing Table', x: 2.20, y: 0.05, z: -0.05 },
-  charger: { name: 'Station D: AMR Charger Dock', x: 0.80, y: 0.05, z: 1.32 },
-  helipad: { name: 'Station E: Drone Helipad', x: -2.55, y: 0.05, z: 1.32 },
-  dock1: { name: 'Bay 1: AMR-01 Dock', x: 0.30, y: 0.05, z: 1.30, isDock: true, assignedRobotId: 'AMR-01', bayNumber: 1 },
-  dock2: { name: 'Bay 2: AMR-02 Dock', x: 0.60, y: 0.05, z: 1.30, isDock: true, assignedRobotId: 'AMR-02', bayNumber: 2 },
-  dock3: { name: 'Bay 3: AMR-03 Dock', x: 0.90, y: 0.05, z: 1.30, isDock: true, assignedRobotId: 'AMR-03', bayNumber: 3 },
-  dock4: { name: 'Bay 4: AMR-04 Dock', x: 1.20, y: 0.05, z: 1.30, isDock: true, assignedRobotId: 'AMR-04', bayNumber: 4 },
-  dock5: { name: 'Bay 5: AMR-05 Dock', x: 1.50, y: 0.05, z: 1.30, isDock: true, assignedRobotId: 'AMR-05', bayNumber: 5 },
-  dock6: { name: 'Bay 6: AMR-06 Dock', x: 1.80, y: 0.05, z: 1.30, isDock: true, assignedRobotId: 'AMR-06', bayNumber: 6 }
+  inventory: { name: 'Station A: Parts Shelf', x: 6.824, y: 0.05, z: -0.533 },
+  electronics: { name: 'Station B: Electronics Bench', x: -6.422, y: 0.05, z: 7.229 },
+  testing: { name: 'Station C: Testing Table', x: 5.556, y: 0.05, z: -0.839 },
+  charger: { name: 'Station D: AMR Charger Dock', x: -6.378, y: 0.05, z: 7.120 },
+  helipad: { name: 'Station E: Drone Helipad', x: -6.420, y: 0.05, z: 7.147 },
+  dock1: { name: 'Bay 1: AMR-01 Dock', x: -4.507, y: 0.05, z: -7.496, isDock: true, assignedRobotId: 'AMR-01', bayNumber: 1 },
+  dock2: { name: 'Bay 2: AMR-02 Dock', x: -4.478, y: 0.05, z: -8.413, isDock: true, assignedRobotId: 'AMR-02', bayNumber: 2 },
+  dock3: { name: 'Bay 3: AMR-03 Dock', x: -7.164, y: 0.05, z: -8.540, isDock: true, assignedRobotId: 'AMR-03', bayNumber: 3 },
+  dock4: { name: 'Bay 4: AMR-04 Dock', x: -7.256, y: 0.05, z: -7.631, isDock: true, assignedRobotId: 'AMR-04', bayNumber: 4 },
+  dock5: { name: 'Bay 5: AMR-05 Dock', x: -6.061, y: 0.05, z: -7.644, isDock: true, assignedRobotId: 'AMR-05', bayNumber: 5 },
+  dock6: { name: 'Bay 6: AMR-06 Dock', x: -5.941, y: 0.05, z: -8.512, isDock: true, assignedRobotId: 'AMR-06', bayNumber: 6 }
 };
 
 class WorldModel {

@@ -45,13 +45,13 @@ public static class Drop {
 // MDC North Campus walkway graph - same nodes / coordinates as the 3D twin
 // (digital_twin_app/public/pedestrians.js) + Building J. Twin units; x right, z down.
 // ===========================================================================
-public final String[] nodeKey = {"b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "ba", "e_lake", "ne_lake", "se_lake", "n_lake_mid", "s_lake_e", "s_lake_w", "nw_lake", "sw_lake", "w_lake", "rotunda_junction", "w_lake_junction", "lake_rd_north", "lake_rd_south", "west_crosswalk", "depot_access", "depot_bay", "bj"};
-public final String[] nodeName = {"Building 1 Entrance", "Building 2 Entrance", "Building 3 Entrance", "Building 4 Entrance", "Building 5 Entrance", "Building 6 Entrance", "Building 7 Entrance", "Building 8 Entrance", "Building 9 Entrance", "Building A Entrance", "East Lake Promenade", "Northeast Lake Plaza", "Southeast Lake Plaza", "North Lake Promenade", "South Lake East Promenade", "South Lake West Promenade", "Northwest Lake Plaza", "Southwest Lake Plaza", "West Lake Promenade", "Rotunda Crosswalk", "West Walkway Hub", "Lake Rd North Crosswalk", "Lake Rd South Crosswalk", "West Campus Promenade", "Depot Sidewalk Access", "Central Depot Loading Bay", "Building J Entrance (Justice)"};
-public final double[] nodeTx = {2.70, 0.80, -0.25, 2.80, -1.62, 1.92, -2.70, -3.60, -4.10, -4.10, 2.25, 2.25, 2.25, 0.00, 0.80, -1.62, -2.20, -2.20, -2.20, 2.30, -2.80, -3.50, -3.30, -4.00, -4.10, -4.45, -3.05};
-public final double[] nodeTz = {0.00, 1.65, -1.60, -2.20, 1.60, -1.65, -1.60, -1.60, -2.70, 0.50, 0.00, -1.25, 1.25, -1.25, 1.25, 1.25, -1.25, 1.25, 0.00, -1.80, -1.25, -1.80, 0.60, -1.00, 1.50, 2.40, -2.55};
-public final int[][] edgeList = {{0, 10}, {0, 11}, {0, 12}, {1, 12}, {1, 14}, {2, 13}, {2, 16}, {3, 11}, {3, 19}, {4, 15}, {4, 17}, {5, 11}, {5, 19}, {6, 16}, {6, 20}, {7, 20}, {7, 21}, {8, 21}, {8, 23}, {9, 22}, {9, 23}, {9, 24}, {10, 11}, {10, 12}, {11, 13}, {11, 19}, {12, 14}, {13, 16}, {14, 15}, {15, 17}, {16, 18}, {16, 20}, {17, 18}, {17, 22}, {18, 20}, {20, 21}, {20, 26}, {21, 23}, {21, 26}, {22, 23}, {22, 24}, {24, 25}};
-public final String[] buildingKeys = {"b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "ba", "bj"};
-public final String[] buildingLabel = {"Bldg 1 - Administration", "Bldg 2 - Library", "Bldg 3 - MAILROOM", "Bldg 4 - Student Life", "Bldg 5 - Arts", "Bldg 6 - ACCESS", "Bldg 7 - English / Math", "Bldg 8", "Bldg 9", "Bldg A - Science", "Bldg J - Justice"};
+public final String[] nodeKey = {"b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "ba", "b20", "b33", "e_lake", "ne_lake", "se_lake", "n_lake_mid", "s_lake_e", "s_lake_w", "nw_lake", "sw_lake", "w_lake", "rotunda_junction", "w_lake_junction", "lake_rd_north", "lake_rd_south", "west_crosswalk", "depot_access", "depot_bay", "nw_dock_hub", "n_campus_mid", "n_campus_east", "dock1", "dock2", "dock3", "dock4", "dock5", "dock6"};
+public final String[] nodeName = {"Building 1 Entrance", "Building 2 Entrance", "Building 3 Entrance", "Building 4 Entrance", "Building 5 Entrance", "Building 6 Entrance", "Building 7 Entrance", "Building 8 Entrance", "Building 9 Entrance", "Building A Entrance", "Building 20 Entrance", "Building 33 Entrance", "East Lake Promenade", "Northeast Lake Plaza", "Southeast Lake Plaza", "North Lake Promenade", "South Lake East Promenade", "South Lake West Promenade", "Northwest Lake Plaza", "Southwest Lake Plaza", "West Lake Promenade", "Rotunda Crosswalk", "West Walkway Hub", "Lake Rd North Crosswalk", "Lake Rd South Crosswalk", "West Campus Promenade", "Depot Sidewalk Access", "Central Depot Loading Bay", "NW AMR Docking Hub", "North Campus Mid Connector", "North Campus East Connector", "Bay 1: AMR-01 Dock", "Bay 2: AMR-02 Dock", "Bay 3: AMR-03 Dock", "Bay 4: AMR-04 Dock", "Bay 5: AMR-05 Dock", "Bay 6: AMR-06 Dock"};
+public final double[] nodeTx = {5.229, 2.395, 1.399, 4.377, -1.085, 2.475, -0.995, 2.290, -4.463, -3.787, 0.277, 6.686, 2.250, 2.250, 2.250, 0.000, 0.800, -1.620, -2.200, -2.200, -2.200, 2.300, -2.800, -3.500, -3.300, -4.000, -5.600, -7.580, -5.800, 0.280, 2.950, -4.507, -4.478, -7.164, -7.256, -6.061, -5.941};
+public final double[] nodeTz = {-0.075, 3.711, -1.493, -5.445, 3.751, -3.450, -1.373, -8.471, -2.576, 0.109, -6.975, -8.487, 0.000, -1.250, 1.250, -1.250, 1.250, 1.250, -1.250, 1.250, 0.000, -1.800, -1.250, -1.800, 0.600, -1.000, -0.180, -0.178, -7.100, -5.800, -5.800, -7.496, -8.413, -8.540, -7.631, -7.644, -8.512};
+public final int[][] edgeList = {{0, 12}, {1, 14}, {1, 16}, {2, 13}, {2, 15}, {2, 21}, {3, 21}, {3, 30}, {4, 17}, {4, 19}, {5, 21}, {5, 29}, {5, 30}, {6, 15}, {6, 18}, {6, 22}, {7, 10}, {7, 30}, {8, 23}, {8, 25}, {9, 24}, {9, 25}, {9, 26}, {10, 29}, {11, 30}, {12, 13}, {12, 14}, {13, 15}, {13, 21}, {14, 16}, {15, 18}, {16, 17}, {17, 19}, {18, 20}, {18, 22}, {19, 20}, {19, 24}, {20, 22}, {22, 23}, {23, 25}, {23, 28}, {24, 25}, {24, 26}, {25, 26}, {26, 27}, {26, 28}, {28, 29}, {28, 31}, {28, 32}, {28, 33}, {28, 34}, {28, 35}, {28, 36}, {29, 30}};
+public final String[] buildingKeys = {"b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "ba", "b20", "b33"};
+public final String[] buildingLabel = {"Bldg 1 - Admin & Library", "Bldg 2 - Academic South", "Bldg 3 - Academic North", "Bldg 4 - Science & Tech", "Bldg 5 - Student Center", "Bldg 6 - Rotunda", "Bldg 7 - Business Annex", "Bldg 8 - Student Services", "Bldg 9 - West Academic", "Bldg A - Science", "Bldg 20 - Annex 20", "Bldg 33 - Annex 33"};
 
 public double[] nodeX, nodeY;                 // meters
 public double[][] spDist; public int[][] spNext;
@@ -164,6 +164,7 @@ public Color roverColor(int i) {
 public double walkerPx(int i) { return i < walkers.size() && walkers.get(i).active ? 546.0 + walkers.get(i).posX / metersPerTwinUnit * 110 : -500; }
 public double walkerPy(int i) { return i < walkers.size() && walkers.get(i).active ? 448.0 + walkers.get(i).posY / metersPerTwinUnit * 110 : -500; }
 public String buildingText(int node) {
+    if (node < 0 || node >= nodeKey.length) return "";
     if (node == depotNode) return "outbox: " + sortedWaiting() + " items";
     return offices[node] + " offices  locker " + (int) Math.round(100 * lockerUsed[node] / Math.max(0.01, lockerCapacity(node))) + "%";
 }
@@ -359,6 +360,132 @@ public String resultHeader() {
     return "policy,robots,pads,batch_fill_pct,amazon_per_day,meters_per_unit,crowd_impact,work_days,arrived,delivered,"
          + "same_day_pct,late_items,avg_hours_to_locker,robot_km,energy_pct,monthly_cost,sim_trip_quiet_min,sim_trip_rush_min,calibration_error,urgent_on_time_pct,depleted_events";
 }
+// ===========================================================================
+// Aerial Urgent Drones (Option A Prototype): UAV-01..03 based at Station E
+// Helipad (-6.420, 7.147), picking up urgent items at Central Depot (-9.280, -0.178)
+// and flying straight-line above walkways & crowds.
+// ===========================================================================
+public static class DroneUnit {
+    public String id, phase = "Standby";
+    public double homeTx, homeTz, tx, ty = 0.22, tz, cruiseY = 2.4, headingRad = 0, battery = 100.0, speedNow = 0;
+    public double phaseUntil = 0, droneSpeedMps = 6.0;
+    public int destNode = -1;
+    public MailItem cargo = null;
+}
+public java.util.ArrayList<DroneUnit> drones = new java.util.ArrayList<DroneUnit>();
+public static final double DEPOT_DRONE_TX = -9.280, DEPOT_DRONE_TZ = -0.178;
+public static final double HELIPAD_TX = -6.420, HELIPAD_TZ = 7.147;
+
+public void initDrones() {
+    drones.clear();
+    double[] offsets = {-0.35, 0.0, 0.35};
+    double[] alts = {2.1, 2.5, 2.9};
+    for (int i = 0; i < 3; i++) {
+        DroneUnit d = new DroneUnit();
+        d.id = String.format("UAV-%02d", i + 1);
+        d.homeTx = HELIPAD_TX + offsets[i];
+        d.homeTz = HELIPAD_TZ;
+        d.tx = d.homeTx; d.tz = d.homeTz; d.ty = 0.22;
+        d.cruiseY = alts[i];
+        drones.add(d);
+    }
+}
+
+public void dispatchDrones() {
+    for (DroneUnit d : drones) {
+        if (!d.phase.equals("Standby") || d.battery < 30.0) continue;
+        int bestB = -1, bestIdx = -1; double bestDue = Double.MAX_VALUE;
+        for (int b : buildingNodes) {
+            java.util.ArrayList<MailItem> q = outbox.get(b);
+            for (int i = 0; i < q.size(); i++) {
+                MailItem m = q.get(i);
+                if (m.urgent && m.deadline < bestDue) { bestDue = m.deadline; bestB = b; bestIdx = i; }
+            }
+        }
+        if (bestB < 0) break;
+        d.cargo = outbox.get(bestB).remove(bestIdx);
+        d.cargo.status = 3; d.cargo.loadedAt = time();
+        d.destNode = bestB;
+        d.phase = "TakeoffDepot";
+    }
+}
+
+boolean moveDroneToward(DroneUnit d, double gx, double gy, double gz, double dt) {
+    double dx = gx - d.tx, dz = gz - d.tz, dy = gy - d.ty;
+    double horizUnits = Math.hypot(dx, dz);
+    if (horizUnits > 1e-4) d.headingRad = Math.atan2(dx, dz);
+    double vertStep = 1.6 * dt;
+    if (Math.abs(dy) > 1e-3 && horizUnits < 0.05) {
+        double moveY = Math.min(Math.abs(dy), vertStep);
+        d.ty += Math.signum(dy) * moveY;
+        d.speedNow = 1.6;
+        d.battery = Math.max(0, d.battery - 0.03 * dt);
+        return Math.abs(gy - d.ty) <= 1e-3;
+    }
+    double maxUnits = (d.droneSpeedMps / Math.max(1.0, metersPerTwinUnit)) * dt;
+    if (horizUnits <= maxUnits) {
+        d.tx = gx; d.tz = gz;
+        d.battery = Math.max(0, d.battery - horizUnits * metersPerTwinUnit / 1000.0 * 8.0);
+        d.speedNow = d.droneSpeedMps;
+        return Math.abs(gy - d.ty) <= 1e-3;
+    } else {
+        d.tx += dx / horizUnits * maxUnits;
+        d.tz += dz / horizUnits * maxUnits;
+        d.battery = Math.max(0, d.battery - maxUnits * metersPerTwinUnit / 1000.0 * 8.0);
+        d.speedNow = d.droneSpeedMps;
+        return false;
+    }
+}
+
+public void stepDrones(double dt) {
+    for (DroneUnit d : drones) {
+        d.speedNow = 0;
+        if (d.phase.equals("Charging")) {
+            d.ty = 0.22;
+            d.battery = Math.min(100.0, d.battery + 2.5 * dt / 60.0);
+            if (d.battery >= 95.0) d.phase = "Standby";
+        } else if (d.phase.equals("TakeoffDepot")) {
+            if (moveDroneToward(d, d.tx, d.cruiseY, d.tz, dt)) d.phase = "ToDepot";
+        } else if (d.phase.equals("ToDepot")) {
+            if (moveDroneToward(d, DEPOT_DRONE_TX, d.cruiseY, DEPOT_DRONE_TZ, dt)) d.phase = "LandingDepot";
+        } else if (d.phase.equals("LandingDepot")) {
+            if (moveDroneToward(d, DEPOT_DRONE_TX, 0.22, DEPOT_DRONE_TZ, dt)) { d.phaseUntil = time() + 10.0; d.phase = "Loading"; }
+        } else if (d.phase.equals("Loading")) {
+            if (time() >= d.phaseUntil) d.phase = "TakeoffDest";
+        } else if (d.phase.equals("TakeoffDest")) {
+            if (moveDroneToward(d, d.tx, d.cruiseY, d.tz, dt)) d.phase = "InFlight";
+        } else if (d.phase.equals("InFlight")) {
+            double bx = nodeTx[d.destNode], bz = nodeTz[d.destNode];
+            if (moveDroneToward(d, bx, d.cruiseY, bz, dt)) d.phase = "LandingDest";
+        } else if (d.phase.equals("LandingDest")) {
+            double bx = nodeTx[d.destNode], bz = nodeTz[d.destNode];
+            if (moveDroneToward(d, bx, 0.22, bz, dt)) { d.phaseUntil = time() + 10.0; d.phase = "Handoff"; }
+        } else if (d.phase.equals("Handoff")) {
+            if (time() >= d.phaseUntil) {
+                if (d.cargo != null) {
+                    if (lockerUsed[d.destNode] + d.cargo.units <= lockerCapacity(d.destNode)) {
+                        lockerUsed[d.destNode] += d.cargo.units;
+                        placeInLocker(d.cargo);
+                    } else {
+                        lockerFullEvents++;
+                        returnToOutbox(d.cargo);
+                    }
+                    d.cargo = null;
+                }
+                d.phase = "TakeoffHome";
+            }
+        } else if (d.phase.equals("TakeoffHome")) {
+            if (moveDroneToward(d, d.tx, d.cruiseY, d.tz, dt)) d.phase = "Returning";
+        } else if (d.phase.equals("Returning")) {
+            if (moveDroneToward(d, d.homeTx, d.cruiseY, d.homeTz, dt)) d.phase = "LandingHome";
+        } else if (d.phase.equals("LandingHome")) {
+            if (moveDroneToward(d, d.homeTx, 0.22, d.homeTz, dt)) {
+                d.phase = (d.battery < 90.0) ? "Charging" : "Standby";
+            }
+        }
+    }
+}
+
 public String resultRow() {
     return dispatchPolicy + "," + numberOfRovers + "," + numberOfChargingPads + "," + f1(batchFillPct) + "," + f1(amazonPackagesPerDay) + ","
          + f1(metersPerTwinUnit) + "," + String.format(java.util.Locale.US, "%.3f", crowdImpactPerWalker) + "," + workDays + ","
@@ -372,8 +499,11 @@ depotNode = indexOfNode(depotKey);
 for (int i = 0; i < rovers.size(); i++) {
     Rover r = rovers.get(i);
     r.roverName = String.format("AMR-%02d", i + 1);     // same ids as the 3D twin fleet
-    r.curNode = depotNode; r.posX = nodeX[depotNode]; r.posY = nodeY[depotNode];
+    int dock = indexOfNode("dock" + (i + 1));
+    r.homeDockNode = dock >= 0 ? dock : depotNode;
+    r.curNode = r.homeDockNode; r.posX = nodeX[r.homeDockNode]; r.posY = nodeY[r.homeDockNode];
 }
+initDrones();
 writeLine("daily_kpis.csv", "day,policy,arrived,eligible,same_day,same_day_pct,delivered,avg_hours_to_locker,"
     + "left_in_mailroom,max_in_mailroom,late_drops,robot_km,energy_pct,locker_full_events,clerk_util_pct,q_reward,q_epsilon", false);
 if (dispatchPolicy == 2 && rlLoadQTable) loadQTable();
@@ -977,7 +1107,7 @@ traceln("MDC Campus Courier v2: " + nodeKey.length + " walkway nodes, " + edgeLi
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA["b1:25,b2:9,b3:2,b4:4,b5:1,b6:1,b7:3,ba:2,bj:1,b8:0,b9:0"]]></Code>
+							<Code><![CDATA["b1:25,b2:9,b3:2,b4:4,b5:1,b6:1,b7:3,b8:1,b9:1,ba:2,b20:1,b33:1"]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1762800000074</Id>
@@ -1003,7 +1133,7 @@ traceln("MDC Campus Courier v2: " + nodeKey.length + " walkway nodes, " + edgeLi
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA["b3"]]></Code>
+							<Code><![CDATA["depot_bay"]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1762800000076</Id>
@@ -1549,7 +1679,7 @@ traceln("MDC Campus Courier v2: " + nodeKey.length + " walkway nodes, " + edgeLi
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[2]]></Code>
+							<Code><![CDATA[6]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1762800000118</Id>
@@ -2445,7 +2575,7 @@ traceln("MDC Campus Courier v2: " + nodeKey.length + " walkway nodes, " + edgeLi
 		<UnitType><![CDATA[NONE]]></UnitType>
 		<SdArray>false</SdArray>
 		<DefaultValue Class="CodeValue">
-			<Code><![CDATA[0]]></Code>
+			<Code><![CDATA[15]]></Code>
 		</DefaultValue>
 		<ParameterEditor>
 			<Id>1795489029262</Id>
@@ -2618,11 +2748,13 @@ for (Walker w : walkers) {
 for (int i = 0; i < crowd.length; i++) java.util.Arrays.fill(crowd[i], 0);
 for (Walker w : walkers) { w.step(stepSec); if (w.active && w.edgeFrom >= 0) crowd[w.edgeFrom][w.edgeTo]++; }
 for (Rover r : rovers) r.step(stepSec);
-// idle robots that are low go to the chargers at the mailroom
+stepDrones(stepSec);
+// idle robots that are low return to their dedicated charging bay
 for (Rover r : rovers)
     if (r.isFree() && r.battery <= chargingThresholdPct) {
-        if (r.curNode == depotNode) requestCharge(r);
-        else { r.goTo(depotNode); r.setPhase("Returning"); }
+        int dock = r.homeDockNode >= 0 ? r.homeDockNode : depotNode;
+        if (r.curNode == dock) requestCharge(r);
+        else { r.goTo(dock); r.setPhase("Returning"); }
     }]]></Action>
 				</Event>
 				<Event>
@@ -3073,7 +3205,7 @@ outbox.get(m.dest).add(m);]]></Body>
 					<PresentationFlag>false</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Body><![CDATA[Rover best = null;
-for (Rover r : rovers) if (r.isFree() && r.curNode == depotNode && r.battery > chargingThresholdPct) { best = r; break; }
+for (Rover r : rovers) if (r.isFree() && (r.curNode == depotNode || r.curNode == r.homeDockNode) && r.battery > chargingThresholdPct) { best = r; break; }
 if (best == null) return false;
 int first = -1; double most = 0;
 for (int b : buildingNodes) {
@@ -3146,6 +3278,7 @@ return units >= batchFillPct / 100.0 * roverCapacityPackages
 					<ShowLabel>true</ShowLabel>
 					<Body><![CDATA[// every 30 s while the robots are on duty
 if (!robotsOnDuty()) return;
+dispatchDrones();
 if (dispatchPolicy == 0) { while (sortedWaiting() > 0 && sendOneRobot()) { } }      // baseline: send at once
 else if (dispatchPolicy == 1) { while (batchingRuleSaysGo() && sendOneRobot()) { } }
 else if (dispatchPolicy == 3) { applyAction(ppoAction()); }
@@ -3240,6 +3373,13 @@ for (int i = 0; i < rovers.size(); i++) {
         "{\"id\":\"%s\",\"x\":%.3f,\"y\":0.05,\"z\":%.3f,\"heading\":%.4f,\"battery\":%.1f,\"speed\":%.2f,\"status\":\"%s\",\"cargo\":%d,\"slots\":%d}",
         r.roverName, r.posX / metersPerTwinUnit, r.posY / metersPerTwinUnit, r.headingRad, r.battery,
         r.speedNow, r.phase, r.cargo.size(), r.cargoSlots()));
+}
+for (int i = 0; i < drones.size(); i++) {
+    DroneUnit d = drones.get(i);
+    if (rovers.size() > 0 || i > 0) sb.append(",");
+    sb.append(String.format(java.util.Locale.US,
+        "{\"id\":\"%s\",\"x\":%.3f,\"y\":%.3f,\"z\":%.3f,\"heading\":%.4f,\"battery\":%.1f,\"speed\":%.2f,\"status\":\"%s\",\"cargo\":%d}",
+        d.id, d.tx, d.ty, d.tz, d.headingRad, d.battery, d.speedNow, d.phase, d.cargo != null ? 1 : 0));
 }
 sb.append("],\"pedestrians\":[");
 boolean first = true;
@@ -9411,6 +9551,8 @@ public int pathIdx = 0;
 public int edgeFrom = -1, edgeTo = -1;       // walkway segment the robot is on (for crowding)
 public double waitUntil = 0;
 public double depletedSince = 0;
+public int homeDockNode = -1;
+public boolean goingToPickup = false;
 
 public void setPhase(String p) {
     phase = p;
@@ -9438,8 +9580,15 @@ public void startTrip(java.util.ArrayList<Main.MailItem> load) {
     cargo.addAll(load);
     for (Main.MailItem m : load) { m.status = 3; m.loadedAt = time(); }
     trips++;
-    waitUntil = time() + main.loadSecondsBase + main.loadSecondsPerItem * load.size();
-    setPhase("Loading");
+    if (curNode != main.depotNode) {
+        goingToPickup = true;
+        goTo(main.depotNode);
+        setPhase("InTransit");
+    } else {
+        goingToPickup = false;
+        waitUntil = time() + main.loadSecondsBase + main.loadSecondsPerItem * load.size();
+        setPhase("Loading");
+    }
 }
 
 void finishLoading() { planStops(); nextStop(); }
@@ -9461,8 +9610,9 @@ void planStops() {
 
 void nextStop() {
     if (stops.isEmpty()) {
-        if (curNode == main.depotNode) finishTrip();
-        else { goTo(main.depotNode); setPhase("Returning"); }
+        int retNode = homeDockNode >= 0 ? homeDockNode : main.depotNode;
+        if (curNode == retNode) finishTrip();
+        else { goTo(retNode); setPhase("Returning"); }
     } else {
         goTo(stops.get(0));
         setPhase("InTransit");
@@ -9499,7 +9649,7 @@ int countFor(int node) { int c = 0; for (Main.MailItem m : cargo) if (m.dest == 
 void finishTrip() {
     for (Main.MailItem m : cargo) main.returnToOutbox(m);
     cargo.clear();
-    if (battery <= main.chargingThresholdPct + 10) main.requestCharge(this);
+    if (battery < 85.0) main.requestCharge(this);
     else setPhase("Idle");
 }
 
@@ -9512,14 +9662,20 @@ public void goTo(int node) {
 void towHome() {
     for (Main.MailItem m : cargo) main.returnToOutbox(m);
     cargo.clear(); stops.clear(); path.clear(); pathIdx = 0;
-    curNode = main.depotNode; posX = main.nodeX[curNode]; posY = main.nodeY[curNode];
+    goingToPickup = false;
+    curNode = homeDockNode >= 0 ? homeDockNode : main.depotNode;
+    posX = main.nodeX[curNode]; posY = main.nodeY[curNode];
     edgeFrom = -1; edgeTo = -1;
     main.requestCharge(this);
 }
 
 void arrive() {
     edgeFrom = -1; edgeTo = -1;
-    if (phase.equals("InTransit")) startHandoff();
+    if (goingToPickup) {
+        goingToPickup = false;
+        waitUntil = time() + main.loadSecondsBase + main.loadSecondsPerItem * cargo.size();
+        setPhase("Loading");
+    } else if (phase.equals("InTransit")) startHandoff();
     else if (phase.equals("Returning")) finishTrip();
 }
 

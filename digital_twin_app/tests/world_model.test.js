@@ -22,7 +22,7 @@ test('separate instances do not share state', () => {
   a.updateRobot({ id: 'AMR-01', x: 9 });
   a.updateStations({ helipad: { x: 9 } });
   assert.strictEqual(b.getRobots()[0].x, -1.5);
-  assert.strictEqual(b.getStation('helipad').x, -2.55);
+  assert.strictEqual(b.getStation('helipad').x, -6.42);
 });
 
 test('mergeRobots updates known robots and adds unknown ones', () => {
@@ -69,7 +69,7 @@ test('updateStations ignores unknown stations and non-numeric coordinates', () =
     nowhere: { x: 1, y: 1, z: 1 },
     charger: null
   });
-  assert.deepStrictEqual(world.getStation('testing'), { name: 'Station C: Testing Table', x: 1.5, y: 0.05, z: -0.05 });
+  assert.deepStrictEqual(world.getStation('testing'), { name: 'Station C: Testing Table', x: 1.5, y: 0.05, z: -0.839 });
   assert.strictEqual(world.getStation('nowhere'), undefined);
-  assert.deepStrictEqual(world.getStation('charger'), { name: 'Station D: AMR Charger Dock', x: 0.8, y: 0.05, z: 1.32 });
+  assert.deepStrictEqual(world.getStation('charger'), { name: 'Station D: AMR Charger Dock', x: -6.378, y: 0.05, z: 7.12 });
 });

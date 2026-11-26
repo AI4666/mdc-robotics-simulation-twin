@@ -432,12 +432,13 @@ test('E_STOP overtakes queued traffic to a slow client', async t => {
   const port = PORT + 3;
   const server = await startServer(port);
   t.after(() => server.stop());
-  const FLOOD = 2000;
+  const FLOOD = 3000;
   const blob = 'x'.repeat(8000);
 
   const slow = await connectClient(port);
   const sender = await connectClient(port);
-  t.after(() => { slow.terminate(); sender.terminate(); });
+  const emergency = await connectClient(port);
+  t.after(() => { slow.terminate(); sender.terminate(); emergency.terminate(); });
   const received = [];
   let bytes = 0;
   slow.on('message', raw => {
@@ -450,9 +451,10 @@ test('E_STOP overtakes queued traffic to a slow client', async t => {
   for (let n = 1; n <= FLOOD; n++) {
     sender.send(JSON.stringify({ type: 'UPDATE_ROBOT', data: { id: 'AMR-01', n, blob } }));
   }
-  await new Promise(r => setTimeout(r, 500));
-  sender.send(JSON.stringify({ type: 'E_STOP', id: 'flood-stop', t: 0, data: { robotId: 'AMR-01', source: 'test' } }));
-  await new Promise(r => setTimeout(r, 300));
+  await new Promise(r => setTimeout(r, 200));
+  emergency.send(JSON.stringify({ type: 'E_STOP', id: 'flood-stop', t: 0, data: { robotId: 'AMR-01', source: 'test' } }));
+  for (let i = 0; i < 40 && sender.bufferedAmount > 0; i++) await new Promise(r => setTimeout(r, 50));
+  await new Promise(r => setTimeout(r, 200));
   slow._socket.resume();
   await new Promise(r => setTimeout(r, 1500));
 

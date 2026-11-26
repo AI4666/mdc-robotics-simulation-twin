@@ -347,17 +347,17 @@ const DEFAULT_CAMPUS_STATION_POSITIONS = {
 };
 
 const DEFAULT_CAMPUS_OSM_STATION_POSITIONS = {
-  inventory: { x: -0.2, y: 0.05, z: -1.30 },   // Station A: Bldg 1000 North Receiving & Mail Hub
-  electronics: { x: -3.50, y: 0.05, z: 0.40 }, // Station B: Science Complex Lab Hub (West)
-  testing: { x: 2.20, y: 0.05, z: -0.05 },     // Station C: Paul R. Scott Library & Bldg 3000 (East)
-  charger: { x: 0.80, y: 0.05, z: 1.32 },      // Station D: Bldg 4000 Admin & Rover Charging Depot (South)
-  helipad: { x: -2.55, y: 0.05, z: 1.32 },     // Station E: Lehman Theater Lakeside Helipad (Southwest)
-  dock1: { x: 0.30, y: 0.05, z: 1.30 },
-  dock2: { x: 0.60, y: 0.05, z: 1.30 },
-  dock3: { x: 0.90, y: 0.05, z: 1.30 },
-  dock4: { x: 1.20, y: 0.05, z: 1.30 },
-  dock5: { x: 1.50, y: 0.05, z: 1.30 },
-  dock6: { x: 1.80, y: 0.05, z: 1.30 }
+  inventory: { x: 6.824, y: 0.05, z: -0.533 },     // Station A: Parts Shelf (East)
+  electronics: { x: -6.422, y: 0.05, z: 7.229 },   // Station B: Electronics Bench (SW Staging)
+  testing: { x: 5.556, y: 0.05, z: -0.839 },       // Station C: Testing Table (East)
+  charger: { x: -6.378, y: 0.05, z: 7.120 },       // Station D: Charger Dock (SW)
+  helipad: { x: -6.420, y: 0.05, z: 7.147 },       // Station E: Drone Charging Helipad (SW)
+  dock1: { x: -4.507, y: 0.05, z: -7.496 },
+  dock2: { x: -4.478, y: 0.05, z: -8.413 },
+  dock3: { x: -7.164, y: 0.05, z: -8.540 },
+  dock4: { x: -7.256, y: 0.05, z: -7.631 },
+  dock5: { x: -6.061, y: 0.05, z: -7.644 },
+  dock6: { x: -5.941, y: 0.05, z: -8.512 }
 };
 
 function isCampusScan(scan) {
@@ -3533,6 +3533,7 @@ function applyAnyLogicUpdate(data) {
     if (!ids.has(up.id)) return;
     const r = robotDefs.find(item => item.id === up.id);
     if (!r || !Number.isFinite(up.x) || !Number.isFinite(up.z)) return;
+    const targetY = Number.isFinite(up.y) ? up.y : r.position.y;
     if (!r.anylogic) {
       // take the robot over: drop its own mission and appear where AnyLogic has it
       r.anylogic = true;
@@ -3541,14 +3542,15 @@ function applyAnyLogicUpdate(data) {
       r.isCustomMission = false;
       r.isReturningToCharge = false;
       r.currentOrder = null;
-      r.position.set(up.x, r.position.y, up.z);
+      r.position.set(up.x, targetY, up.z);
     }
-    r.alTarget = { x: up.x, z: up.z };
+    r.alTarget = { x: up.x, y: targetY, z: up.z };
     if (Number.isFinite(up.heading)) r.alHeading = up.heading;
     if (Number.isFinite(up.battery)) r.battery = up.battery;
     if (Number.isFinite(up.speed)) r.speed = up.speed;
     const load = Number.isFinite(up.slots) ? ` (${up.cargo || 0} items, ${up.slots}/5 slots)` : '';
-    r.status = `🛰 AnyLogic: ${up.status || 'Idle'}${load}`;
+    const prefix = r.type === 'drone' ? '🚁 AnyLogic UAV' : '🛰 AnyLogic';
+    r.status = `${prefix}: ${up.status || 'Idle'}${load}`;
   });
   if (pedestrianSwarm) pedestrianSwarm.setExternalTargets(data.pedestrians || []);
   updateAnyLogicBanner();
@@ -3558,13 +3560,36 @@ function applyAnyLogicUpdate(data) {
 function followAnyLogic(r, delta) {
   const t = r.alTarget;
   if (t) {
-    const dx = t.x - r.position.x, dz = t.z - r.position.z, dist = Math.hypot(dx, dz);
-    if (dist > 2.0) {
-      r.position.x = t.x; r.position.z = t.z;           // far behind (paused tab, big jump): snap
+    const ty = Number.isFinite(t.y) ? t.y : r.position.y;
+    const dx = t.x - r.position.x, dy = ty - r.position.y, dz = t.z - r.position.z;
+    const dist = Math.hypot(dx, dy, dz);
+    if (dist > 3.0) {
+      r.position.set(t.x, ty, t.z);                     // far behind (paused tab, big jump): snap
     } else {
       const k = 1 - Math.exp(-anylogicFollowRate * delta);
-      r.position.x += dx * k; r.position.z += dz * k;
-      if (r.wheels && dist > 0.002) r.wheels.forEach(w => { w.rotation.x += dist * k * 40; });
+      r.position.x += dx * k;
+      r.position.y += dy * k;
+      r.position.z += dz * k;
+      const planar = Math.hypot(dx, dz);
+      if (r.wheels && planar > 0.002) r.wheels.forEach(w => { w.rotation.x += planar * k * 40; });
+    }
+  }
+  if (r.type === 'drone') {
+    const airborne = r.position.y > 0.30;
+    if (r.propellers) {
+      const propSpeed = airborne ? ((r.speed || 0) > 0.1 ? 55 : 40) : ((r.speed || 0) > 0.05 ? 25 : 0);
+      if (propSpeed > 0) r.propellers.forEach((p, pIdx) => {
+        p.rotation.y += (pIdx % 2 === 0 ? 1 : -1) * delta * propSpeed;
+      });
+    }
+    if (r.statusLight) {
+      if (!airborne) {
+        r.statusLight.visible = true;
+        r.statusLight.material.color.setHex(0x10b981);
+      } else {
+        r.statusLight.material.color.setHex(0x38bdf8);
+        r.statusLight.visible = (Math.floor(performance.now() * 0.005) % 2 === 0);
+      }
     }
   }
   if (Number.isFinite(r.alHeading)) {

@@ -69,7 +69,7 @@ export function createParcelBoxMesh(priority = 'standard') {
 // ============================================================================
 // 2. CENTRAL SORTING & DISTRIBUTION DEPOT WITH 1,000 SMALL YELLOW PACKAGES
 // ============================================================================
-export function createCentralDepotMesh(depotCenter = { x: -5.4, z: 2.4 }) {
+export function createCentralDepotMesh(depotCenter = { x: -8.53, z: -0.178 }) {
   const root = new THREE.Group();
   root.name = 'central_logistics_depot';
   root.userData = { isDepot: true, isDraggable: true };
@@ -317,8 +317,8 @@ export class CampusLogisticsDispatcher {
     this.onTimeCount = 0;
     this.totalDeliveryTime = 0;
 
-    // Central Sorting Depot Center coordinates (red zone: west lawn)
-    this.depotCenter = { x: -5.4, z: 2.4 };
+    // Central Sorting Depot Center coordinates (west side, substituting Building J)
+    this.depotCenter = { x: -8.53, z: -0.178 };
     this.loadSavedDepotPosition();
 
     // Build the 3D depot facility with 1,000 instanced packages
