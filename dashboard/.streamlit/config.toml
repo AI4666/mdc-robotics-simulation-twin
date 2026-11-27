@@ -5,10 +5,16 @@ headless = true
 [browser]
 gatherUsageStats = false
 
+# Skin: blueprint (dashboard/styles.py). Other skins: editorial, control; see dashboard/README.md
 [theme]
 base = "light"
 primaryColor = "#0B4DA2"
 backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F3F6FB"
-textColor = "#0F1B2D"
-font = "sans serif"
+secondaryBackgroundColor = "#F2F6FC"
+textColor = "#0A2A5E"
+borderColor = "#C8D6EA"
+baseRadius = "0rem"
+font = "'Atkinson Hyperlegible', sans-serif"
+headingFont = "Archivo, sans-serif"
+codeFont = "'DM Mono', monospace"
+showWidgetBorder = true

@@ -47,10 +47,28 @@ Any missing file shows a short "isn't available yet" note instead of an error.
 `monthly_cost` in the CSVs uses $35 per robot-day, $5 per late item and $0.25 per item-hour waiting. The sidebar
 re-prices every run with other values by adjusting only those components; the model's energy cost is kept.
 
+## Look and feel
+
+The default skin is **Blueprint**: a white engineering-drawing grid, Archivo (wide, bold) headings, Atkinson
+Hyperlegible body text (built for legibility, good on a projector) and DM Mono for numbers, square corners and
+offset-shadow cards, all in the MDC blue palette. Fonts load from Google Fonts; offline, the page falls back to
+system fonts and keeps working.
+
+Two other skins share the same layout: `editorial` (light, serif, report-like) and `control` (dark console).
+To try one, run it with its theme flags:
+
+```bash
+DASHBOARD_STYLE=control streamlit run app.py $(python styles.py control --flags)
+```
+
+To make another skin the default, set `DEFAULT_STYLE` in `styles.py` and paste `python styles.py <skin>`
+into `.streamlit/config.toml` in place of the `[theme]` block.
+
 ## Files
 
 - `app.py`: the Streamlit UI
 - `data.py`: loading, KPIs, what-if estimator, statistics, RL comparison, twin client, insights
 - `tests/test_dashboard.py`: data-layer tests plus full app runs (committed data, no data, partial data,
   final 21-column data, several policies, twin online / offline)
-- `.streamlit/config.toml`: port 8501 and the light MDC-blue theme
+- `styles.py`: the three skins (CSS, fonts, chart colours, Streamlit theme values)
+- `.streamlit/config.toml`: port 8501 and the Blueprint theme

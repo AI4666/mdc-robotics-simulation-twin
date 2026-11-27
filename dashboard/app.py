@@ -20,104 +20,60 @@ import plotly.graph_objects as go
 import streamlit as st
 
 import data as D
+import styles as S
 
 st.set_page_config(
     page_title="MDC Campus Courier Dashboard",
-    page_icon="📦",
+    page_icon=":material/local_shipping:",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
 # --------------------------------------------------------------------------------------------------
-# Look and feel
+# Look and feel (styles.py: one layout, three skins; DASHBOARD_STYLE picks one)
 # --------------------------------------------------------------------------------------------------
-MDC_BLUE = "#0B4DA2"
-MDC_NAVY = "#0A2A5E"
-INK = "#0F1B2D"
-MUTED = "#5B6B82"
-GRID = "#E6EBF2"
-POLICY_COLORS = {
-    "Baseline (FIFO)": "#8A96A8",
-    "Batching": "#E8A33D",
-    "Q-learning": "#1A9E8F",
-    "PPO": MDC_BLUE,
-}
-SERIES = [MDC_BLUE, "#1A9E8F", "#E8A33D", "#C2410C", "#7C3AED", "#8A96A8"]
+STYLE = S.current()
+P = S.palette(STYLE)
+MDC_BLUE, MDC_NAVY = P["blue"], P["navy"]
+INK, MUTED, GRID, SURFACE, FILL = P["ink"], P["muted"], P["grid"], P["surface"], P["fill"]
+TEAL, AMBER, RUST, SLATE = P["teal"], P["amber"], P["rust"], P["slate"]
+GOOD, BAD = P["good"], P["bad"]
+POLICY_COLORS = {"Baseline (FIFO)": SLATE, "Batching": AMBER, "Q-learning": TEAL, "PPO": MDC_BLUE}
+SERIES = [MDC_BLUE, TEAL, AMBER, RUST, SLATE]
 PLOTLY_CONFIG = {"displaylogo": False, "modeBarButtonsToRemove": ["lasso2d", "select2d"]}
 
-st.markdown(
-    f"""
-<style>
-  .block-container {{ padding-top: 1.6rem; padding-bottom: 3rem; max-width: 1400px; }}
-  h1, h2, h3 {{ color: {INK}; letter-spacing: -0.01em; }}
-  .hero {{
-      background: linear-gradient(120deg, {MDC_NAVY} 0%, {MDC_BLUE} 70%, #2F74D0 100%);
-      color: #fff; border-radius: 14px; padding: 22px 28px; margin-bottom: 18px;
-  }}
-  .hero h1 {{ color: #fff; font-size: 1.75rem; margin: 0 0 4px 0; }}
-  .hero p {{ color: #DCE7F7; margin: 0; font-size: 0.98rem; }}
-  .hero .pill {{
-      display: inline-block; background: rgba(255,255,255,0.16); color: #fff; border-radius: 999px;
-      padding: 2px 10px; font-size: 0.78rem; margin-right: 6px; margin-top: 10px;
-  }}
-  .kpi {{
-      background: #fff; border: 1px solid {GRID}; border-radius: 12px; padding: 14px 16px 12px 16px;
-      box-shadow: 0 1px 2px rgba(15,27,45,0.04); height: 100%;
-      border-top: 4px solid {MDC_BLUE}; min-height: 132px;
-  }}
-  .kpi .label {{ color: {MUTED}; font-size: 0.80rem; font-weight: 600; text-transform: uppercase;
-                letter-spacing: 0.04em; }}
-  .kpi .value {{ color: {INK}; font-size: 1.65rem; font-weight: 700; line-height: 1.25; margin-top: 2px; }}
-  .kpi .sub {{ color: {MUTED}; font-size: 0.80rem; margin-top: 2px; }}
-  .kpi .up {{ color: #15803D; font-weight: 600; }}
-  .kpi .down {{ color: #B91C1C; font-weight: 600; }}
-  .kpi.alt {{ border-top-color: #1A9E8F; }}
-  .kpi.warn {{ border-top-color: #E8A33D; }}
-  .section-note {{ color: {MUTED}; font-size: 0.9rem; margin-top: -6px; margin-bottom: 10px; }}
-  .insight {{
-      background: #F6F9FE; border: 1px solid #DCE6F5; border-left: 4px solid {MDC_BLUE};
-      border-radius: 10px; padding: 14px 16px; margin-bottom: 12px;
-  }}
-  .insight .tag {{ color: {MDC_BLUE}; font-size: 0.74rem; font-weight: 700; text-transform: uppercase;
-                   letter-spacing: 0.05em; }}
-  .insight h4 {{ margin: 2px 0 6px 0; color: {INK}; font-size: 1.05rem; }}
-  .robot {{
-      background: #fff; border: 1px solid {GRID}; border-radius: 12px; padding: 12px 14px; margin-bottom: 10px;
-  }}
-  .robot .rid {{ font-weight: 700; color: {INK}; }}
-  .robot .rstatus {{ color: {MUTED}; font-size: 0.84rem; min-height: 2.2em; }}
-  .bar {{ background: #EEF2F7; border-radius: 6px; height: 8px; overflow: hidden; margin-top: 6px; }}
-  .bar > div {{ height: 8px; border-radius: 6px; }}
-  .stTabs [data-baseweb="tab-list"] {{ gap: 6px; border-bottom: 1px solid {GRID}; }}
-  .stTabs [role="tab"] {{
-      padding: 8px 14px; border-radius: 8px 8px 0 0; background: #F3F6FB; font-weight: 600;
-  }}
-  .stTabs [role="tab"][aria-selected="true"] {{ background: #E6EEF9; color: {MDC_BLUE}; }}
-  section[data-testid="stSidebar"] {{ border-right: 1px solid {GRID}; }}
-</style>
-""",
-    unsafe_allow_html=True,
-)
+st.markdown(S.css(STYLE), unsafe_allow_html=True)
 
 
 def style_fig(fig: go.Figure, height: int = 360, title: str | None = None, legend: bool = True) -> go.Figure:
     fig.update_layout(
-        template="plotly_white",
+        template=P["template"],
         height=height,
         margin=dict(l=10, r=10, t=48 if title else 18, b=10 if not legend else 30),
-        title=dict(text=title, x=0, xanchor="left", font=dict(size=15, color=INK)) if title else None,
-        font=dict(family="Inter, Segoe UI, Arial, sans-serif", size=13, color=INK),
+        title=dict(text=title, x=0, xanchor="left", font=dict(size=15, color=INK, family=P["display"]))
+        if title else None,
+        font=dict(family=P["body"], size=13, color=INK),
         colorway=SERIES,
-        hoverlabel=dict(bgcolor="#fff", bordercolor=GRID, font=dict(color=INK)),
+        hoverlabel=dict(bgcolor=SURFACE, bordercolor=GRID, font=dict(color=INK, family=P["body"])),
         legend=dict(orientation="h", yanchor="top", y=-0.22, xanchor="center", x=0.5, title=None)
         if legend else None,
         showlegend=legend,
-        plot_bgcolor="#fff",
-        paper_bgcolor="#fff",
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
     )
     fig.update_xaxes(gridcolor=GRID, zeroline=False, linecolor=GRID, title_font=dict(size=12, color=MUTED))
     fig.update_yaxes(gridcolor=GRID, zeroline=False, linecolor=GRID, title_font=dict(size=12, color=MUTED))
     return fig
+
+
+def section(num: str, title: str, note: str = "") -> None:
+    note_html = f'<div class="section-note">{note}</div>' if note else ""
+    st.markdown(f'<div class="sec"><span class="num">{num}</span><h2>{title}</h2></div>{note_html}',
+                unsafe_allow_html=True)
+
+
+def sub(title: str) -> None:
+    st.markdown(f'<div class="subhead">{title}</div>', unsafe_allow_html=True)
 
 
 def chart(fig: go.Figure, key: str) -> None:
@@ -134,9 +90,8 @@ def kpi(label: str, value: str, sub: str = "", variant: str = "") -> str:
 
 
 def kpi_row(cards: list[str]) -> None:
-    cols = st.columns(len(cards))
-    for col, card in zip(cols, cards):
-        col.markdown(card, unsafe_allow_html=True)
+    """Cards in a CSS grid that wraps on narrow screens instead of squeezing the text."""
+    st.markdown(f'<div class="kpi-grid">{"".join(cards)}</div>', unsafe_allow_html=True)
 
 
 def delta(new, old, lower_is_better: bool, fmt: str = "{:+.1f}", unit: str = "") -> str:
@@ -152,7 +107,7 @@ def delta(new, old, lower_is_better: bool, fmt: str = "{:+.1f}", unit: str = "")
 
 def missing(what: str, file_hint: str) -> None:
     st.info(f"**{what}** isn't available yet. Expected file: `{file_hint}`. The dashboard will pick it up "
-            f"automatically as soon as it exists.", icon="📂")
+            f"automatically as soon as it exists.", icon=":material/folder_open:")
 
 
 def fmt_money(v) -> str:
@@ -184,10 +139,9 @@ def stamp(folder: Path, names) -> tuple:
 # Sidebar
 # --------------------------------------------------------------------------------------------------
 with st.sidebar:
-    st.markdown(f"### 📦 Campus Courier")
-    st.caption("MDC North Campus mail robots · Option 2")
-
-    st.markdown("#### Scenario")
+    st.markdown('<div class="brand"><span class="brand-mark">MDC</span><div><b>Campus Courier</b>'
+                '<small>North Campus mail robots · Option 2</small></div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="side-label">Scenario</div>', unsafe_allow_html=True)
     robots_in = st.slider("Courier robots", 1, 6, D.DEFAULT_SETUP["robots"],
                           help="Fleet size. Each robot carries 5 package slots (25 letters = 1 slot).")
     pads_in = st.slider("Charging pads", 1, 3, D.DEFAULT_SETUP["pads"], help="Charging pads at the mailroom.")
@@ -235,47 +189,53 @@ rl_table = D.rl_comparison(rl["ppo"], rl["q_learning"])
 final_data = D.exports_are_final(exports)
 
 with st.sidebar:
-    st.markdown("#### Data status")
+    st.markdown('<div class="side-label">Data status</div>', unsafe_allow_html=True)
     n_found = sum(v is not None for v in exports.values())
     st.markdown(f"AnyLogic files: **{n_found}/{len(exports)}** · RL files: "
                 f"**{sum(v is not None for v in rl.values())}/{len(rl)}**")
     if final_data:
-        st.success("Final calibrated exports (21 columns).", icon="✅")
+        st.success("Final calibrated exports (21 columns).", icon=":material/check_circle:")
     elif n_found:
         st.warning("Sample exports from test runs before calibration. Final numbers come from Ricardo's "
-                   "re-runs; drop the new CSVs in and press Reload.", icon="🧪")
+                   "re-runs; drop the new CSVs in and press Reload.", icon=":material/science:")
     else:
-        st.error(f"No AnyLogic CSVs found in `{exports_dir}`.", icon="⚠️")
+        st.error(f"No AnyLogic CSVs found in `{exports_dir}`.", icon=":material/warning:")
 
 # --------------------------------------------------------------------------------------------------
 # Header
 # --------------------------------------------------------------------------------------------------
+n_runs = sum(len(f) for f in (opt, compare, mc, sens, calib) if f is not None)
+status_txt = "Final exports" if final_data else ("Sample exports" if n_found else "No exports")
 st.markdown(
-    """
-<div class="hero">
-  <h1>MDC North Campus Mail Robots — Digital Twin Dashboard</h1>
-  <p>Autonomous couriers carry vendor mail from the Duplicating &amp; Mail Center (Building 3, Room 3103) to a
-  locker at every building. Multi-method AnyLogic model (DES + ABM) · Q-learning vs. PPO · live 3D twin.</p>
-  <span class="pill">AnyLogic 8.9</span><span class="pill">Stable-Baselines3 PPO</span>
-  <span class="pill">Tabular Q-learning (288 states)</span><span class="pill">Three.js twin</span>
+    f"""
+<div class="mast">
+  <div class="eyebrow">CAI 4830C · Simulation for Applied AI · Miami Dade College</div>
+  <h1>North Campus Mail Robots</h1>
+  <p>Courier robots carry vendor mail from the Duplicating &amp; Mail Center (Building 3, Room 3103) to a locker at
+  every building. A multi-method AnyLogic model, Q-learning vs. PPO dispatch, and a live 3D twin.</p>
+  <div class="facts">
+    <div class="fact"><b>{n_runs}</b><span>AnyLogic runs loaded</span></div>
+    <div class="fact"><b>5</b><span>experiments</span></div>
+    <div class="fact"><b>{len(rl_table)}</b><span>dispatch policies compared</span></div>
+    <div class="fact"><b>{status_txt}</b><span>data status</span></div>
+  </div>
 </div>
 """,
     unsafe_allow_html=True,
 )
 
 tab_ops, tab_ai, tab_exp, tab_twin, tab_exec = st.tabs([
-    "📊 Operational KPIs", "🤖 AI Policy Comparison", "🧪 AnyLogic Experiments",
-    "🛰️ 3D Digital Twin", "📝 Executive Report",
+    ":material/monitoring: Operational KPIs", ":material/model_training: AI Policy Comparison",
+    ":material/science: AnyLogic Experiments", ":material/view_in_ar: 3D Digital Twin",
+    ":material/summarize: Executive Report",
 ])
 
 # ==================================================================================================
 # Tab 1 — Operational KPIs
 # ==================================================================================================
 with tab_ops:
-    st.subheader("Operational KPIs for the selected scenario")
-    st.markdown('<div class="section-note">The cards show the closest real AnyLogic run to the sidebar '
-                'settings (Optimization and Sensitivity experiments, batching policy, 30 working days).</div>',
-                unsafe_allow_html=True)
+    section("01", "Operational KPIs", "The closest real AnyLogic run to the sidebar settings (Optimization and "
+            "Sensitivity experiments, batching policy, 30 working days).")
 
     pool = [f for f in (opt, sens, mc) if f is not None]
     pool_df = pd.concat(pool, ignore_index=True) if pool else None
@@ -313,7 +273,7 @@ with tab_ops:
     # What-if estimate
     st.markdown("")
     with st.container(border=True):
-        st.markdown("##### 🔮 What-if estimate for your exact settings")
+        sub("What-if estimate for your exact settings")
         model = D.fit_whatif([opt, sens, mc])
         est = D.predict_whatif(model, robots_in, pads_in, batch_in, amazon_in, costs)
         if est is None:
@@ -326,7 +286,7 @@ with tab_ops:
                        f" Use it to explore between runs, then confirm in AnyLogic.")
             if est["extrapolating"]:
                 st.warning("Some settings are outside the range of the runs, so this estimate is extrapolated.",
-                           icon="⚠️")
+                           icon=":material/warning:")
             c = st.columns(5)
             c[0].metric("Wait (h)", f"{est['avg_hours_to_locker']:.2f}")
             c[1].metric("Throughput (/h)", f"{est['throughput_per_hr']:.0f}")
@@ -345,7 +305,7 @@ with tab_ops:
                         customdata=g[["n"]], hovertemplate="%{x} robots<br>$%{y:,.0f}/month<br>%{customdata[0]} runs"
                                                             "<extra></extra>")
             fig.add_scatter(x=g["robots"], y=g["hours"], name="Hours to locker", yaxis="y2", mode="lines+markers",
-                            line=dict(color="#E8A33D", width=3), marker=dict(size=9),
+                            line=dict(color=AMBER, width=3), marker=dict(size=9),
                             hovertemplate="%{x} robots<br>%{y:.2f} h to locker<extra></extra>")
             fig.add_vline(x=robots_in, line_dash="dot", line_color=MUTED)
             fig.update_layout(yaxis=dict(title="Monthly cost ($)"), xaxis=dict(title="Courier robots", dtick=1),
@@ -361,7 +321,7 @@ with tab_ops:
                             mode="lines+markers", line=dict(color=MDC_BLUE, width=3),
                             hovertemplate="λ = %{x}/day<br>%{y:.0f} items/day<extra></extra>")
             fig.add_scatter(x=g["amazon_per_day"], y=g["km"], name="Robot km / month", yaxis="y2",
-                            mode="lines+markers", line=dict(color="#1A9E8F", width=3),
+                            mode="lines+markers", line=dict(color=TEAL, width=3),
                             hovertemplate="λ = %{x}/day<br>%{y:,.0f} km/month<extra></extra>")
             fig.add_vline(x=amazon_in, line_dash="dot", line_color=MUTED)
             fig.update_layout(xaxis=dict(title="Amazon packages / day (λ)"), yaxis=dict(title="Items / day"),
@@ -371,7 +331,7 @@ with tab_ops:
             missing("Amazon-volume sensitivity", "exp_sensitivity.csv")
 
     # Daily trends
-    st.markdown("#### Day-by-day trend (Simulation experiment)")
+    sub("Day-by-day trend (Simulation experiment)")
     if daily is None:
         missing("Daily KPIs", "daily_kpis.csv")
     else:
@@ -387,13 +347,13 @@ with tab_ops:
         a, b = st.columns(2)
         with a:
             fig = go.Figure()
-            fig.add_bar(x=d["day"], y=d["arrived"], name="Arrived", marker_color="#BFD3EE",
+            fig.add_bar(x=d["day"], y=d["arrived"], name="Arrived", marker_color=FILL,
                         hovertemplate="Day %{x}<br>%{y} arrived<extra></extra>")
             fig.add_bar(x=d["day"], y=d["delivered"] if "delivered" in d else d["same_day"], name="Delivered",
                         marker_color=MDC_BLUE, hovertemplate="Day %{x}<br>%{y} delivered<extra></extra>")
             if "same_day_pct" in d:
                 fig.add_scatter(x=d["day"], y=d["same_day_pct"], name="Same-day %", yaxis="y2",
-                                mode="lines+markers", line=dict(color="#1A9E8F", width=3),
+                                mode="lines+markers", line=dict(color=TEAL, width=3),
                                 hovertemplate="Day %{x}<br>%{y:.1f}% same day<extra></extra>")
             fig.update_layout(barmode="group", xaxis=dict(title="Working day", dtick=1),
                               yaxis=dict(title="Mail items"),
@@ -407,7 +367,7 @@ with tab_ops:
                             hovertemplate="Day %{x}<br>%{y:.1f} km<extra></extra>")
             if "max_in_mailroom" in d:
                 fig.add_bar(x=d["day"], y=d["max_in_mailroom"], name="Peak items waiting in mailroom", yaxis="y2",
-                            marker_color="rgba(232,163,61,0.35)",
+                            marker_color="rgba(232,163,61,0.38)",
                             hovertemplate="Day %{x}<br>peak %{y} items waiting<extra></extra>")
                 fig.data = fig.data[::-1]  # bars behind the line
             fig.update_layout(xaxis=dict(title="Working day", dtick=1), yaxis=dict(title="Robot km"),
@@ -426,10 +386,8 @@ with tab_ops:
 # Tab 2 — AI Policy Comparison
 # ==================================================================================================
 with tab_ai:
-    st.subheader("Baseline vs. Q-learning vs. PPO")
-    st.markdown('<div class="section-note">From Jordan\'s Option 2 training in <code>rl_models/</code>: the same '
-                'campus mail day (5-minute dispatch decisions 08:00–17:00), evaluated on identical seeds.</div>',
-                unsafe_allow_html=True)
+    section("02", "Baseline vs. Q-learning vs. PPO", "From Jordan's Option 2 training in <code>rl_models/</code>: "
+            "the same campus mail day (5-minute dispatch decisions 08:00–17:00), evaluated on identical seeds.")
     ppo, ql = rl["ppo"], rl["q_learning"]
     if rl_table.empty:
         missing("RL results", "rl_models/ppo_results.json and q_learning_results.json")
@@ -467,7 +425,7 @@ with tab_ai:
             with cols[i % 2]:
                 chart(style_fig(fig, 300, title, legend=False), f"rl_bar_{i}")
 
-        st.markdown("#### Learning curves")
+        sub("Learning curves")
         win = st.slider("Smoothing window (episodes)", 1, 100, 25, key="rl_window")
         a, b = st.columns(2)
         with a:
@@ -475,12 +433,12 @@ with tab_ai:
             if ql and ql.get("episode_rewards"):
                 y = ql["episode_rewards"]
                 fig.add_scatter(x=list(range(1, len(y) + 1)), y=y, name="Q-learning (raw)", mode="lines",
-                                line=dict(color="#1A9E8F", width=1), opacity=0.25,
+                                line=dict(color=TEAL, width=1), opacity=0.25,
                                 hovertemplate="Episode %{x}<br>reward %{y:.1f}<extra></extra>")
                 fig.add_scatter(x=list(range(1, len(y) + 1)), y=D.rolling_mean(y, win), mode="lines",
-                                name=f"Q-learning ({win}-ep mean)", line=dict(color="#1A9E8F", width=3),
+                                name=f"Q-learning ({win}-ep mean)", line=dict(color=TEAL, width=3),
                                 hovertemplate="Episode %{x}<br>mean %{y:.1f}<extra></extra>")
-            ref_lines = [("fifo", "FIFO baseline", "#8A96A8"), ("batching", "Batching", "#E8A33D"),
+            ref_lines = [("fifo", "FIFO baseline", SLATE), ("batching", "Batching", AMBER),
                          ("ppo", "PPO (evaluation)", MDC_BLUE)]
             n_ep = len(ql["episode_rewards"]) if ql and ql.get("episode_rewards") else 1
             for key, name, color in ref_lines:
@@ -503,12 +461,12 @@ with tab_ai:
             if ql and ql.get("episode_rewards"):
                 y = ql["episode_rewards"][-50:]
                 fig.add_scatter(x=list(range(1, len(y) + 1)), y=y, name="Q-learning (last 50)", mode="lines+markers",
-                                line=dict(color="#1A9E8F", width=2), marker=dict(size=6),
+                                line=dict(color=TEAL, width=2), marker=dict(size=6),
                                 hovertemplate="Day %{x}<br>reward %{y:.1f}<extra></extra>")
             if "fifo" in t.index:
                 yv = t.loc["fifo", "Avg reward / day"]
                 fig.add_scatter(x=[1, 50], y=[yv, yv], mode="lines", name=f"FIFO baseline ({yv:.1f})",
-                                line=dict(color="#8A96A8", width=2, dash="dash"),
+                                line=dict(color=SLATE, width=2, dash="dash"),
                                 hovertemplate=f"FIFO baseline: {yv:.1f}<extra></extra>")
             fig.update_layout(xaxis=dict(title="Evaluation day"), yaxis=dict(title="Daily reward"))
             chart(style_fig(fig, 380, "Trained policies on 50 evaluation days"), "rl_eval")
@@ -520,8 +478,8 @@ with tab_ai:
             viol = [max(0.0, 100.0 - v) for v in sd]
             fig = go.Figure()
             fig.add_scatter(x=list(range(1, len(sd) + 1)), y=D.rolling_mean(viol, win), mode="lines",
-                            name="SLA violation %", line=dict(color="#C2410C", width=3), fill="tozeroy",
-                            fillcolor="rgba(194,65,12,0.10)",
+                            name="SLA violation %", line=dict(color=RUST, width=3), fill="tozeroy",
+                            fillcolor="rgba(194,65,12,0.12)",
                             hovertemplate="Episode %{x}<br>%{y:.2f}% not same-day<extra></extra>")
             if ql.get("backlog_history"):
                 fig.add_scatter(x=list(range(1, len(sd) + 1)), y=D.rolling_mean(ql["backlog_history"], win),
@@ -536,7 +494,7 @@ with tab_ai:
         with st.expander("Full comparison table"):
             table(rl_table.drop(columns=["key"]).round(2))
 
-    st.markdown("#### Inside AnyLogic: Compare Runs experiment")
+    sub("Inside AnyLogic: Compare Runs experiment")
     if compare is None:
         missing("Compare Runs experiment", "exp_compare_runs.csv")
     else:
@@ -564,13 +522,13 @@ with tab_ai:
 
     qp = D.q_policy(rl["q_table"]) if rl["q_table"] is not None else D.q_policy(exports["q_table"])
     if qp is not None and qp["visited"].any():
-        st.markdown("#### What the Q-learning agent learned")
+        sub("What the Q-learning agent learned")
         v = qp[qp["visited"]]
         a, b = st.columns([2, 3])
         with a:
             counts = v["best_action"].value_counts().reindex(D.ACTIONS, fill_value=0)
             fig = go.Figure(go.Pie(labels=counts.index, values=counts.values, hole=0.55, sort=False,
-                                   marker=dict(colors=["#8A96A8", MDC_BLUE, "#1A9E8F", "#E8A33D"]),
+                                   marker=dict(colors=[SLATE, MDC_BLUE, TEAL, AMBER], line=dict(color=SURFACE, width=2)),
                                    hovertemplate="%{label}: %{value} states<extra></extra>"))
             chart(style_fig(fig, 320, f"Best action in {len(v)} visited states"), "q_pie")
         with b:
@@ -581,7 +539,7 @@ with tab_ai:
             text = [[pivot.get((r, c_), "") for c_ in cols_] for r in rows_]
             fig = go.Figure(go.Heatmap(
                 z=z, x=cols_, y=rows_, text=text, texttemplate="%{text}", showscale=False, zmin=0, zmax=3,
-                colorscale=[[0, "#D5DBE4"], [0.33, "#BFD3EE"], [0.66, "#B5E3DC"], [1, "#F6D9A8"]],
+                colorscale=[[0, SLATE], [0.33, MDC_BLUE], [0.66, TEAL], [1, AMBER]], opacity=0.55,
                 hovertemplate="Mail ready: %{y}<br>Time: %{x}<br>Most common best action: %{text}<extra></extra>"))
             fig.update_layout(xaxis=dict(title="Time of day"), yaxis=dict(title="Sorted mail waiting"))
             chart(style_fig(fig, 320, "Most common best action by mail waiting × time", legend=False), "q_heat")
@@ -590,7 +548,8 @@ with tab_ai:
 # Tab 3 — AnyLogic Experiments
 # ==================================================================================================
 with tab_exp:
-    st.subheader("The 5 AnyLogic experiments")
+    section("03", "The 5 AnyLogic experiments", "Optimization, Monte Carlo, Sensitivity, Calibration and "
+            "Compare Runs, read from the experiment exports.")
     e_opt, e_mc, e_sens, e_cal, e_cmp = st.tabs(["Optimization", "Monte Carlo", "Sensitivity", "Calibration",
                                                  "Compare Runs"])
 
@@ -618,7 +577,7 @@ with tab_exp:
                     fig.add_scatter(
                         x=s["cost"], y=s["avg_hours_to_locker"], mode="markers", name=f"{int(pads_v)} pad(s)",
                         marker=dict(size=8 + 3 * s["robots"], color=s["robots"], colorscale="Blues", cmin=0, cmax=6,
-                                    symbol=sym, line=dict(color="#fff", width=1),
+                                    symbol=sym, line=dict(color=SURFACE, width=1),
                                     colorbar=dict(title="Robots", len=0.6) if pads_v == opt["pads"].min() else None,
                                     showscale=bool(pads_v == opt["pads"].min())),
                         customdata=s[["robots", "pads", "batch_fill_pct", "robot_km", "late_items"]],
@@ -627,9 +586,9 @@ with tab_exp:
                                       "%{customdata[4]} late<extra></extra>")
                 front = opt[pm].sort_values("cost")
                 fig.add_scatter(x=front["cost"], y=front["avg_hours_to_locker"], mode="lines", name="Pareto front",
-                                line=dict(color="#C2410C", width=2, dash="dash"), hoverinfo="skip")
+                                line=dict(color=RUST, width=2, dash="dash"), hoverinfo="skip")
                 fig.add_scatter(x=[best["cost"]], y=[best["avg_hours_to_locker"]], mode="markers", name="Best",
-                                marker=dict(symbol="star", size=20, color="#E8A33D", line=dict(color=INK, width=1)),
+                                marker=dict(symbol="star", size=20, color=AMBER, line=dict(color=INK, width=1)),
                                 hovertemplate="Best solution<extra></extra>")
                 fig.update_layout(xaxis=dict(title="Monthly cost ($)"), yaxis=dict(title="Hours vendor drop → locker"))
                 chart(style_fig(fig, 420, "Pareto trade-off: cost vs. delivery wait"), "opt_pareto")
@@ -664,7 +623,7 @@ with tab_exp:
             st.markdown("")
             a, b = st.columns([3, 2])
             with a:
-                fig = go.Figure(go.Histogram(x=mc[metric], nbinsx=15, marker_color="#BFD3EE",
+                fig = go.Figure(go.Histogram(x=mc[metric], nbinsx=15, marker_color=FILL,
                                              marker_line=dict(color=MDC_BLUE, width=1), name="Runs",
                                              hovertemplate="%{x}<br>%{y} runs<extra></extra>"))
                 fig.add_vrect(x0=ci["lo"], x1=ci["hi"], fillcolor=MDC_BLUE, opacity=0.15, line_width=0,
@@ -681,7 +640,7 @@ with tab_exp:
                 fig.add_scatter(x=n, y=running + half, mode="lines", line=dict(width=0), showlegend=False,
                                 hoverinfo="skip")
                 fig.add_scatter(x=n, y=running - half, mode="lines", line=dict(width=0), fill="tonexty",
-                                fillcolor="rgba(11,77,162,0.15)", name="95% CI", hoverinfo="skip")
+                                fillcolor="rgba(76,141,246,0.18)", name="95% CI", hoverinfo="skip")
                 fig.add_scatter(x=n, y=running, mode="lines", line=dict(color=MDC_BLUE, width=3), name="Running mean",
                                 hovertemplate="after %{x} runs: %{y:,.2f}<extra></extra>")
                 fig.update_layout(xaxis=dict(title="Number of replications"), yaxis=dict(title="Running mean"))
@@ -695,7 +654,7 @@ with tab_exp:
                      next((c for c in ("battery_use_pct_per_km", "battery_pct_per_km", "batteryUsePctPerKm")
                            if sens_batt is not None and c in sens_batt), None), "exp_sensitivity_battery.csv"))
         for title, df, xcol, fname in sets:
-            st.markdown(f"##### {title}")
+            sub(title)
             if df is None:
                 missing(f"Sensitivity on {title.split(' (')[0].lower()}", fname)
                 continue
@@ -754,7 +713,7 @@ with tab_exp:
                 fig.add_scatter(x=calib["sim_trip_quiet_min"], y=calib["sim_trip_rush_min"], mode="markers",
                                 name="Iterations",
                                 marker=dict(size=10, color=np.log10(calib["calibration_error"] + 1e-3),
-                                            colorscale="Blues", reversescale=True, line=dict(color="#fff", width=1),
+                                            colorscale="Blues", reversescale=True, line=dict(color=SURFACE, width=1),
                                             colorbar=dict(title="log₁₀ error", len=0.7)),
                                 customdata=calib[["meters_per_unit", "crowd_impact", "calibration_error"]],
                                 hovertemplate="quiet %{x:.1f} min · rush %{y:.1f} min<br>scale %{customdata[0]:.1f} "
@@ -762,7 +721,7 @@ with tab_exp:
                                               "<extra></extra>")
                 fig.add_scatter(x=[D.CALIBRATION_TARGET["quiet"]], y=[D.CALIBRATION_TARGET["rush"]], mode="markers",
                                 name="Observed (4 / 7 min)",
-                                marker=dict(symbol="x", size=18, color="#C2410C", line=dict(width=2)),
+                                marker=dict(symbol="x", size=18, color=RUST, line=dict(width=2)),
                                 hovertemplate="Observed: 4 min quiet, 7 min at class change<extra></extra>")
                 fig.update_layout(xaxis=dict(title="Simulated trip, quiet walkways (min)"),
                                   yaxis=dict(title="Simulated trip, class change (min)"))
@@ -771,7 +730,7 @@ with tab_exp:
                 it = np.arange(1, len(calib) + 1)
                 fig = go.Figure()
                 fig.add_scatter(x=it, y=calib["calibration_error"], mode="markers", name="Iteration error",
-                                marker=dict(color="#BFD3EE", size=8, line=dict(color=MDC_BLUE, width=1)),
+                                marker=dict(color=FILL, size=8, line=dict(color=MDC_BLUE, width=1)),
                                 hovertemplate="iteration %{x}<br>error %{y:.3f}<extra></extra>")
                 fig.add_scatter(x=it, y=calib["calibration_error"].cummin(), mode="lines", name="Best so far",
                                 line=dict(color=MDC_BLUE, width=3, shape="hv"),
@@ -825,7 +784,7 @@ with tab_exp:
 # Tab 4 — 3D Digital Twin
 # ==================================================================================================
 with tab_twin:
-    st.subheader("3D digital twin: live fleet status")
+    section("04", "3D digital twin: live fleet status")
     top = st.columns([2, 2, 3])
     auto = top[0].toggle("Auto-refresh every 2 s", value=False, key="twin_auto")
     couriers_only = top[1].toggle("Courier robots only (AMR)", value=True, key="twin_couriers")
@@ -833,7 +792,7 @@ with tab_twin:
                     f'(Jorge\'s Node server, docs/API_CONTRACT.md §2).</div>', unsafe_allow_html=True)
 
     def battery_color(b):
-        return "#15803D" if b >= 60 else ("#E8A33D" if b >= 30 else "#B91C1C")
+        return GOOD if b >= 60 else (AMBER if b >= 30 else BAD)
 
     def render_twin():
         robots, err = D.fetch_robots(twin_url, timeout=2.0)
@@ -844,7 +803,7 @@ with tab_twin:
                 "The 3D twin isn't running, so there's no live telemetry. The rest of the dashboard works "
                 "without it.\n\n**To go live:** `cd digital_twin_app` → `npm install` → `npm start`, then open "
                 "http://localhost:3000. For AnyLogic-driven robots, tick **enableTwinBridge** in the Simulation "
-                "experiment and run it.", icon="🔌")
+                "experiment and run it.", icon=":material/power_off:")
             st.caption(f"Connection detail: {err}")
             return
         df = D.fleet_frame(robots, couriers_only)
@@ -883,9 +842,8 @@ with tab_twin:
         with a:
             fig = go.Figure(go.Scatter(
                 x=df["x"], y=df["z"], mode="markers+text", text=df["id"], textposition="top center",
-                marker=dict(size=16, color=df["battery"], colorscale=[[0, "#B91C1C"], [0.3, "#E8A33D"],
-                                                                      [0.6, "#15803D"], [1, "#15803D"]],
-                            cmin=0, cmax=100, line=dict(color="#fff", width=2), colorbar=dict(title="Battery %")),
+                marker=dict(size=16, color=df["battery"], colorscale=[[0, BAD], [0.3, AMBER], [0.6, GOOD], [1, GOOD]],
+                            cmin=0, cmax=100, line=dict(color=SURFACE, width=2), colorbar=dict(title="Battery %")),
                 customdata=df[["status", "battery"]],
                 hovertemplate="%{text}<br>%{customdata[0]}<br>battery %{customdata[1]:.0f}%<extra></extra>"))
             fig.update_layout(xaxis=dict(title="x (twin units)"),
@@ -913,7 +871,7 @@ with tab_twin:
 # Tab 5 — Executive Report
 # ==================================================================================================
 with tab_exec:
-    st.subheader("Executive summary")
+    section("05", "Executive summary")
     st.markdown(
         "Miami Dade College North Campus receives mail from USPS, Amazon, UPS, FedEx and newspaper vendors at the "
         "**Duplicating & Mail Center (Building 3)**. Three clerks sort it, and today staff walk it to offices. We "
@@ -922,11 +880,11 @@ with tab_exec:
         "policies, and a live 3D view. The model is **calibrated** against the real 4-minute (quiet) and "
         "7-minute (class change) walk from Building 3 to Building 1.")
     if not final_data:
-        st.caption("🧪 The findings below are computed live from the files currently loaded (sample exports before "
+        st.caption("The findings below are computed live from the files currently loaded (sample exports before "
                    "calibration). They update automatically when the final CSVs are added.")
 
     insights = D.build_insights(opt, compare, mc, sens, calib, rl_table)
-    st.markdown("#### Key findings")
+    sub("Key findings")
     if not insights:
         st.info("No results loaded yet.")
     cols = st.columns(2)
@@ -935,7 +893,7 @@ with tab_exec:
         cols[i % 2].markdown(f'<div class="insight"><div class="tag">{ins["tag"]}</div><h4>{ins["title"]}</h4>'
                              f'{body}</div>', unsafe_allow_html=True)
 
-    st.markdown("#### What did the model reveal that wasn't obvious?")
+    sub("What did the model reveal that wasn't obvious?")
     st.markdown(
         "- **More robots isn't better.** Beyond a small fleet, extra robots add cost without improving same-day "
         "service in the Optimization runs: mail arrives in a few vendor drops a day, so extra robots mostly wait.\n"
@@ -947,7 +905,7 @@ with tab_exec:
         "- **Class changes matter.** Students on the walkways stretch a 4-minute trip to 7 minutes, so *when* a "
         "robot leaves matters as much as *how full* it is.")
 
-    st.markdown("#### Which policies improve the system?")
+    sub("Which policies improve the system?")
     st.markdown(
         "1. **Right-size the fleet** using the Optimization result above, and keep 2 charging pads.\n"
         "2. **Dispatch with a learned policy (PPO)** for the best balance of reward, service and battery health; "
@@ -957,20 +915,19 @@ with tab_exec:
         "4. **Plan for growth:** the Sensitivity runs show how much distance and cost each extra 10 Amazon "
         "packages per day adds.")
 
-    st.markdown("#### System architecture")
+    sub("System architecture")
     st.graphviz_chart(
         f"""
 digraph G {{
   rankdir=LR; bgcolor="transparent"; pad=0.2; nodesep=0.35; ranksep=0.6;
-  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=13, color="#C9D6EA",
-        fillcolor="#F3F6FB", fontcolor="#0F1B2D", margin="0.18,0.10"];
-  edge [color="#5B6B82", fontname="Helvetica", fontsize=9, fontcolor="#5B6B82"];
-  data [label="Real campus data\\nMDC directory · vendor times\\nobserved 4 / 7 min walk", fillcolor="#FFF7E8",
-        color="#F1D19A"];
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=13, color="{P['node_line']}",
+        fillcolor="{P['node_fill']}", fontcolor="{INK}", margin="0.18,0.10"];
+  edge [color="{MUTED}", fontname="Helvetica", fontsize=10, fontcolor="{MUTED}"];
+  data [label="Real campus data\\nMDC directory · vendor times\\nobserved 4 / 7 min walk", color="{AMBER}"];
   anylogic [label="AnyLogic 8.9 model\\nDES mailroom (3 clerks)\\nABM robots + students\\n5 experiments",
-            fillcolor="#E6EEF9", color="{MDC_BLUE}"];
-  rl [label="RL training (Python)\\nGymnasium env\\nQ-learning · PPO (SB3)", fillcolor="#E5F4F1", color="#1A9E8F"];
-  twin [label="3D digital twin\\nNode.js + Three.js\\nport 3000", fillcolor="#EEF0F4"];
+            color="{MDC_BLUE}", penwidth=2];
+  rl [label="RL training (Python)\\nGymnasium env\\nQ-learning · PPO (SB3)", color="{TEAL}", penwidth=2];
+  twin [label="3D digital twin\\nNode.js + Three.js\\nport 3000"];
   csv [label="CSV exports\\nanylogic_model/exports", shape=folder];
   json [label="RL results JSON\\nrl_models/*.json", shape=folder];
   dash [label="Streamlit dashboard\\nport 8501", fillcolor="{MDC_BLUE}", fontcolor="white", color="{MDC_NAVY}"];
@@ -997,7 +954,7 @@ digraph G {{
             table(D.file_inventory(rl_dir, D.RL_FILES))
 
 st.markdown(
-    f'<div style="color:{MUTED};font-size:0.8rem;margin-top:28px;border-top:1px solid {GRID};padding-top:10px">'
+    '<div class="foot">'
     "CAI 4830C Simulation for Applied AI · Miami Dade College · Team: Jorge A Mendoza (3D twin), "
     "Jordan Gonzalez (RL), Illia Shybanov (dashboard), Ricardo Molina Gonzalez (AnyLogic model)</div>",
     unsafe_allow_html=True,
