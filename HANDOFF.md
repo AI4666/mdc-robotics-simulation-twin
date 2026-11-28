@@ -12,7 +12,7 @@ we share, so the AnyLogic model, the RL training, the dashboard and the 3D twin 
 | AnyLogic model (DES + ABM), 30 working days | ✅ Working, calibrated with real data | Ricardo |
 | 5 experiment types with charts (Optimization, Compare Runs, Monte Carlo ×100 + 95% CI, Sensitivity ×2, Calibration) | ✅ Working | Ricardo |
 | Q-learning dispatcher inside AnyLogic (`dispatchPolicy = 2`) | ✅ Working, learns 1 episode per day | Ricardo → **Jordan to analyze/tune** |
-| PPO policy (`dispatchPolicy = 3`) | ⏳ Hook ready, policy to be trained | **Jordan** |
+| PPO policy (`dispatchPolicy = 3`) | ✅ Jordan's trained PPO runs inside AnyLogic (`ppoAction()` reads `exports/ppo_policy.json`) | Jordan / Ricardo |
 | 3D twin follows AnyLogic live + speed bar | ✅ Working | Jorge (app) / Ricardo (AnyLogic mode) |
 | Streamlit dashboard for Option 2 | ⏳ To build (current `dashboard/app.py` is Option 1 with made-up numbers) | **Illia** |
 | RL environment for Option 2 | ⏳ To build (current `rl_models/` is the Option 1 lab env) | **Jordan** |
@@ -227,7 +227,7 @@ To do / check:
   volumes, costs, policy), saved to a file the model reads at startup.
 - Re-run all 5 experiments with the calibrated model and replace the files in `anylogic_model/exports/` with the final CSVs
   (and set the model's `outputFolder` to `../exports` so runs write there directly).
-- PPO forward pass in `ppoAction()` once Jordan exports `ppo_policy.json`.
+- ~~PPO forward pass in `ppoAction()`~~ done (Nov 28).
 - Report + slides with the final numbers.
 
 See [`RICARDO_README.md`](RICARDO_README.md) for the full list.
@@ -235,9 +235,9 @@ See [`RICARDO_README.md`](RICARDO_README.md) for the full list.
 ---
 
 ## 9. Integration checklist before submission
-- [ ] Final experiment CSVs from the calibrated model
+- [x] Final experiment CSVs from the calibrated model (Nov 28)
 - [ ] Jordan: Option 2 env + Q-learning vs. PPO results + exported policies
-- [ ] PPO running inside AnyLogic (policy 3) and in Compare Runs
+- [x] PPO running inside AnyLogic (policy 3) and in Compare Runs
 - [ ] Illia: dashboard on real CSVs (all required tabs)
 - [ ] Live demo: AnyLogic + 3D twin + dashboard
 - [ ] Report (2–3 pages), slides, AI use statement, member Module 4 zips

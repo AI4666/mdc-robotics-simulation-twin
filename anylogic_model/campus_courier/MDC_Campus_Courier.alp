@@ -239,9 +239,108 @@ public void applyAction(int a) {
     }
 }
 
-// PPO hook for Jordan: same state, same 4 actions. Until a trained policy is loaded,
-// policy 3 uses the batching rule. Replace the body with the trained network's forward pass.
-public int ppoAction() { return batchingRuleSaysGo() ? 1 : 0; }
+// ===========================================================================
+// PPO policy (dispatchPolicy = 3), trained by Jordan with Stable-Baselines3 (rl_models/train_ppo.py)
+// and exported to ppoPolicyFile (ppo_policy.json). Network: 8 inputs -> 64 tanh -> 64 tanh -> 4 action
+// scores; the action with the highest score is taken (deterministic, as in model.predict).
+// Same 4 actions as Q-learning: 0 wait, 1 send one robot, 2 send all free robots, 3 charge.
+// ===========================================================================
+public double[][] ppoW0, ppoW1, ppoWa;
+public double[] ppoB0, ppoB1, ppoBa;
+public boolean ppoLoaded = false;
+public int ppoLastAction = -1;
+public int[] ppoActionCount = new int[4];
+
+double[] ppoNumbers(String json, String key) {
+    int k = json.indexOf("\"" + key + "\"");
+    if (k < 0) throw new RuntimeException("key " + key + " not found");
+    int start = json.indexOf('[', k), depth = 0, end = start;
+    for (int i = start; i < json.length(); i++) {
+        char c = json.charAt(i);
+        if (c == '[') depth++;
+        else if (c == ']' && --depth == 0) { end = i; break; }
+    }
+    java.util.regex.Matcher m = java.util.regex.Pattern.compile("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?").matcher(json.substring(start, end));
+    java.util.ArrayList<Double> v = new java.util.ArrayList<Double>();
+    while (m.find()) v.add(Double.parseDouble(m.group()));
+    double[] a = new double[v.size()];
+    for (int i = 0; i < a.length; i++) a[i] = v.get(i);
+    return a;
+}
+
+double[][] ppoMatrix(double[] flat, int rows) {
+    int cols = flat.length / rows;
+    double[][] w = new double[rows][cols];
+    for (int r = 0; r < rows; r++) for (int c = 0; c < cols; c++) w[r][c] = flat[r * cols + c];
+    return w;
+}
+
+public void loadPpoPolicy() {
+    try {
+        java.io.File f = new java.io.File(ppoPolicyFile);
+        String json = new String(java.nio.file.Files.readAllBytes(f.toPath()), java.nio.charset.StandardCharsets.UTF_8);
+        ppoB0 = ppoNumbers(json, "shared_0.bias");   ppoW0 = ppoMatrix(ppoNumbers(json, "shared_0.weight"), ppoB0.length);
+        ppoB1 = ppoNumbers(json, "shared_2.bias");   ppoW1 = ppoMatrix(ppoNumbers(json, "shared_2.weight"), ppoB1.length);
+        ppoBa = ppoNumbers(json, "action_head_bias"); ppoWa = ppoMatrix(ppoNumbers(json, "action_head_weight"), ppoBa.length);
+        if (ppoW0[0].length != 8 || ppoBa.length != 4) throw new RuntimeException("expected 8 inputs and 4 actions");
+        ppoLoaded = true;
+        traceln("Loaded PPO policy (8 -> " + ppoB0.length + " -> " + ppoB1.length + " -> 4) from " + f.getAbsolutePath());
+    } catch (Exception e) {
+        ppoLoaded = false;
+        traceln("PPO policy not loaded (" + e.getMessage() + "): policy 3 uses the batching rule instead");
+    }
+}
+
+double[] ppoLayer(double[][] w, double[] b, double[] x, boolean tanh) {
+    double[] y = new double[b.length];
+    for (int r = 0; r < b.length; r++) {
+        double s = b[r];
+        for (int c = 0; c < x.length; c++) s += w[r][c] * x[c];
+        y[r] = tanh ? Math.tanh(s) : s;
+    }
+    return y;
+}
+
+// action scores for an observation (also used by the verification test)
+public double[] ppoForward(double[] x) {
+    return ppoLayer(ppoWa, ppoBa, ppoLayer(ppoW1, ppoB1, ppoLayer(ppoW0, ppoB0, x, true), true), false);
+}
+public double[] ppoObservation() {
+    int free = 0, charging = 0;
+    double sumB = 0, minB = 100;
+    for (Rover r : rovers) {
+        if (r.isFree()) free++;
+        if (r.phase.equals("Charging")) charging++;
+        sumB += r.battery;
+        minB = Math.min(minB, r.battery);
+    }
+    int n = Math.max(1, rovers.size());
+    double unsorted = 0;                          // mail in the mailroom not sorted yet, in robot slots
+    for (MailItem m : injectQueue) unsorted += m.units;
+    for (MailItem m : itemOf.values()) unsorted += m.units;
+    for (Drop dr : drops) if (time() >= dr.arriveAt) for (MailItem m : dr.items) unsorted += m.units;
+    double h = hourOfDay(), minute = (h * 60) % 60;
+    return new double[] {
+        Math.min(1.0, sortedWaitingUnits() / 15.0),        // waiting_units_norm
+        free / 6.0,                                        // free_rovers_fraction (fleet of 6 in training)
+        sumB / n / 100.0,                                  // avg_fleet_battery
+        minB / 100.0,                                      // min_fleet_battery
+        charging / 2.0,                                    // charger_occupancy (2 pads in training)
+        Math.max(0.0, Math.min(1.0, (h - 8.0) / 9.0)),     // time_of_day_fraction
+        minute >= 40 ? 1.0 : 0.0,                          // class_change_soon
+        Math.min(1.0, unsorted / 50.0)                     // total_unsorted_norm
+    };
+}
+
+public int ppoAction() {
+    if (!ppoLoaded) return batchingRuleSaysGo() ? 1 : 0;   // fallback if the policy file is missing
+    double[] s = ppoForward(ppoObservation());
+    int best = 0;
+    for (int a = 1; a < s.length; a++) if (s[a] > s[best]) best = a;
+    ppoLastAction = best;
+    ppoActionCount[best]++;
+    return best;
+}
 
 // ---- CSV output (for the Streamlit dashboard and the report)
 public void writeLine(String file, String line, boolean append) {
@@ -377,6 +476,7 @@ for (int i = 0; i < rovers.size(); i++) {
 writeLine("daily_kpis.csv", "day,policy,arrived,eligible,same_day,same_day_pct,delivered,avg_hours_to_locker,"
     + "left_in_mailroom,max_in_mailroom,late_drops,robot_km,energy_pct,locker_full_events,clerk_util_pct,q_reward,q_epsilon", false);
 if (dispatchPolicy == 2 && rlLoadQTable) loadQTable();
+if (dispatchPolicy == 3) loadPpoPolicy();
 traceln("MDC Campus Courier v2: " + nodeKey.length + " walkway nodes, " + edgeList.length + " links, "
         + buildingNodes.length + " buildings, " + rovers.size() + " robots, " + walkers.size() + " walkers, "
         + "mailroom = " + nodeName[depotNode] + ", " + workDays + " working days, policy " + dispatchPolicy);]]></StartupCode>
@@ -2501,6 +2601,29 @@ traceln("MDC Campus Courier v2: " + nodeKey.length + " walkway nodes, " + edgeLi
 			<DelimeterType>NO_DELIMETER</DelimeterType>
 		</ParameterEditor>
 	</Properties>
+</Variable><Variable Class="Parameter">
+	<Id>1795489079298</Id>
+	<Name><![CDATA[ppoPolicyFile]]></Name>
+	<X>50</X><Y>1818</Y>
+	<Label><X>10</X><Y>0</Y></Label>
+	<PublicFlag>false</PublicFlag>
+	<PresentationFlag>true</PresentationFlag>
+	<ShowLabel>true</ShowLabel>
+	<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+		<Type><![CDATA[String]]></Type>
+		<UnitType><![CDATA[NONE]]></UnitType>
+		<SdArray>false</SdArray>
+		<DefaultValue Class="CodeValue">
+			<Code><![CDATA["../exports/ppo_policy.json"]]></Code>
+		</DefaultValue>
+		<ParameterEditor>
+			<Id>1795489079299</Id>
+			<EditorContolType>TEXT_BOX</EditorContolType>
+			<MinSliderValue><![CDATA[0]]></MinSliderValue>
+			<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+			<DelimeterType>NO_DELIMETER</DelimeterType>
+		</ParameterEditor>
+	</Properties>
 </Variable></Variables>
 			<Connectors>
 				<Connector>
@@ -2753,7 +2876,8 @@ calibrationProbe();]]></Action>
 						</RecurrenceCode>
 						<Condition><![CDATA[false]]></Condition>
 					</Properties>
-					<Action><![CDATA[if (dispatchPolicy == 2 && robotsOnDuty()) qLearningStep();]]></Action>
+					<Action><![CDATA[if (dispatchPolicy == 2 && robotsOnDuty()) qLearningStep();
+else if (dispatchPolicy == 3 && robotsOnDuty()) applyAction(ppoAction());]]></Action>
 				</Event>
 				<Event>
 					<Id>1762800000214</Id>
@@ -3148,7 +3272,7 @@ return units >= batchFillPct / 100.0 * roverCapacityPackages
 if (!robotsOnDuty()) return;
 if (dispatchPolicy == 0) { while (sortedWaiting() > 0 && sendOneRobot()) { } }      // baseline: send at once
 else if (dispatchPolicy == 1) { while (batchingRuleSaysGo() && sendOneRobot()) { } }
-else if (dispatchPolicy == 3) { applyAction(ppoAction()); }
+// policy 3 (PPO) also decides in the rlDecision event, every rlDecisionMinutes like in training
 // policy 2 (Q-learning) decides in the rlDecision event]]></Body>
 				</Function>
 				<Function AccessType="default" StaticFunction="false">
@@ -11119,7 +11243,7 @@ public void step(double dt) {
 				<Parameter>
 					<ParameterName><![CDATA[calibTargetKey]]></ParameterName>
 				</Parameter>
-			<Parameter><ParameterName><![CDATA[urgentSharePct]]></ParameterName></Parameter><Parameter><ParameterName><![CDATA[slaUrgentMin]]></ParameterName></Parameter><Parameter><ParameterName><![CDATA[depletedRescueMinutes]]></ParameterName></Parameter></Parameters>
+			<Parameter><ParameterName><![CDATA[urgentSharePct]]></ParameterName></Parameter><Parameter><ParameterName><![CDATA[slaUrgentMin]]></ParameterName></Parameter><Parameter><ParameterName><![CDATA[depletedRescueMinutes]]></ParameterName></Parameter><Parameter><ParameterName><![CDATA[ppoPolicyFile]]></ParameterName></Parameter></Parameters>
 			<PresentationProperties>
 				<EnableZoomAndPanning>true</EnableZoomAndPanning>
 				<ExecutionMode><![CDATA[realTimeScaled]]></ExecutionMode>
@@ -15924,7 +16048,7 @@ Results: one row per run in output/exp_sensitivity_battery.csv (next to the mode
 			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
 			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
 			<AfterSimulationRunCode><![CDATA[root.appendRow("exp_compare_runs.csv");
-policyToRun = (policyToRun + 1) % 3;   // next Run uses the next policy
+policyToRun = (policyToRun + 1) % 4;   // next Run uses the next policy (0 baseline, 1 batching, 2 Q-learning, 3 PPO)
 crKmDS.add(root.dispatchPolicy, root.totalRobotKm());
 crHoursDS.add(root.dispatchPolicy, root.avgHoursToLocker());
 crCostDS.add(root.dispatchPolicy, root.monthlyCost());
@@ -16075,9 +16199,9 @@ crSameDayDS.add(root.dispatchPolicy, root.sameDayPctAll());]]></AfterSimulationR
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-16777216</Color>
-					<Text><![CDATA[2. COMPARE RUNS - baseline vs batching vs Q-learning
+					<Text><![CDATA[2. COMPARE RUNS - baseline vs batching vs Q-learning vs PPO
 
-Press Run 3 times: run 1 = baseline (0), run 2 = batching (1), run 3 = Q-learning (2).
+Press Run 4 times: run 1 = baseline (0), run 2 = batching (1), run 3 = Q-learning (2), run 4 = PPO (3).
 Same random seed, so the three policies see exactly the same mail.
 Results: one row per run in output/exp_compare_runs.csv (next to the model). Runs in virtual time, no animation.]]></Text>
 					<Font>
@@ -16101,7 +16225,7 @@ Results: one row per run in output/exp_compare_runs.csv (next to the model). Run
 					<Rotation>0.0</Rotation>
 					<Color>-16777216</Color>
 					<Text><![CDATA[]]></Text>
-					<TextCode><![CDATA["Runs done: " + crKmDS.size() + "     NEXT RUN: " + (policyToRun == 0 ? "0 = baseline" : policyToRun == 1 ? "1 = batching" : "2 = Q-learning") + "     (x axis: 0 baseline, 1 batching, 2 Q-learning)"]]></TextCode>
+					<TextCode><![CDATA["Runs done: " + crKmDS.size() + "     NEXT RUN: " + (policyToRun == 0 ? "0 = baseline" : policyToRun == 1 ? "1 = batching" : policyToRun == 2 ? "2 = Q-learning" : "3 = PPO") + "     (x axis: 0 baseline, 1 batching, 2 Q-learning, 3 PPO)"]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>15</Size>
@@ -16684,7 +16808,7 @@ Results: one row per run in output/exp_compare_runs.csv (next to the model). Run
 				<Parameter>
 					<ParameterName><![CDATA[calibTargetKey]]></ParameterName>
 				</Parameter>
-			<Parameter><ParameterName><![CDATA[urgentSharePct]]></ParameterName></Parameter><Parameter><ParameterName><![CDATA[slaUrgentMin]]></ParameterName></Parameter><Parameter><ParameterName><![CDATA[depletedRescueMinutes]]></ParameterName></Parameter></Parameters>			
+			<Parameter><ParameterName><![CDATA[urgentSharePct]]></ParameterName></Parameter><Parameter><ParameterName><![CDATA[slaUrgentMin]]></ParameterName></Parameter><Parameter><ParameterName><![CDATA[depletedRescueMinutes]]></ParameterName></Parameter><Parameter><ParameterName><![CDATA[ppoPolicyFile]]></ParameterName></Parameter></Parameters>			
 			<PresentationProperties>
 				<EnableZoomAndPanning>true</EnableZoomAndPanning>
 				<EnableDeveloperPanel>true</EnableDeveloperPanel>
