@@ -32,6 +32,10 @@ class MetricsCallback(BaseCallback):
     def __init__(self, verbose=0):
         super().__init__(verbose)
         self.episode_rewards = []
+        self.same_day_history = []
+        self.backlog_history = []
+        self.battery_history = []
+        self.km_history = []
         self.current_reward = 0.0
 
     def _on_step(self) -> bool:
@@ -40,8 +44,15 @@ class MetricsCallback(BaseCallback):
 
         dones = self.locals.get("dones", [False])
         if any(dones):
-            self.episode_rewards.append(float(self.current_reward))
+            self.episode_rewards.append(round(float(self.current_reward), 2))
             self.current_reward = 0.0
+            infos = self.locals.get("infos", [{}])
+            if infos and isinstance(infos[0], dict):
+                info = infos[0]
+                self.same_day_history.append(round(float(info.get("same_day_pct", 0.0)), 2))
+                self.backlog_history.append(float(info.get("waiting_units", 0.0)))
+                self.battery_history.append(round(float(info.get("avg_battery", 0.0) / 100.0), 3))
+                self.km_history.append(round(float(info.get("robot_km", 0.0)), 2))
         return True
 
 
@@ -91,8 +102,6 @@ def export_ppo_weights_json(model, out_path: Path):
             print(f"       Exported copy to AnyLogic exports: {anylogic_export}")
     except Exception as e:
         print(f"[WARN] Could not export portable weights JSON: {e}")
-    except Exception as e:
-        print(f"[WARN] Could not export portable weights JSON: {e}")
 
 
 def train_ppo(total_timesteps=54000):
@@ -121,6 +130,7 @@ def train_ppo(total_timesteps=54000):
         clip_range=0.2,
         ent_coef=0.01,         # Encourage exploration
         seed=42,
+        device="cpu",
     )
 
     callback = MetricsCallback()
@@ -153,7 +163,7 @@ def train_ppo(total_timesteps=54000):
             obs, r, terminated, _, info = env.step(int(action))
             ep_rew += r
 
-        eval_rewards.append(float(ep_rew))
+        eval_rewards.append(round(float(ep_rew), 2))
         eval_backlogs.append(float(info.get("waiting_units", 0.0)))
         eval_batteries.append(float(info.get("avg_battery", 0.0) / 100.0))
         eval_sla.append(float(info.get("same_day_pct", 0.0)))
@@ -182,15 +192,18 @@ def train_ppo(total_timesteps=54000):
         # 6 Mandatory top-level keys
         "algorithm": "PPO (Stable-Baselines3 MlpPolicy)",
         "episodes": total_timesteps // 108,
-        "final_avg_reward": float(np.mean(eval_rewards)),
-        "rewards_sample": [round(float(r), 2) for r in eval_rewards],
-        "avg_battery_end": float(np.mean(eval_batteries)),
-        "avg_backlog_end": float(np.mean(eval_backlogs)),
+        "final_avg_reward": float(np.mean(callback.episode_rewards[-50:])),
+        "rewards_sample": callback.episode_rewards[::3],  # downsample for clean charts
+        "avg_battery_end": float(np.mean(callback.battery_history[-50:])),
+        "avg_backlog_end": float(np.mean(callback.backlog_history[-50:])),
 
         # Option 2 Extended Metrics
-        "same_day_pct": float(np.mean(eval_sla)),
-        "robot_km": float(np.mean(eval_kms)),
-        "episode_rewards": eval_rewards,
+        "same_day_pct": float(np.mean(callback.same_day_history[-50:])),
+        "robot_km": float(np.mean(callback.km_history[-50:])),
+        "episode_rewards": callback.episode_rewards,
+        "same_day_history": callback.same_day_history,
+        "backlog_history": callback.backlog_history,
+        "eval_rewards": eval_rewards,
         "baseline_comparison": {
             "fifo": fifo_baseline,
             "batching": batching_baseline,
@@ -201,6 +214,7 @@ def train_ppo(total_timesteps=54000):
                 "avg_backlog": float(np.mean(eval_backlogs)),
                 "avg_battery": float(np.mean(eval_batteries)),
                 "avg_km": float(np.mean(eval_kms)),
+                "eval_rewards": eval_rewards,
             },
         },
     }
