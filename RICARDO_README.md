@@ -85,9 +85,9 @@ OptQuest (40 iterations) found a **map scale of 49.4 m/unit** and a **crowd slow
    - dispatch policy, days
 
    This also gives Illia's dashboard a real "inputs" tab.
-2. **Final experiment runs** with the calibrated model, replacing the files in `anylogic_model/exports/` (those are test runs from before calibration).
-3. **PPO inside AnyLogic:** write the forward pass in `ppoAction()` from Jordan's `ppo_policy.json`, then compare
-   Q-learning vs. PPO in Compare Runs.
+2. ~~Final experiment runs~~ **Done (Nov 28):** all experiments re-run with the calibrated model; `anylogic_model/exports/` now holds the final CSVs.
+3. ~~PPO inside AnyLogic~~ **Done (Nov 28):** `ppoAction()` runs Jordan's network from `exports/ppo_policy.json` (verified: same action as his
+   trained model in 2,000/2,000 test cases); Compare Runs now runs baseline, batching, Q-learning and PPO.
 4. **Building J position:** confirm it on the 3D map with Jorge.
 5. **More real data** (optional): daily mail volumes per vendor from the mailroom, and locker pickup times.
 6. **Report (2–3 pages) and slides:** problem, multi-method design, calibration, experiment results, recommendations,

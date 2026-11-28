@@ -17,4 +17,5 @@ Thumbs.db
 *.bak
 *.autosave
 anylogic_model/campus_courier/output/
+anylogic_model/campus_courier/output_*/
 anylogic_model/campus_courier/__pycache__/
